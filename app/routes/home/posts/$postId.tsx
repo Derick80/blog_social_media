@@ -32,99 +32,96 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const postId = params.pstId as string;
-  const userId = await getserId(request);
-  let formData = await reqest.formData();
-  const id 'id'rData.get("id");
-  let title 'title'aa.get("title");
-  let body 'body'Dta.get("body");
+  const postId = params.postId as string;
+  const userId = await getUserId(request);
+  let formData = await request.formData();
+  const id = formData.get("id");
+  let title = formData.get("title");
+  let body = formData.get("body");
   if (
-     'string'id !== "string" ||
-      ty'string'le !== "string" ||
-      t'string'dy !== "string" ||
-      typ'string'Id !== "string"
+    typeof id !== "string" ||
+    typeof title !== "string" ||
+    typeof body !== "string" ||
+    typeof userId !== "string"
   ) {
-    return 'invalid form data'alid form data" }, { tatus : 400 });
+    return json({ error: "invalid form data" }, { status: 400 });
   }
 
   const errors = {
-    title : validateText(title as string),
+    title: validateText(title as string),
 
-    body : validateText(ody s string),
+    body: validateText(body as string),
   };
 
   if (Object.values(errors).some(Boolean))
     return json(
-        {
-          errors,
-          fields : {
-            title,
-           body,
-          },
-         form : action,
+      {
+        errors,
+        fields: {
+          title,
+          body,
         },
-        { statu : 400 }
+        form: action,
+      },
+      { status: 400 }
     );
 };
 export default function PostRoute() {
-  const { data, user } = useLoaderData()
-  const actionData = useActionData()
-  const [errors, setErrors] = useState(actionData?.errors || {})
-  console.log(actionData)
+  const { data, user } = useLoaderData();
+  const actionData = useActionData();
+  const [errors, setErrors] = useState(actionData?.errors || {});
+  console.log(actionData);
   const [formData, setFormData] = useState({
-    id : data.post.id,
-    title : data.post.title,
-    body : data.post.body
-  })
+    id: data.post.id,
+    title: data.post.title,
+    body: data.post.body,
+  });
   const handleInputChange = (
-      event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>,
-      field: string
+    event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>,
+    field: string
   ) => {
     setFormData((form) => ({
       ...form,
-      [field] : event.target.value
-    }
-    ))
-  }
+      [field]: event.target.value,
+    }));
+  };
   return (
-      <div className='w-full col-span-1 md:row-start-2 md:row-span-1 md:col-start-4 md:col-end-10 flex mx-auto max-w'>
-        <div className='w-full flex flex-col items-center'>
-          <form method='post'
-                className='text-xl font-semibold'
-          >
-            <FormField
-                htmlFor='id'
-                label=''
-                name='id'
-                type='hidden'
-                value={ formData.id }
-                onChange={ (event: any) => handleInputChange(event, 'id') }
-                error={ errors?.id }
-            />
-            <FormField
-                htmlFor='title'
-                label='title'
-                name='title'
-                value={ formData.title }
-                onChange={ (event: any) => handleInputChange(event, 'title') }
-                error={ errors?.title }
-            />
-            <FormField
-                htmlFor='body'
-                label='Content'
-                name='body'
-                type='textarea'
-                className='w-full'
-                value={ formData.body }
-                onChange={ (event: any) => handleInputChange(event, 'body') }
-                error={ errors?.body }
-            />
+    <div className="w-full col-span-1 md:row-start-2 md:row-span-1 md:col-start-4 md:col-end-10 flex mx-auto max-w">
+      <div className="w-full flex flex-col items-center">
+        <form method="post" className="text-xl font-semibold">
+          <FormField
+            htmlFor="id"
+            label=""
+            name="id"
+            type="hidden"
+            value={formData.id}
+            onChange={(event: any) => handleInputChange(event, "id")}
+            error={errors?.id}
+          />
+          <FormField
+            htmlFor="title"
+            label="title"
+            name="title"
+            value={formData.title}
+            onChange={(event: any) => handleInputChange(event, "title")}
+            error={errors?.title}
+          />
+          <FormField
+            htmlFor="body"
+            label="Content"
+            name="body"
+            type="textarea"
+            className="w-full"
+            value={formData.body}
+            onChange={(event: any) => handleInputChange(event, "body")}
+            error={errors?.body}
+          />
 
-            <div className='max-w-full text-container'>
-              <button type='submit'>Save</button>
-            </div>
-          </form>
-        </div>
+          <div className="max-w-full text-container">
+            <button type="submit">Save</button>
+          </div>
+        </form>
       </div>
-  )
+    </div>
+  );
 }
