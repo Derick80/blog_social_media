@@ -36,6 +36,7 @@ model Profile {
   id              String    @id @unique @default(uuid())
   firstName       String
   lastName        String
+  bio             String?
   birthDay        DateTime?
   currentLocation String?
   pronouns        Pronouns? @default(THEY)
