@@ -76,6 +76,13 @@ export async function updatePost({ id, title, body, postImg }: Partial<Post>) {
   });
 }
 
+export async function publishPost(id: string) {
+  await prisma.post.update({
+    where: { id: id },
+    data: { published: true },
+  });
+}
+
 export async function unpublishPost(id: string) {
   await prisma.post.update({
     where: { id: id },

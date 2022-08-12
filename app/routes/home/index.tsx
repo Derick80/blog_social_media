@@ -61,9 +61,6 @@ export default function HomeRoute() {
             <div className="flex flex-row justify-between p-2">
               {user.email === role ? (
                 <>
-                  <Tooltip message="Leave a Comment">
-                    <Icon icon="add_comment" />
-                  </Tooltip>
                   <Tooltip message="Edit Post">
                     <Link to={post.id} className="text-red-600 underline">
                       <Icon icon="edit" />
@@ -71,11 +68,7 @@ export default function HomeRoute() {
                   </Tooltip>
                 </>
               ) : (
-                <div className="flex flex-row justify-between p-2">
-                  <Tooltip message="Leave a Comment">
-                    <Icon icon="add_comment" />
-                  </Tooltip>
-                </div>
+                <div className="flex flex-row justify-between p-2"></div>
               )}
             </div>
           ) : null}
