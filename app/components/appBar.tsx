@@ -10,7 +10,7 @@ type AppBarProps = {
 export default function AppBar({ user, role }: AppBarProps) {
   const navigate = useNavigate();
   return (
-    <nav className="invisible h-1/4 w-full p-2 font-semibold uppercase md:visible flex mx-auto max-w-7xl  text-center justify-between">
+    <nav className="w-full p-2 font-semibold uppercase md:visible flex mx-auto max-w-7xl  text-center justify-between">
       <div className="flex h-1/4 w-full justify-around">
         <Tooltip message="View Post Drafts">
           <NavLink
@@ -18,8 +18,8 @@ export default function AppBar({ user, role }: AppBarProps) {
             className={({ isActive }) =>
               ` ${
                 isActive
-                  ? "material-symbols-outlined underline text-5xl"
-                  : "material-symbols-outlined text-5xl"
+                  ? "material-symbols-outlined underline text-2xl md:text-5xl"
+                  : "material-symbols-outlined text-2xl md:text-5xl"
               }`
             }
           >
@@ -38,8 +38,8 @@ export default function AppBar({ user, role }: AppBarProps) {
                     className={({ isActive }) =>
                       ` ${
                         isActive
-                          ? "material-symbols-outlined underline text-5xl"
-                          : "material-symbols-outlined text-5xl"
+                          ? "material-symbols-outlined underline text-2xl md:text-5xl"
+                          : "material-symbols-outlined text-2xl md:text-5xl"
                       }`
                     }
                   >
@@ -52,8 +52,8 @@ export default function AppBar({ user, role }: AppBarProps) {
                     className={({ isActive }) =>
                       ` ${
                         isActive
-                          ? "material-symbols-outlined underline text-5xl"
-                          : "material-symbols-outlined text-5xl"
+                          ? "material-symbols-outlined underline text-2xl md:text-5xl"
+                          : "material-symbols-outlined text-2xl md:text-5xl"
                       }`
                     }
                   >
@@ -72,8 +72,8 @@ export default function AppBar({ user, role }: AppBarProps) {
             className={({ isActive }) =>
               ` ${
                 isActive
-                  ? "material-symbols-outlined underline text-5xl"
-                  : "material-symbols-outlined text-5xl"
+                  ? "material-symbols-outlined underline text-2xl md:text-5xl"
+                  : "material-symbols-outlined text-2xl md:text-5xl"
               }`
             }
           >

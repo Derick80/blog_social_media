@@ -2,6 +2,7 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import React from "react";
+import ContentContainer from "~/components/shared/content-container";
 import Icon from "~/components/shared/icon";
 import Tooltip from "~/components/shared/tooltip";
 import { getUser, requireUserId } from "~/utils/auth.server";
@@ -9,7 +10,13 @@ import { getPosts } from "~/utils/post.server";
 
 type LoaderData = {
   user: { id: string; email: string };
-  userPosts: Array<{ id: string; title: string; body: string; email: string }>;
+  userPosts: Array<{
+    id: string;
+    title: string;
+    body: string;
+    email: string;
+    postImg: string;
+  }>;
   role: string;
   email: string;
 };
@@ -29,20 +36,26 @@ export default function HomeRoute() {
   const { user, userPosts, role, email }: LoaderData = useLoaderData();
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="text-5xl font-extrabold">Posts</div>
+    <ContentContainer>
+      <div className="text-base md:text-5xl font-extrabold">Posts</div>
       {userPosts.map((post) => (
         <div
           key={post.id}
-          className="w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4"
+          className="w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 md:mt-4 md:mb-4"
         >
           <div className="flex flex-row">
-            <h1 className="my-6 border-b-2 text-center text-3xl">
+            <h1 className="text-2xl my-6 border-b-2 text-center md:text-3xl">
               {post.title}
             </h1>
           </div>
-
-          <div className="flex flex-row p-2 my-3"> {post.body}</div>
+          <div className="flex flex-col-reverse items-center p-2 md:flex md:flex-row md:p-2 md:space-x-10">
+            <img
+              className="object-contain w-1/2 rounded"
+              src={post.postImg}
+              alt="profile"
+            />
+            <div className="text-base md:text-2xl">{post.body}</div>
+          </div>
 
           {user ? (
             <div className="flex flex-row justify-between p-2">
@@ -68,6 +81,6 @@ export default function HomeRoute() {
           ) : null}
         </div>
       ))}
-    </div>
+    </ContentContainer>
   );
 }

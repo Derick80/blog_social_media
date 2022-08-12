@@ -5,3 +5,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .form-primary {
+        @apply text-xl w-full font-semibold
+    }
+
+    .form-field-primary {
+        @apply dark:bg-slate-400 border-2 border-black dark:border-white w-full p-2 rounded-xl my-2
+    }
+}

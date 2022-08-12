@@ -3,7 +3,9 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
 import React, { useState } from "react";
+import { ImageUploader } from "~/components/image-uploader";
 import Button from "~/components/shared/button";
+import ContentContainer from "~/components/shared/content-container";
 import FormField from "~/components/shared/form-field";
 import Tooltip from "~/components/shared/tooltip";
 import { getUser, getUserId } from "~/utils/auth.server";
@@ -49,11 +51,13 @@ export const action: ActionFunction = async ({ request, params }) => {
   let published = formData.get("published");
   let title = formData.get("title");
   let body = formData.get("body");
+  let postImg = formData.get("postImg");
   if (
     typeof id !== "string" ||
     typeof title !== "string" ||
     typeof body !== "string" ||
-    typeof userId !== "string"
+    typeof userId !== "string" ||
+    typeof postImg !== "string"
   ) {
     return json({ error: "invalid form data" }, { status: 400 });
   }
@@ -81,7 +85,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     if (published) {
       await unpublishPost(id);
     } else {
-      await updatePost({ id, userId, title, body });
+      await updatePost({ id, userId, title, body, postImg });
     }
   }
   return redirect("/");
@@ -96,6 +100,7 @@ export default function PostRoute() {
     title: data.post.title,
     body: data.post.body,
     published: data.post.published,
+    postImg: data.post.postImg,
   });
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>,
@@ -106,14 +111,31 @@ export default function PostRoute() {
       [field]: event.target.value,
     }));
   };
+  const handleFileUpload = async (file: File) => {
+    let inputFormData = new FormData();
+    inputFormData.append("postImg", file);
+    const response = await fetch("/image", {
+      method: "POST",
+      body: inputFormData,
+    });
+
+    const { imageUrl } = await response.json();
+    console.log("imageUrl", imageUrl);
+
+    setFormData({
+      ...formData,
+      postImg: imageUrl,
+    });
+  };
+
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="w-full flex flex-col items-center">
-        <div className="text-5xl font-extrabold">
+    <ContentContainer>
+      <div className="w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 md:mt-4 mb-4">
+        <div className="text-base md:text-5xl font-extrabold">
           Edit, Publish, unPublish, or Delete Post
         </div>
 
-        <form method="post" className="text-xl w-1/2 font-semibold">
+        <form method="post" className="form-primary">
           <FormField
             htmlFor="id"
             label=""
@@ -138,21 +160,35 @@ export default function PostRoute() {
             labelClass="uppercase"
             name="title"
             type="textarea"
-            className="dark:text-black w-full p-2 rounded-xl my-2"
             value={formData.title}
             onChange={(event: any) => handleInputChange(event, "title")}
             error={errors?.title}
           />
+          <p>
+            <label className="uppercase">
+              Content:{" "}
+              <textarea
+                name="body"
+                className="form-field-primary"
+                value={formData.body}
+                onChange={(event: any) => handleInputChange(event, "body")}
+              />
+            </label>
+          </p>
+          {actionData?.errors.name ? (
+            <p style={{ color: "red" }}>{actionData.errors.name}</p>
+          ) : null}
           <FormField
-            htmlFor="body"
-            label="Content"
+            htmlFor="postImg"
+            label="Post Image"
             labelClass="uppercase"
-            name="body"
-            type="textarea"
-            className="dark:text-black w-full p-2 rounded-xl my-2"
-            value={formData.body}
-            onChange={(event: any) => handleInputChange(event, "body")}
-            error={errors?.body}
+            name="postImg"
+            value={formData.postImg}
+            onChange={(event: any) => handleInputChange(event, "postImg")}
+          />
+          <ImageUploader
+            onChange={handleFileUpload}
+            postImg={formData.postImg || ""}
           />
           {formData.published ? (
             <>
@@ -177,6 +213,6 @@ export default function PostRoute() {
           )}
         </form>
       </div>
-    </div>
+    </ContentContainer>
   );
 }

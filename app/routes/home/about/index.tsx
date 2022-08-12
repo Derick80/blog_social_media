@@ -4,6 +4,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { format } from "date-fns";
 import React from "react";
+import ContentContainer from "~/components/shared/content-container";
 import Icon from "~/components/shared/icon";
 import Tooltip from "~/components/shared/tooltip";
 import { requireUserId } from "~/utils/auth.server";
@@ -30,6 +31,7 @@ export default function About() {
     id,
     firstName,
     lastName,
+    bio,
     birthDay,
     currentLocation,
     pronouns,
@@ -38,7 +40,7 @@ export default function About() {
   } = userProfile;
   // @ts-ignore
   return (
-    <div className="w-full flex flex-col items-center">
+    <ContentContainer>
       <div
         key={id}
         className="w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4"
@@ -54,12 +56,27 @@ export default function About() {
             src="/images/DerickFace.jpg"
             alt="profile"
           />
-
-          <div>
-            <div>{format(new Date(birthDay), "MMMM, do")}</div>
-            <div> {currentLocation}</div>
-            <div> {pronouns}</div>
-            <div> {occupation}</div>
+          <div className="flex flex-col">
+            <div className="uppercase font-semibold">About Me</div>
+            {bio}
+          </div>
+          <div className="flex flex-col">
+            <div>
+              <div className="uppercase font-semibold">Birthday</div>
+              {format(new Date(birthDay), "MMMM, do")}
+            </div>
+            <div>
+              <div className="uppercase font-semibold">Current City</div>
+              {currentLocation}
+            </div>
+            <div>
+              <div className="uppercase font-semibold">My Pronouns</div>
+              {pronouns}
+            </div>
+            <div>
+              <div className="uppercase font-semibold">My Occupation</div>
+              {occupation}
+            </div>
           </div>
         </div>
         <div className="flex flex-row-reverse justify-between p-2">
@@ -72,6 +89,6 @@ export default function About() {
           ) : null}
         </div>
       </div>
-    </div>
+    </ContentContainer>
   );
 }

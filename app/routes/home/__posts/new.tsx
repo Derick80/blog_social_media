@@ -1,9 +1,12 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { ImageUploader } from "~/components/image-uploader";
 import Button from "~/components/shared/button";
+import ContentContainer from "~/components/shared/content-container";
 import FormField from "~/components/shared/form-field";
+
 import { getUser, getUserId, requireUserId } from "~/utils/auth.server";
 import { createDraft } from "~/utils/post.server";
 import { validateText } from "~/utils/validators.server";
@@ -30,8 +33,15 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const title = formData.get("title");
   const body = formData.get("body");
+  const postImg = formData.get("postImg");
 
-  if (typeof title !== "string" || typeof body !== "string") {
+  // || typeof body !== "string" || typeof postImg !== "string"
+
+  if (
+    typeof title !== "string" ||
+    typeof body !== "string" ||
+    typeof postImg !== "string"
+  ) {
     return json(
       {
         error: "invalid form data",
@@ -45,20 +55,22 @@ export const action: ActionFunction = async ({ request }) => {
     title: validateText(title as string),
 
     body: validateText(body as string),
+    postImg: validateText(postImg as string),
   };
 
   if (Object.values(errors).some(Boolean))
     return json(
       {
         errors,
-        fields: { title, body },
+        fields: { title, body, postImg },
         form: action,
       },
       { status: 400 }
     );
-  const draft = await createDraft({
+  await createDraft({
     title,
     body,
+    postImg,
     userId,
   });
 
@@ -68,55 +80,101 @@ export const action: ActionFunction = async ({ request }) => {
 export default function NewPostRoute() {
   const { userId } = useLoaderData();
   const actionData = useActionData();
+  const firstLoad = useRef(true);
+  const [formError, setFormError] = useState(actionData?.error || "");
   const [errors, setErrors] = useState(actionData?.errors || {});
   console.log(actionData);
   const [formData, setFormData] = useState({
-    title: "",
-    body: "",
+    title: actionData?.fields?.title || "",
+    body: actionData?.fields?.body || "",
+    postImg: actionData?.fields?.postImg || "",
+
     userId: userId,
   });
+  useEffect(() => {
+    if (!firstLoad.current) {
+      setFormError("");
+    }
+  }, [formData]);
+
+  useEffect(() => {
+    firstLoad.current = false;
+  }, []);
+
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>,
+    event: React.ChangeEvent<HTMLInputElement>,
     field: string
   ) => {
-    setFormData((form) => ({
-      ...form,
-      [field]: event.target.value,
-    }));
+    event.preventDefault();
+    setFormData((form) => ({ ...form, [field]: event.target.value }));
   };
+  const handleFileUpload = async (file: File) => {
+    let inputFormData = new FormData();
+    inputFormData.append("postImg", file);
+    const response = await fetch("/image", {
+      method: "POST",
+      body: inputFormData,
+    });
 
+    const { imageUrl } = await response.json();
+    console.log("imageUrl", imageUrl);
+
+    setFormData({
+      ...formData,
+      postImg: imageUrl,
+    });
+  };
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="text-5xl font-extrabold">Write a New Post</div>
+    <ContentContainer>
+      <div className="w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4">
+        <div className="text-base md:text-5xl font-extrabold">
+          Write a New Post
+        </div>
+        <form
+          method="post"
+          onSubmit={(e) =>
+            !confirm("Are you sure?") ? e.preventDefault() : true
+          }
+          className="form-primary"
+        >
+          <FormField
+            htmlFor="title"
+            label="title"
+            labelClass="uppercase"
+            name="title"
+            type="textarea"
+            value={formData.title}
+            onChange={(event: any) => handleInputChange(event, "title")}
+            error={errors?.title}
+          />
+          <p>
+            <label className="uppercase">
+              Content:{" "}
+              <textarea
+                name="body"
+                className="form-field-primary"
+                value={formData.body}
+                onChange={(event: any) => handleInputChange(event, "body")}
+              />
+            </label>
+          </p>
 
-      <form
-        method="post"
-        className="w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4"
-      >
-        <FormField
-          htmlFor="title"
-          label="title"
-          labelClass="uppercase"
-          name="title"
-          type="textarea"
-          className="dark:text-black w-full p-2 rounded-xl my-2"
-          value={formData.title}
-          onChange={(event: any) => handleInputChange(event, "title")}
-          error={errors?.title}
+          <FormField
+            htmlFor="postImg"
+            label=""
+            labelClass="uppercase"
+            name="postImg"
+            type="hidden"
+            value={formData.postImg}
+            onChange={(event: any) => handleInputChange(event, "postImg")}
+          />
+          <Button type="submit">Save as a Draft</Button>
+        </form>
+        <ImageUploader
+          onChange={handleFileUpload}
+          postImg={formData.postImg || ""}
         />
-        <FormField
-          htmlFor="body"
-          label="Content"
-          labelClass="uppercase"
-          name="body"
-          type="textarea"
-          className="dark:text-black w-full p-2 rounded-xl my-2"
-          value={formData.body}
-          onChange={(event: any) => handleInputChange(event, "body")}
-          error={errors?.body}
-        />
-        <Button type="submit">Save as a Draft</Button>
-      </form>
-    </div>
+      </div>
+    </ContentContainer>
   );
 }

@@ -5,7 +5,7 @@ import { useActionData, useLoaderData } from "@remix-run/react";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import FormField from "~/components/shared/form-field";
-import { getUserId } from "~/utils/auth.server";
+import { getUser, getUserId } from "~/utils/auth.server";
 import { getProfile, updateProfile } from "~/utils/profile.server";
 import { validateText } from "~/utils/validators.server";
 
@@ -16,6 +16,8 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ params, request }) => {
   let userId = await getUserId(request);
   let profileId = params.profileId as string;
+  const user = await getUser(request);
+
   const role = await process.env.ADMIN;
   let profile = userId ? await getProfile(profileId) : null;
   if (!profile) {

@@ -1,15 +1,16 @@
 export interface LoginForm {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface RegisterForm {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface CreateOrEditPost {
-  title: string
-  body: string
-  userId: string
+  title: string;
+  body: string;
+  postImg: string;
+  userId: string;
 }
