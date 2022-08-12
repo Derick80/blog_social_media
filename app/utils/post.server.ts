@@ -22,27 +22,29 @@ export async function getPosts() {
 }
 
 export async function getPost({
-                                id,
-                                userId,
-                              }: Pick<Post, "id"> & { userId: User["id"] }) {
+  id,
+  userId,
+}: Pick<Post, "id"> & { userId: User["id"] }) {
   return prisma.post.findUnique({
-    where : { id : id },
-    include : { user : { select : { email : true } } },
+    where: { id: id },
+    include: { user: { select: { email: true } } },
   });
 }
 
 export async function createDraft({
-                                    title,
-                                    body,
-                                    userId,
-                                  }: Omit<CreateOrEditPost, "id" & "userId"> & { userId: User["id"] }) {
+  title,
+  body,
+  postImg,
+  userId,
+}: Omit<CreateOrEditPost, "id" & "userId"> & { userId: User["id"] }) {
   await prisma.post.create({
-    data : {
+    data: {
       title,
       body,
-      user : {
-        connect : {
-          id : userId,
+      postImg,
+      user: {
+        connect: {
+          id: userId,
         },
       },
     },
@@ -51,40 +53,41 @@ export async function createDraft({
 
 export async function getUserDrafts(userId: string) {
   const userDrafts = await prisma.post.findMany({
-    where : {
-      userId : userId,
-      published : false,
+    where: {
+      userId: userId,
+      published: false,
     },
-    orderBy : {
-      createdAt : "asc",
+    orderBy: {
+      createdAt: "asc",
     },
   });
   return { userDrafts };
 }
 
-export async function updatePost({ id, title, body }: Partial<Post>) {
+export async function updatePost({ id, title, body, postImg }: Partial<Post>) {
   await prisma.post.update({
-    where : { id : id },
-    data : {
+    where: { id: id },
+    data: {
       title,
       body,
-      published : true,
+      postImg,
+      published: true,
     },
   });
 }
 
 export async function unpublishPost(id: string) {
   await prisma.post.update({
-    where : { id : id },
-    data : { published : false },
-  })
+    where: { id: id },
+    data: { published: false },
+  });
 }
 
 export function deletePost({
-                             id,
-                             userId,
-                           }: Pick<Post, "userId" | "id"> & { userId: User["id"] }) {
+  id,
+  userId,
+}: Pick<Post, "userId" | "id"> & { userId: User["id"] }) {
   return prisma.post.deleteMany({
-    where : { id, userId },
+    where: { id, userId },
   });
 }
