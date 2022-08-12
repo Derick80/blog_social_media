@@ -731,6 +731,14 @@ video {
   flex-direction: column-reverse;
 }
 
+.content-center{
+  align-content: center;
+}
+
+.items-end{
+  align-items: flex-end;
+}
+
 .items-center{
   align-items: center;
 }
@@ -819,6 +827,10 @@ video {
 .bg-gray-600{
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
+}
+
+.fill-black{
+  fill: #000;
 }
 
 .object-contain{

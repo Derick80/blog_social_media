@@ -4,6 +4,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { format } from "date-fns";
 import React from "react";
+import Button from "~/components/shared/button";
 import ContentContainer from "~/components/shared/content-container";
 import Icon from "~/components/shared/icon";
 import Tooltip from "~/components/shared/tooltip";
@@ -79,6 +80,18 @@ export default function About() {
             </div>
           </div>
         </div>
+
+        <Button>
+          <a
+            href="https://github.com/Derick80"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Github
+            <span className="material-symbols-outlined">open_in_new</span>
+          </a>
+        </Button>
+
         <div className="flex flex-row-reverse justify-between p-2">
           {email === role ? (
             <Tooltip message="Edit Post">
