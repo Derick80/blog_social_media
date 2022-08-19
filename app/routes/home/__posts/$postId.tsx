@@ -9,7 +9,12 @@ import ContentContainer from "~/components/shared/content-container";
 import FormField from "~/components/shared/form-field";
 import Tooltip from "~/components/shared/tooltip";
 import { getUser, getUserId } from "~/utils/auth.server";
-import { getPost, unpublishPost, updatePost } from "~/utils/post.server";
+import {
+  deletePost,
+  getPost,
+  publishPost,
+  updatePost,
+} from "~/utils/post.server";
 import { validateText } from "~/utils/validators.server";
 
 interface IPost extends Post {
@@ -52,43 +57,61 @@ export const action: ActionFunction = async ({ request, params }) => {
   let title = formData.get("title");
   let body = formData.get("body");
   let postImg = formData.get("postImg");
-  if (
-    typeof id !== "string" ||
-    typeof title !== "string" ||
-    typeof body !== "string" ||
-    typeof userId !== "string" ||
-    typeof postImg !== "string"
-  ) {
-    return json({ error: "invalid form data" }, { status: 400 });
-  }
 
-  const errors = {
-    title: validateText(title as string),
+  const action = formData.get("_action");
+  switch (action) {
+    case "save":
+      if (
+        typeof id !== "string" ||
+        typeof title !== "string" ||
+        typeof body !== "string" ||
+        typeof userId !== "string" ||
+        typeof postImg !== "string"
+      ) {
+        return json({ error: "invalid form data" }, { status: 400 });
+      }
 
-    body: validateText(body as string),
-  };
+      const errors = {
+        title: validateText(title as string),
 
-  if (Object.values(errors).some(Boolean))
-    return json(
-      {
-        errors,
-        fields: {
-          title,
-          body,
-        },
-        form: action,
-      },
-      { status: 400 }
-    );
+        body: validateText(body as string),
+      };
 
-  {
-    if (published) {
-      await unpublishPost(id);
-    } else {
+      if (Object.values(errors).some(Boolean))
+        return json(
+          {
+            errors,
+            fields: {
+              title,
+              body,
+            },
+            form: action,
+          },
+          { status: 400 }
+        );
       await updatePost({ id, userId, title, body, postImg });
-    }
+      return redirect("/");
+    case "publish":
+      if (typeof id !== "string") {
+        return json({ error: "invalid form data publish" }, { status: 400 });
+      }
+      await publishPost(id);
+      return redirect("/");
+    case "unpublish":
+      if (typeof id !== "string") {
+        return json({ error: "invalid form data unpublish" }, { status: 400 });
+      }
+      await publishPost(id);
+      return redirect("/");
+    case "delete":
+      if (typeof id !== "string") {
+        return json({ error: "invalid form data delete" }, { status: 400 });
+      }
+      await deletePost(id);
+      return redirect("/");
+    default:
+      return json({ error: "invalid form data general" }, { status: 400 });
   }
-  return redirect("/");
 };
 export default function PostRoute() {
   const { data, user, isPublished } = useLoaderData();
@@ -146,15 +169,6 @@ export default function PostRoute() {
             error={errors?.id}
           />{" "}
           <FormField
-            htmlFor="published"
-            label=""
-            name="published"
-            type="hidden"
-            value={formData.published}
-            onChange={(event: any) => handleInputChange(event, "published")}
-            error={errors?.published}
-          />
-          <FormField
             htmlFor="title"
             label="title"
             labelClass="uppercase"
@@ -175,9 +189,6 @@ export default function PostRoute() {
               />
             </label>
           </p>
-          {actionData?.errors.name ? (
-            <p style={{ color: "red" }}>{actionData.errors.name}</p>
-          ) : null}
           <FormField
             htmlFor="postImg"
             label="Post Image"
@@ -193,9 +204,15 @@ export default function PostRoute() {
           {formData.published ? (
             <>
               <div className="max-w-full flex flex-row flex-end text-container">
-                {" "}
                 <Tooltip message="unpublish this post">
-                  <Button type="submit">UnPublish</Button>
+                  <Button type="submit" name="_action" value="unpublish">
+                    UnPublish
+                  </Button>
+                </Tooltip>
+                <Tooltip message="unpublish this post">
+                  <Button type="submit" name="_action" value="delete">
+                    Delete
+                  </Button>
                 </Tooltip>
                 <div className="max-w-full text-container">
                   <Tooltip message="Save and Publish">
@@ -207,8 +224,23 @@ export default function PostRoute() {
           ) : (
             <div className="max-w-full text-container">
               <Tooltip message="Save and Publish">
-                <Button type="submit">Save & Publish Post</Button>
+                <Button type="submit" name="_action" value="save">
+                  Save & Publish Post
+                </Button>
               </Tooltip>
+              <Tooltip message="unpublish this post">
+                <Button type="submit" name="_action" value="delete">
+                  Delete
+                </Button>
+              </Tooltip>
+              <div className="max-w-full text-container">
+                <Tooltip message="Save and Publish">
+                  <Button type="submit" name="_action" value="publish">
+                    {" "}
+                    Publish Post
+                  </Button>
+                </Tooltip>
+              </div>
             </div>
           )}
         </form>

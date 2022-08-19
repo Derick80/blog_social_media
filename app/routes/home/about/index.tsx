@@ -127,7 +127,7 @@ export default function About() {
         <div className="flex flex-row-reverse justify-between p-2">
           {email === role ? (
             <Tooltip message="Edit Post">
-              <Link to={id} className="text-red-600 underline">
+              <Link to={`/home/about/${id}`} className="text-red-600 underline">
                 <Icon icon="edit" />
               </Link>
             </Tooltip>

@@ -71,7 +71,6 @@ export async function updatePost({ id, title, body, postImg }: Partial<Post>) {
       title,
       body,
       postImg,
-      published: true,
     },
   });
 }
@@ -90,11 +89,12 @@ export async function unpublishPost(id: string) {
   });
 }
 
-export function deletePost({
-  id,
-  userId,
-}: Pick<Post, "userId" | "id"> & { userId: User["id"] }) {
-  return prisma.post.deleteMany({
-    where: { id, userId },
-  });
+export async function deletePost(id: string) {
+  try {
+    const post = prisma.post.delete({
+      where: { id: id },
+    });
+  } catch (error) {
+    throw new Error("Unable to delete post");
+  }
 }

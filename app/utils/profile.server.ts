@@ -24,18 +24,16 @@ export async function updateProfile({
   profilePicture,
 }: Omit<Profile, "createdAt" | "updatedAt">) {
   return await prisma.profile.update({
+    where: { id: id },
     data: {
-      where: { id: id },
-      data: {
-        firstName,
-        lastName,
-        bio,
-        birthDay,
-        currentLocation,
-        pronouns,
-        occupation,
-        profilePicture,
-      },
+      firstName,
+      lastName,
+      bio,
+      birthDay,
+      currentLocation,
+      pronouns,
+      occupation,
+      profilePicture,
     },
   });
 }

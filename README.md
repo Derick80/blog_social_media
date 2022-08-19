@@ -1,13 +1,23 @@
-# Welcome to Remix!
+# Welcome to My Personal Blog!
 
 - [Remix Docs](https://remix.run/docs)
+
+## S3-Image Upload
+
+- I used a combination of the newer remix docs and the video/github code
+
+    - https://github.com/sabinadams/kudos-remix-mongodb-prisma/tree/main/app
+    - https://github.com/remix-run/remix/tree/main/examples/file-and-s3-upload
 
 ## Development
 
 From your terminal:
 
 ```sh
-npm run dev
+$ npm install
+$ npm run dev
+```
+
 ```
 
 This starts your app in development mode, rebuilding assets on file changes.
@@ -30,7 +40,8 @@ Now you'll need to pick a host to deploy it to.
 
 ### DIY
 
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
+If you're familiar with deploying node applications, the built-in Remix app
+server is production-ready.
 
 Make sure to deploy the output of `remix build`
 
@@ -39,8 +50,10 @@ Make sure to deploy the output of `remix build`
 
 ### Using a Template
 
-When you ran `npx create-remix@latest` there were a few choices for hosting. You can run that again to create a new
-project, then copy over your `app/` folder to the new project that's pre-configured for your target server.
+When you ran `npx create-remix@latest` there were a few choices for hosting. You
+can run that again to create a new
+project, then copy over your `app/` folder to the new project that's
+pre-configured for your target server.
 
 ```sh
 cd ..
