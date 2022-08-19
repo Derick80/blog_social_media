@@ -1,6 +1,6 @@
-import type { Post, User } from "@prisma/client";
-import { prisma } from "./prisma.server";
-import type { CreateOrEditPost } from "./types.server";
+import type {Post, User} from '@prisma/client'
+import {prisma} from './prisma.server'
+import type {CreateOrEditPost} from './types.server'
 
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
@@ -65,35 +65,67 @@ export async function getUserDrafts(userId: string) {
 }
 
 export async function updatePost({ id, title, body, postImg }: Partial<Post>) {
-  await prisma.post.update({
-    where: { id: id },
-    data: {
-      title,
-      body,
-      postImg,
-    },
-  });
+  try{
+    const  updatePost = await prisma.post.update({
+      where: { id: id },
+      data: {
+        title,
+        body,
+        postImg,
+      },
+    });
+    return { updatePost };
+  } catch (error) {
+    throw new Error("Unable to save post draft");
+  }
 }
-
+export async function updateAndPublish({ id, title, body, postImg }: Partial<Post>) {
+  try{
+    const  updateAndPublish = await prisma.post.update({
+      where: { id: id },
+      data: {
+        title,
+        body,
+        postImg,
+        published: true,
+      },
+    });
+    return { updateAndPublish };
+  } catch (error) {
+    throw new Error("Unable to update AND Publish post");
+  }
+}
 export async function publishPost(id: string) {
-  await prisma.post.update({
-    where: { id: id },
-    data: { published: true },
-  });
+ try{
+   const publish =  await prisma.post.update({
+     where: { id: id },
+     data: { published: true },
+   });
+    return publish;
+    }catch(error){
+      throw new Error("error in publish");
+    }
+
 }
 
 export async function unpublishPost(id: string) {
-  await prisma.post.update({
-    where: { id: id },
-    data: { published: false },
-  });
+  try{
+   await prisma.post.update({
+      where: { id: id },
+      data: { published: false },
+    });
+    return true;
+  }catch (error){
+    throw new Error("error in unpublish");
+  }
 }
 
 export async function deletePost(id: string) {
   try {
-    const post = prisma.post.delete({
+   await prisma.post.delete({
       where: { id: id },
     });
+    return true
   } catch (error) {
     throw new Error("Unable to delete post");
   }

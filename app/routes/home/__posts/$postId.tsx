@@ -1,21 +1,15 @@
-import type { Post } from "@prisma/client";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { useActionData, useLoaderData } from "@remix-run/react";
-import React, { useState } from "react";
-import { ImageUploader } from "~/components/image-uploader";
-import Button from "~/components/shared/button";
-import ContentContainer from "~/components/shared/content-container";
-import FormField from "~/components/shared/form-field";
-import Tooltip from "~/components/shared/tooltip";
-import { getUser, getUserId } from "~/utils/auth.server";
-import {
-  deletePost,
-  getPost,
-  publishPost,
-  updatePost,
-} from "~/utils/post.server";
-import { validateText } from "~/utils/validators.server";
+import type {Post} from '@prisma/client'
+import type {ActionFunction, LoaderFunction} from '@remix-run/node'
+import {json, redirect} from '@remix-run/node'
+import {useActionData, useLoaderData} from '@remix-run/react'
+import React, {useState} from 'react'
+import {ImageUploader} from '~/components/image-uploader'
+import ContentContainer from '~/components/shared/content-container'
+import FormField from '~/components/shared/form-field'
+import Tooltip from '~/components/shared/tooltip'
+import {getUser, getUserId} from '~/utils/auth.server'
+import {deletePost, getPost, publishPost, unpublishPost, updateAndPublish, updatePost} from '~/utils/post.server'
+import {validateText} from '~/utils/validators.server'
 
 interface IPost extends Post {
   user: { email: string };
@@ -24,6 +18,7 @@ interface IPost extends Post {
 type LoaderData = {
   post: Post;
   isPublished: boolean;
+  postId: string;
 };
 export const loader: LoaderFunction = async ({ params, request }) => {
   let userId = await getUserId(request);
@@ -44,6 +39,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   let data: LoaderData = {
     post,
     isPublished,
+    postId,
   };
   return json({ data, user, isPublished });
 };
@@ -90,34 +86,47 @@ export const action: ActionFunction = async ({ request, params }) => {
           { status: 400 }
         );
       await updatePost({ id, userId, title, body, postImg });
-      return redirect("/");
+      return redirect(`/home/${id}`);
+    case "updateAndPublish":
+      if (
+          typeof id !== "string" ||
+          typeof title !== "string" ||
+          typeof body !== "string" ||
+          typeof userId !== "string" ||
+          typeof postImg !== "string"
+      ) {
+        return json({ error: "invalid form data" }, { status: 400 });
+      }
+      await updateAndPublish({ id, userId, title, body, postImg });
+      return redirect(`/home`);
     case "publish":
       if (typeof id !== "string") {
         return json({ error: "invalid form data publish" }, { status: 400 });
       }
-      await publishPost(id);
-      return redirect("/");
+      await  publishPost(id);
+        return redirect("/home")
     case "unpublish":
       if (typeof id !== "string") {
         return json({ error: "invalid form data unpublish" }, { status: 400 });
       }
-      await publishPost(id);
-      return redirect("/");
+      await  unpublishPost(id);
+        return redirect(`/home/${id}`)
     case "delete":
       if (typeof id !== "string") {
         return json({ error: "invalid form data delete" }, { status: 400 });
       }
       await deletePost(id);
-      return redirect("/");
+      return redirect("drafts");
     default:
-      return json({ error: "invalid form data general" }, { status: 400 });
+      throw new Error("Unexpected action");
   }
 };
 export default function PostRoute() {
   const { data, user, isPublished } = useLoaderData();
+  console.log(isPublished)
   const actionData = useActionData();
   const [errors, setErrors] = useState(actionData?.errors || {});
-  console.log(actionData);
+
   const [formData, setFormData] = useState({
     id: data.post.id,
     title: data.post.title,
@@ -125,6 +134,7 @@ export default function PostRoute() {
     published: data.post.published,
     postImg: data.post.postImg,
   });
+
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>,
     field: string
@@ -134,6 +144,7 @@ export default function PostRoute() {
       [field]: event.target.value,
     }));
   };
+
   const handleFileUpload = async (file: File) => {
     let inputFormData = new FormData();
     inputFormData.append("postImg", file);
@@ -157,7 +168,7 @@ export default function PostRoute() {
         <div className="text-base md:text-5xl font-extrabold">
           Edit, Publish, unPublish, or Delete Post
         </div>
-
+        {isPublished ? (<> You are editing a published Post</>) : (<> You are editing an unpublished Draft</>)}
         <form method="post" className="form-primary">
           <FormField
             htmlFor="id"
@@ -205,40 +216,45 @@ export default function PostRoute() {
             <>
               <div className="max-w-full flex flex-row flex-end text-container">
                 <Tooltip message="unpublish this post">
-                  <Button type="submit" name="_action" value="unpublish">
+                  <button type="submit" name="_action" value="unpublish" className='btn-primary'>
                     UnPublish
-                  </Button>
+                  </button>
                 </Tooltip>
-                <Tooltip message="unpublish this post">
-                  <Button type="submit" name="_action" value="delete">
+                <Tooltip message="delete this post">
+                  <button type="submit" name="_action" value="delete" className='btn-primary'>
                     Delete
-                  </Button>
+                  </button>
                 </Tooltip>
                 <div className="max-w-full text-container">
                   <Tooltip message="Save and Publish">
-                    <Button type="submit">Save & Publish Post</Button>
+                    <button type="submit" name='_action' value='save' className='btn-primary'>Save Post</button>
                   </Tooltip>
                 </div>
               </div>
             </>
           ) : (
-            <div className="max-w-full text-container">
-              <Tooltip message="Save and Publish">
-                <Button type="submit" name="_action" value="save">
-                  Save & Publish Post
-                </Button>
+              <div className="max-w-full flex flex-row flex-end text-container">
+                <Tooltip message="Save as a draft">
+                <button type="submit" name="_action" value="save" className='btn-primary'>
+                  Save Post Draft
+                </button>
               </Tooltip>
-              <Tooltip message="unpublish this post">
-                <Button type="submit" name="_action" value="delete">
+              <Tooltip message="Save and Publish">
+                <button type="submit" name="_action" value="updateAndPublish" className='btn-primary'>
+                  Save and Publish Post
+                </button>
+              </Tooltip>
+              <Tooltip message="Delete this post">
+                <button type="submit" name="_action" value="delete" className='btn-primary'>
                   Delete
-                </Button>
+                </button>
               </Tooltip>
               <div className="max-w-full text-container">
-                <Tooltip message="Save and Publish">
-                  <Button type="submit" name="_action" value="publish">
-                    {" "}
+                <Tooltip message="Publish">
+                  <button type="submit" name="_action" value="publish" className='btn-primary'>
+
                     Publish Post
-                  </Button>
+                  </button>
                 </Tooltip>
               </div>
             </div>

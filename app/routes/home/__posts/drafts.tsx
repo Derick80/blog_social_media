@@ -1,13 +1,11 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
-import React, { useState } from "react";
-import Button from "~/components/shared/button";
-import ContentContainer from "~/components/shared/content-container";
-import FormField from "~/components/shared/form-field";
-import Tooltip from "~/components/shared/tooltip";
-import { getUser, requireUserId } from "~/utils/auth.server";
-import { getUserDrafts, publishPost } from "~/utils/post.server";
+import type {ActionFunction, LoaderFunction} from '@remix-run/node'
+import {json, redirect} from '@remix-run/node'
+import {Link, useActionData, useLoaderData} from '@remix-run/react'
+import React, {useState} from 'react'
+import ContentContainer from '~/components/shared/content-container'
+import Tooltip from '~/components/shared/tooltip'
+import {getUser, requireUserId} from '~/utils/auth.server'
+import {getUserDrafts, publishPost} from '~/utils/post.server'
 
 type LoaderData = {
   userDrafts: Array<{
@@ -42,13 +40,17 @@ export const action: ActionFunction = async ({ request, params }) => {
       if (typeof id !== "string") {
         return json({ error: "invalid form data publish" }, { status: 400 });
       }
-      await publishPost(id);
-      return redirect("/");
+      await  publishPost(id);
+      return redirect("/home")
+    }
+    default: {
+      throw new Error("Unexpected action");
     }
   }
 };
 export default function Posts() {
   const { data } = useLoaderData();
+  const actionData = useActionData();
 
   const [formData, setFormData] = useState({
     id: data.id,
@@ -83,21 +85,7 @@ export default function Posts() {
               className="object-contain w-1/2 rounded"
             />
             <div className="flex flex-row p-2 my-3"> {post.body}</div>
-            <form method="post" className="form-primary">
-              <FormField
-                htmlFor="id"
-                label=""
-                name="id"
-                type="hidden"
-                onChange={(event: any) => handleInputChange(event, "id")}
-                value={formData.id}
-              />
-              <Tooltip message="Pulish Post">
-                <Button type="submit" name="_action" value="publish">
-                  Publish
-                </Button>
-              </Tooltip>
-            </form>
+
           </div>
 
           <div className="flex flex-row justify-between p-2">
