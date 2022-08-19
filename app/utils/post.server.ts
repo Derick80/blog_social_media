@@ -8,11 +8,13 @@ export async function getPosts() {
       published: true,
     },
     include: {
+      comments: true,
       user: {
         select: {
           email: true,
         },
       },
+
     },
     orderBy: {
       createdAt: "asc",
