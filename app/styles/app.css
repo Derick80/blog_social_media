@@ -948,6 +948,10 @@ video {
   text-transform: uppercase;
 }
 
+.normal-case{
+  text-transform: none;
+}
+
 .leading-none{
   line-height: 1;
 }
@@ -1086,6 +1090,10 @@ video {
 
   .md\:flex{
     display: flex;
+  }
+
+  .md\:w-1\/2{
+    width: 50%;
   }
 
   .md\:grid-cols-12{

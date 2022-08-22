@@ -1,15 +1,15 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { useActionData, useLoaderData } from "@remix-run/react";
-import React, { useEffect, useRef, useState } from "react";
-import { ImageUploader } from "~/components/image-uploader";
-import Button from "~/components/shared/button";
-import ContentContainer from "~/components/shared/content-container";
-import FormField from "~/components/shared/form-field";
+import type {ActionFunction, LoaderFunction} from '@remix-run/node'
+import {json, redirect} from '@remix-run/node'
+import {useActionData, useLoaderData} from '@remix-run/react'
+import React, {useEffect, useRef, useState} from 'react'
+import {ImageUploader} from '~/components/image-uploader'
+import Button from '~/components/shared/button'
+import ContentContainer from '~/components/shared/content-container'
+import FormField from '~/components/shared/form-field'
 
-import { getUser, getUserId, requireUserId } from "~/utils/auth.server";
-import { createDraft } from "~/utils/post.server";
-import { validateText } from "~/utils/validators.server";
+import {getUser, getUserId, requireUserId} from '~/utils/auth.server'
+import {createDraft} from '~/utils/post.server'
+import {validateText} from '~/utils/validators.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -126,7 +126,7 @@ export default function NewPostRoute() {
   };
   return (
     <ContentContainer>
-      <div className="w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4">
+      <div className="w-full md:w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4">
         <div className="text-base md:text-5xl font-extrabold">
           Write a New Post
         </div>

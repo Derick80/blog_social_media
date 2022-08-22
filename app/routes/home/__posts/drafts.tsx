@@ -71,7 +71,7 @@ export default function Posts() {
       {data.userDrafts.map((post: any) => (
         <div
           key={post.id}
-          className="w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 md:mt-4 md:mb-4"
+          className="w-full md:w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 md:mt-4 md:mb-4"
         >
           <div className="flex flex-row">
             <h1 className="text-2xl my-6 border-b-2 text-center md:text-3xl">
