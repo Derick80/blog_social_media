@@ -1,9 +1,9 @@
-import { createCookieSessionStorage, json, redirect } from "@remix-run/node";
-import bcrypt from "bcryptjs";
+import {createCookieSessionStorage, json, redirect} from '@remix-run/node'
+import bcrypt from 'bcryptjs'
 
-import { prisma } from "./prisma.server";
-import type { LoginForm, RegisterForm } from "./types.server";
-import { createUser } from "./user.server";
+import {prisma} from './prisma.server'
+import type {LoginForm, RegisterForm} from './types.server'
+import {createUser} from './user.server'
 
 const secret = process.env.SESSION_SECRET;
 if (!secret) {
@@ -116,7 +116,8 @@ export async function getUser(request: Request) {
       },
     });
     return user;
-  } catch {
+  }
+  catch {
     throw logout(request);
   }
 }
@@ -129,47 +130,3 @@ export async function logout(request: Request) {
     },
   });
 }
-
-const resetPassword = async (email: string) => {
-  const user = await prisma.user.findFirst({
-    where: {
-      email,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (user) {
-    await sendPasswordResetEmail(auth.client, email, {
-      url: `${process.env.APP_URL}/sign-in?email=${email}`,
-    });
-  }
-};
-
-const createNewPassword = async (
-  email: string,
-  password: string,
-  oobCode: string
-) => {
-  const requestedEmail = await verifyPasswordResetCode(auth.client, oobCode);
-  const passwordHash = await bcrypt.hash(user.password, 10);
-
-  if (email === requestedEmail) {
-    await prisma.user.update({
-      where: {
-        email,
-      },
-      data: {
-        password: {
-          update: {
-            password: passwordHash,
-          },
-        },
-      },
-    });
-    await confirmPasswordReset(auth.client, oobCode, password);
-    return true;
-  }
-  return false;
-};

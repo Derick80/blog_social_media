@@ -1,8 +1,8 @@
-import type { ActionFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { publishPost } from "~/utils/post.server";
+import type {ActionFunction} from '@remix-run/node'
+import {json} from '@remix-run/node'
+import {publishPost} from '~/utils/post.server'
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request   }) => {
   // 2
   const postId = await publishPost(request);
 

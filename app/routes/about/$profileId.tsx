@@ -1,15 +1,17 @@
-import type { Profile, Pronouns } from "@prisma/client";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
-import { format } from "date-fns";
-import React, { useState } from "react";
-import FormField from "~/components/shared/form-field";
-import { SelectBox } from "~/components/shared/select-box";
-import { getUser, getUserId } from "~/utils/auth.server";
-import { pronouns } from "~/utils/constants";
-import { getProfile, updateProfile } from "~/utils/profile.server";
-import { validateName, validateText } from "~/utils/validators.server";
+import type {Profile, Pronouns} from '@prisma/client'
+import type {ActionFunction, LoaderFunction} from '@remix-run/node'
+import {json, redirect} from '@remix-run/node'
+import {useActionData, useLoaderData} from '@remix-run/react'
+import {format} from 'date-fns'
+import React, {useState} from 'react'
+import FormField from '~/components/shared/form-field'
+import {SelectBox} from '~/components/shared/select-box'
+import {getUser, getUserId} from '~/utils/auth.server'
+import {pronouns} from '~/utils/constants'
+import {getProfile, updateProfile} from '~/utils/profile.server'
+import {validateDate, validateEmail, validateName, validateText} from '~/utils/validators.server'
+import Tooltip from '~/components/shared/tooltip'
+import {ImageUploader} from '~/components/image-uploader'
 
 type LoaderData = {
   profile: Profile;
@@ -53,14 +55,16 @@ export const action: ActionFunction = async ({ request, params }) => {
   let lastName = formData.get("lastName");
   let bio = formData.get("bio");
   // @ts-ignore
-  let birthDay = new Date(formData.get("birthDay"));
+  let birthDay = new Date(formData.get("birthDay"))
   let currentLocation = formData.get("currentLocation");
   let pronouns = formData.get("pronouns");
   let occupation = formData.get("occupation");
-  let profilePicture = formData.get("profilePicture");
-
+  let postImg = formData.get("postImg");
+  let email = formData.get("email");
+  console.log("birthday", birthDay, id, firstName, lastName, bio, currentLocation, pronouns, occupation, postImg, email);
   if (
     typeof id !== "string" ||
+
     typeof firstName !== "string" ||
     typeof lastName !== "string" ||
     typeof bio !== "string" ||
@@ -68,7 +72,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     typeof occupation !== "string" ||
     typeof pronouns !== "string" ||
     typeof userId !== "string" ||
-    typeof profilePicture !== "string"
+    typeof email !== "string" ||
+    typeof postImg !== "string"
+
   ) {
     return json({ error: "invalid form data" }, { status: 400 });
   }
@@ -78,8 +84,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     bio: validateText(bio as string),
     currentLocation: validateText(currentLocation as string),
     occupation: validateText(occupation as string),
-    profilePicture: validateText(profilePicture as string),
     pronouns: validateName(pronouns),
+    email: validateEmail(email as string),
+    birthDay: validateDate(birthDay as Date),
   };
 
   if (Object.values(errors).some(Boolean))
@@ -93,24 +100,29 @@ export const action: ActionFunction = async ({ request, params }) => {
           currentLocation,
           occupation,
           pronouns,
-          profilePicture,
+         email,
+            birthDay,
         },
         form: action,
       },
       { status: 400 }
     );
 
-  await updateProfile({
-    id: profileId,
+  await updateProfile(
+      {
+    userId: userId,
+        id: profileId,
     firstName: firstName,
     lastName: lastName,
     bio: bio,
-    birthDay: birthDay,
+    birthDay,
     currentLocation: currentLocation,
     occupation: occupation,
     pronouns: pronouns as Pronouns,
-    profilePicture: profilePicture,
+    profilePicture: postImg,
+    email: email
   });
+  return redirect('/about')
 };
 
 export default function ProfileRoute() {
@@ -126,7 +138,8 @@ export default function ProfileRoute() {
     currentLocation: data.profile.currentLocation,
     pronouns: actionData?.fields?.pronouns || data.profile.pronouns || "THEY",
     occupation: data.profile.occupation,
-    profilePicture: data.profile?.profilePicture || "",
+    postImg: data.profile.profilePicture,
+    email: data.profile.email || "",
   });
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>,
@@ -137,15 +150,34 @@ export default function ProfileRoute() {
       [field]: event.target.value,
     }));
   };
+
+  const handleFileUpload = async (file: File) => {
+    let inputFormData = new FormData();
+    inputFormData.append("postImg", file);
+    const response = await fetch("/image", {
+      method: "POST",
+      body: inputFormData,
+    });
+
+    const { imageUrl } = await response.json();
+    console.log("imageUrl", imageUrl);
+
+    setFormData({
+      ...formData,
+      postImg: imageUrl,
+    });
+  };
+
   return (
     <main className="w-full col-span-1  md:col-start-2 md:col-end-10 flex mx-auto max-w-7xl text-center justify-between">
       <div className="w-full flex flex-col items-center">
-        <Form method="post" className="text-xl font-semibold">
-          <fieldset>
+        <form method="post" className="form-primary">
             <FormField
               htmlFor="id"
               label=""
               name="id"
+              className="form-field-primary"
+
               type="hidden"
               value={formData.id}
               onChange={(event: any) => handleInputChange(event, "id")}
@@ -155,18 +187,22 @@ export default function ProfileRoute() {
               htmlFor="firstName"
               label="FirstName"
               name="firstName"
+
               type="textarea"
-              className="w-full"
+              className="form-field-primary"
+
               value={formData.firstName}
               onChange={(event: any) => handleInputChange(event, "firstName")}
               error={errors?.firstName}
             />
             <FormField
+
               htmlFor="lastName"
               label="LastName"
               name="lastName"
               type="textarea"
-              className="w-full"
+              className="form-field-primary"
+
               value={formData.lastName}
               onChange={(event: any) => handleInputChange(event, "lastName")}
               error={errors?.lastName}
@@ -176,7 +212,7 @@ export default function ProfileRoute() {
               label="Bio"
               name="bio"
               type="textarea"
-              className="w-full"
+              className="form-field-primary"
               value={formData.bio}
               onChange={(event: any) => handleInputChange(event, "bio")}
               error={errors?.bio}
@@ -186,8 +222,9 @@ export default function ProfileRoute() {
               label="Birthday"
               name="birthDay"
               type="date"
-              className="w-full"
-              value={format(new Date(formData.birthDay), "MMMM do")}
+              className="form-field-primary"
+
+              value={format(new Date(formData.birthDay), "yyyy-MM-dd")}
               onChange={(event: any) => handleInputChange(event, "birthDay")}
               error={errors?.birthDay}
             />
@@ -196,7 +233,7 @@ export default function ProfileRoute() {
               label="Curent Location"
               name="currentLocation"
               type="textarea"
-              className="w-full"
+              className="form-field-primary"
               value={formData.currentLocation}
               onChange={(event: any) =>
                 handleInputChange(event, "currentLocation")
@@ -206,6 +243,8 @@ export default function ProfileRoute() {
             <SelectBox
               options={pronouns}
               name="pronouns"
+              className="form-field-primary"
+
               label="Pronouns"
               id="pronouns"
               value={formData.pronouns}
@@ -217,17 +256,43 @@ export default function ProfileRoute() {
               label="Occupation"
               name="occupation"
               type="textarea"
-              className="w-full"
+              className="form-field-primary"
+
               value={formData.occupation}
               onChange={(event: any) => handleInputChange(event, "occupation")}
               error={errors?.occupation}
             />
+            <FormField
+              htmlFor='email'
+                label='Email'
+                name='email'
+                type='email'
+                className='form-field-primary'
+                value={formData.email}
+                onChange={(event: any) => handleInputChange(event, 'email')}
+                error={errors?.email}
+              />
+            <FormField
+                htmlFor="postImg"
+                label="Post Image"
+                labelClass="uppercase"
+                name="postImg"
+                value={formData.postImg}
+                onChange={(event: any) => handleInputChange(event, "postImg")}
+            />
+
+            <ImageUploader
+                onChange={handleFileUpload}
+                postImg={formData.postImg || ""}
+            />
 
             <div className="max-w-full text-container">
-              <button type="submit">Save</button>
+<Tooltip message='Update your profile'>
+  <button type="submit" className='btn-primary'>Save</button>
+
+</Tooltip>
             </div>
-          </fieldset>
-        </Form>
+        </form>
       </div>
     </main>
   );

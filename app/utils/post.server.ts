@@ -8,7 +8,6 @@ export async function getPosts() {
       published: true,
     },
     include: {
-      comments: true,
       user: {
         select: {
           email: true,
@@ -58,6 +57,11 @@ export async function getUserDrafts(userId: string) {
     where: {
       userId: userId,
       published: false,
+    },
+    include: {
+        user: {
+            select: {email: true}
+        }
     },
     orderBy: {
       createdAt: "asc",

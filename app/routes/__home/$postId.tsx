@@ -86,7 +86,7 @@ export const action: ActionFunction = async ({ request, params }) => {
           { status: 400 }
         );
       await updatePost({ id, userId, title, body, postImg });
-      return redirect(`/home/${id}`);
+      return redirect(`/${id}`);
     case "updateAndPublish":
       if (
           typeof id !== "string" ||
@@ -98,19 +98,19 @@ export const action: ActionFunction = async ({ request, params }) => {
         return json({ error: "invalid form data" }, { status: 400 });
       }
       await updateAndPublish({ id, userId, title, body, postImg });
-      return redirect(`/home`);
+      return redirect(`/`);
     case "publish":
       if (typeof id !== "string") {
         return json({ error: "invalid form data publish" }, { status: 400 });
       }
       await  publishPost(id);
-        return redirect("/home")
+        return redirect("/")
     case "unpublish":
       if (typeof id !== "string") {
         return json({ error: "invalid form data unpublish" }, { status: 400 });
       }
       await  unpublishPost(id);
-        return redirect(`/home/${id}`)
+        return redirect('/drafts')
     case "delete":
       if (typeof id !== "string") {
         return json({ error: "invalid form data delete" }, { status: 400 });
@@ -164,11 +164,11 @@ export default function PostRoute() {
 
   return (
     <ContentContainer>
-      <div className="w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 md:mt-4 mb-4">
+      <div className="w-full md:w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 md:mt-4 mb-4">
         <div className="text-base md:text-5xl font-extrabold">
-          Edit, Publish, unPublish, or Delete Post
+          Make changes to your post
         </div>
-        {isPublished ? (<> You are editing a published Post</>) : (<> You are editing an unpublished Draft</>)}
+        {isPublished ? (<> You are editing a published post</>) : (<> You are editing an unpublished Draft</>)}
         <form method="post" className="form-primary">
           <FormField
             htmlFor="id"
@@ -251,9 +251,10 @@ export default function PostRoute() {
               </Tooltip>
               <div className="max-w-full text-container">
                 <Tooltip message="Publish">
-                  <button type="submit" name="_action" value="publish" className='btn-primary'>
-
-                    Publish Post
+                  <button type="submit" name="_action" value="publish" className="">
+<span className="material-symbols-outlined">
+save
+</span>
                   </button>
                 </Tooltip>
               </div>

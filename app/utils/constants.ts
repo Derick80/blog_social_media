@@ -3,3 +3,9 @@ export const pronouns = [
   { name: "He/His", value: "HE" },
   { name: "She/Her", value: "SHE" },
 ];
+
+export const emojiMap = {
+  THUMBSUP: "👍",
+  THUMBSDOWN: "👎",
+  MAYBE: "🤷",
+};

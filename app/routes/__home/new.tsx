@@ -125,6 +125,7 @@ export default function NewPostRoute() {
     });
   };
   return (
+
     <ContentContainer>
       <div className="w-full md:w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4">
         <div className="text-base md:text-5xl font-extrabold">

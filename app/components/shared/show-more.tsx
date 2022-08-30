@@ -1,5 +1,4 @@
-import { useState } from "react";
-import Button from "~/components/shared/button";
+import {useState} from 'react'
 
 function ShowButton({ ...props }) {
   let content = props.content;
@@ -20,13 +19,13 @@ function ShowButton({ ...props }) {
     return (
       <>
         {more ? content : `${content?.substring(0, 100)}`}
-        <Button className="btn-icon-filled" role="switch" onClick={onClick}>
+        <button className="btn-icon-filled" role="switch" onClick={onClick}>
           <span className="material-icons">
             {" "}
             {more ? "expand_less" : "expand_more"}
           </span>
           {more ? "less..." : "more..."}
-        </Button>
+        </button>
       </>
     );
   }
