@@ -131,6 +131,9 @@ export default function NewPostRoute() {
         <div className="text-base md:text-5xl font-extrabold">
           Write a New Post
         </div>
+        <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full mb-2">
+          {formError}
+        </div>
         <form
           method="post"
           onSubmit={(e) =>

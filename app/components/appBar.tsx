@@ -31,7 +31,7 @@ export default function AppBar({ user, isOwner }: AppBarProps) {
 
                 <Tooltip message="Write a new Blog Post">
                   <NavLink
-                      to="new"
+                      to="/new"
                       className={({ isActive }) =>
                           ` ${
                               isActive

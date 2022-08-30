@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from 'react'
 
 export interface FormFieldProps {
   htmlFor: string;
@@ -28,7 +28,9 @@ export default function FormField({
   labelClass,
 }: FormFieldProps) {
   const [errorText, setErrorText] = useState(error);
-
+    useEffect(() => {
+        setErrorText(error)
+    }, [error])
   return (
     <>
       <label htmlFor={htmlFor} className={labelClass}>
