@@ -14,3 +14,7 @@ export interface CreateOrEditPost {
   postImg: string;
   userId: string;
 }
+
+export interface CategoryForm {
+    name: string;
+}

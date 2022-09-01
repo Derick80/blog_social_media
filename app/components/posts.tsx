@@ -1,6 +1,7 @@
 import Tooltip from '~/components/shared/tooltip'
 import {Link} from '@remix-run/react'
 import Icon from '~/components/shared/icon'
+import CategoryContainer from '~/components/shared/category-container'
 
 type PostsProps = {
     posts: {
@@ -9,6 +10,7 @@ type PostsProps = {
         body: string;
         email: string;
         postImg: string;
+        categories: Array<{ id: string; name: string }>;
     }
     isOwner: boolean;
 
@@ -34,7 +36,9 @@ export default function Posts({posts, isOwner}: PostsProps) {
                 />
                 <div className="text-base md:text-2xl">{posts.body}</div>
             </div>
-
+<div>
+    <CategoryContainer categories={     posts.categories} />
+</div>
             {isOwner ? (
   <Tooltip message="Edit Post">
                         <Link to={`/${posts.id}`} className="text-green-600 dark:text-white">
@@ -43,6 +47,7 @@ export default function Posts({posts, isOwner}: PostsProps) {
                     </Tooltip>
 
             ) : null               }
+            
         </div>
     )
 }
