@@ -8,17 +8,18 @@ export async function getPosts() {
       published: true,
     },
     include: {
+      categories: true,
       user: {
         select: {
           email: true,
         },
       },
-
     },
     orderBy: {
       createdAt: "asc",
     },
   });
+  console.log("ts userPosts", { userPosts });
   return { userPosts };
 }
 

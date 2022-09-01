@@ -14,6 +14,8 @@ type LoaderData = {
         body: string;
         email: string;
         postImg: string;
+        published: boolean;
+        categories: Array<{ id: string; name: string }>;
     }>;
     role: string;
     email: string;

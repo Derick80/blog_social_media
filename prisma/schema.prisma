@@ -37,10 +37,16 @@ model Post {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
 
+  categories Category[]
 
 }
+// https://github.com/prisma/docs/blob/main/content/200-concepts/100-components/02-prisma-client/030-crud.mdx
+model Category {
+  id        String   @id @unique @default(uuid())
+  name      String @unique
+   posts     Post[]
 
-
+}
 model Profile {
   id              String    @id @unique @default(uuid())
   firstName       String
@@ -62,4 +68,8 @@ enum Pronouns {
   THEY
   HE
   SHE
+}
+enum Role {
+  USER
+  ADMIN
 }

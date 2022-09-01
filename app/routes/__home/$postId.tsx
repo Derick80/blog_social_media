@@ -1,5 +1,5 @@
 import type {Post} from '@prisma/client'
-import type {ActionFunction, LoaderFunction, MetaFunction} from '@remix-run/node'
+import type {ActionFunction, LoaderFunction} from '@remix-run/node'
 import {json, redirect} from '@remix-run/node'
 import {useActionData, useLoaderData} from '@remix-run/react'
 import React, {useState} from 'react'
@@ -11,23 +11,6 @@ import {getUser, getUserId} from '~/utils/auth.server'
 import {deletePost, getPost, publishPost, unpublishPost, updateAndPublish, updatePost} from '~/utils/post.server'
 import {validateText} from '~/utils/validators.server'
 
-
-export const meta: MetaFunction = ({
-                                     data,
-                                   }:{
-    data: LoaderData | undefined
-})=>{
-  if(!data){
-    return{
-        title: 'Post not found',
-        description: 'Post not found',
-    }
-  }
-    return{
-    title: `"${data.post.title}" `,
-    description: data.post.body,
-    }
-}
 
 type LoaderData = {
   post: Post;
