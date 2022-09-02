@@ -64,8 +64,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   let title = formData.get("title");
   let body = formData.get("body");
   let postImg = formData.get("postImg");
+  const categories = formData.getAll('categories') as []
 
   const action = formData.get("_action");
+  const converted = categories.map((category)=>{return {name:category}})
+
   switch (action) {
     case "save":
       if (
@@ -96,7 +99,8 @@ export const action: ActionFunction = async ({ request, params }) => {
           },
           { status: 400 }
         );
-      await updatePost({ id, userId, title, body, postImg });
+
+      await updatePost({ id, userId, title, body, postImg,categories });
       return redirect(`/${id}`);
     case "updateAndPublish":
       if (
@@ -108,7 +112,8 @@ export const action: ActionFunction = async ({ request, params }) => {
       ) {
         return json({ error: "invalid form data" }, { status: 400 });
       }
-      await updateAndPublish({ id, userId, title, body, postImg });
+
+      await updateAndPublish({ id, userId, title, body, postImg ,  categories: converted,});
       return redirect(`/`);
     case "publish":
       if (typeof id !== "string") {
@@ -144,6 +149,8 @@ export default function PostRoute() {
     body: data.post.body,
     published: data.post.published,
     postImg: data.post.postImg,
+    categories: actionData?.fields?.categories || [],
+
   });
 
   const handleInputChange = (
@@ -218,7 +225,20 @@ export default function PostRoute() {
             name="postImg"
             value={formData.postImg}
             onChange={(event: any) => handleInputChange(event, "postImg")}
-          />
+          />  <div>
+          <select className="text-black dark:text-white dark:bg-gray-400"                name="categories"
+                  multiple={true}
+                  onChange={(event:any)=>handleInputChange(event,"categories")}
+
+          >
+            {categories.map((option) => (
+                <option key={option.id} value={option.name}>
+                  {option.name}
+                </option>
+            ))}
+
+          </select>
+        </div>
           <ImageUploader
             onChange={handleFileUpload}
             postImg={formData.postImg || ""}

@@ -54,7 +54,7 @@ export default function Drafts() {
       <div className="text-base md:text-5xl font-extrabold">Drafts</div>
 
       {userDrafts.map((posts: typeof userDrafts) => (
-          <Posts key={posts.id} posts={posts} isOwner={isOwner}  isPost={true} />
+          <Posts key={posts.id} posts={posts} isOwner={isOwner}  isPost={false} />
       ))}
     </ContentContainer>
   );
