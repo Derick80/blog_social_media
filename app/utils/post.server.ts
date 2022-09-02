@@ -1,26 +1,26 @@
-import type {Post, User} from '@prisma/client'
-import {prisma} from './prisma.server'
-import type {CreateOrEditPost} from './types.server'
-import {UpdatePost} from './types.server'
+import type { Post, User } from '@prisma/client'
+import { prisma } from './prisma.server'
+import type { CreateOrEditPost } from './types.server'
+import { UpdatePost } from './types.server'
 
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
     where: {
-      published: true,
+      published: true
     },
     include: {
       categories: true,
       user: {
         select: {
-          email: true,
-        },
-      },
+          email: true
+        }
+      }
     },
     orderBy: {
-      createdAt: "asc",
-    },
-  });
-  return { userPosts };
+      createdAt: 'asc'
+    }
+  })
+  return { userPosts }
 }
 
 export async function getPost({
@@ -55,7 +55,7 @@ export async function createDraft({
         categories: {
             connectOrCreate: categories.map((category) => ({  where: { name: category.name }, create: { name: category.name } })),      },  },  });
 }
-    
+
 
 export async function getUserDrafts(userId: string) {
   const userDrafts = await prisma.post.findMany({
@@ -76,7 +76,7 @@ export async function getUserDrafts(userId: string) {
   return  userDrafts ;
 }
 
-export async function updatePost({ id, title, body, postImg }: Partial<Post>) {
+export async function updatePost({ id, title, body, postImg , categories}:CreateOrEditPost) {
   try{
     const  updatePost = await prisma.post.update({
       where: { id: id },
@@ -91,7 +91,7 @@ export async function updatePost({ id, title, body, postImg }: Partial<Post>) {
     throw new Error("Unable to save post draft");
   }
 }
-export async function updateAndPublish({ id, title, body, postImg }: Partial<Post>) {
+export async function updateAndPublish({ id, title, body, postImg }: CreateOrEditPost) {
   try{
     const  updateAndPublish = await prisma.post.update({
       where: { id: id },

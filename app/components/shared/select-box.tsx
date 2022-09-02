@@ -10,6 +10,7 @@ interface props {
   label?: string;
   value?: any;
   onChange?: (...args: any) => any;
+  multiple?: boolean;
 }
 
 export function SelectBox({
@@ -21,6 +22,7 @@ export function SelectBox({
   id,
   value,
   label,
+    multiple,
 }: props) {
   return (
     <div>
@@ -33,7 +35,8 @@ export function SelectBox({
           id={id}
           name={name}
           onChange={onChange}
-          value={value || ""}
+          value={value }
+          multiple={multiple}
         >
           {options.map((option) => (
             <option key={option.name} value={option.value}>

@@ -1,18 +1,18 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 
 export interface FormFieldProps {
-  htmlFor: string;
-  label: string;
-  type?: string;
-  value?: any;
-  name?: string;
-  onChange?: (...args: any) => any;
-  onClick?: (...args: any) => any;
-  checked?: boolean;
-  error?: string;
-  className?: string;
-  labelClass?: string;
-  defaultValue?: string | boolean;
+  htmlFor: string
+  label: string
+  type?: string
+  value?: any
+  name?: string
+  onChange?: (...args: any) => any
+  onClick?: (...args: any) => any
+  checked?: boolean
+  error?: string
+  className?: string
+  labelClass?: string
+  defaultValue?: string | boolean
 }
 
 export default function FormField({
@@ -25,12 +25,12 @@ export default function FormField({
   onClick = () => {},
   onChange = () => {},
   error = "",
-  labelClass,
+  labelClass = "block text-sm font-semibold",
 }: FormFieldProps) {
   const [errorText, setErrorText] = useState(error);
-    useEffect(() => {
-        setErrorText(error)
-    }, [error])
+  useEffect(() => {
+    setErrorText(error);
+  }, [error]);
   return (
     <>
       <label htmlFor={htmlFor} className={labelClass}>

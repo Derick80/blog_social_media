@@ -1,16 +1,22 @@
-import type {ActionFunction, LoaderFunction} from '@remix-run/node'
-import {json, redirect} from '@remix-run/node'
-import {useActionData, useLoaderData} from '@remix-run/react'
-import React, {useState} from 'react'
-import {ImageUploader} from '~/components/image-uploader'
-import ContentContainer from '~/components/shared/content-container'
-import FormField from '~/components/shared/form-field'
-import Tooltip from '~/components/shared/tooltip'
-import {getUser, getUserId} from '~/utils/auth.server'
-import {deletePost, getPost, publishPost, unpublishPost, updateAndPublish, updatePost} from '~/utils/post.server'
-import {validateText} from '~/utils/validators.server'
-import CategoryContainer from '~/components/shared/category-container'
-
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { useActionData, useLoaderData } from "@remix-run/react";
+import React, { useState } from "react";
+import { ImageUploader } from "~/components/image-uploader";
+import ContentContainer from "~/components/shared/content-container";
+import FormField from "~/components/shared/form-field";
+import Tooltip from "~/components/shared/tooltip";
+import { getUser, getUserId } from "~/utils/auth.server";
+import {
+  deletePost,
+  getPost,
+  publishPost,
+  unpublishPost,
+  updateAndPublish,
+  updatePost,
+} from "~/utils/post.server";
+import { validateText } from "~/utils/validators.server";
+import CategoryContainer from "~/components/shared/category-container";
 
 type LoaderData = {
   post: {
@@ -19,11 +25,11 @@ type LoaderData = {
     body: string;
     postImg: string;
     published: boolean;
-    user:{
-        email: string;
-    }
+    user: {
+      email: string;
+    };
     categories: Array<{ id: string; name: string }>;
-  }
+  };
   categories: Array<{ id: string; name: string }>;
 
   isPublished: boolean;
@@ -52,7 +58,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     postId,
     categories,
   };
-  return json({ data, user, isPublished,categories });
+  return json({ data, user, isPublished, categories });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -64,10 +70,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   let title = formData.get("title");
   let body = formData.get("body");
   let postImg = formData.get("postImg");
-  const categories = formData.getAll('categories') as []
+  const categories = formData.getAll("categories") as [];
 
   const action = formData.get("_action");
-  const converted = categories.map((category)=>{return {name:category}})
+  const converted = categories.map((category) => {
+    return { name: category };
+  });
 
   switch (action) {
     case "save":
@@ -100,33 +108,40 @@ export const action: ActionFunction = async ({ request, params }) => {
           { status: 400 }
         );
 
-      await updatePost({ id, userId, title, body, postImg,categories });
+      await updatePost({ id, userId, title, body, postImg, categories });
       return redirect(`/${id}`);
     case "updateAndPublish":
       if (
-          typeof id !== "string" ||
-          typeof title !== "string" ||
-          typeof body !== "string" ||
-          typeof userId !== "string" ||
-          typeof postImg !== "string"
+        typeof id !== "string" ||
+        typeof title !== "string" ||
+        typeof body !== "string" ||
+        typeof userId !== "string" ||
+        typeof postImg !== "string"
       ) {
         return json({ error: "invalid form data" }, { status: 400 });
       }
 
-      await updateAndPublish({ id, userId, title, body, postImg ,  categories: converted,});
+      await updateAndPublish({
+        id,
+        userId,
+        title,
+        body,
+        postImg,
+        categories: converted,
+      });
       return redirect(`/`);
     case "publish":
       if (typeof id !== "string") {
         return json({ error: "invalid form data publish" }, { status: 400 });
       }
-      await  publishPost(id);
-        return redirect("/")
+      await publishPost(id);
+      return redirect("/");
     case "unpublish":
       if (typeof id !== "string") {
         return json({ error: "invalid form data unpublish" }, { status: 400 });
       }
-      await  unpublishPost(id);
-        return redirect('/drafts')
+      await unpublishPost(id);
+      return redirect("/drafts");
     case "delete":
       if (typeof id !== "string") {
         return json({ error: "invalid form data delete" }, { status: 400 });
@@ -138,10 +153,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 };
 export default function PostRoute() {
-  const { data, user, isPublished ,categories} = useLoaderData();
-  console.log(isPublished)
+  const { data, isPublished, categories } = useLoaderData();
+  console.log(isPublished);
   const actionData = useActionData();
-  const [errors, setErrors] = useState(actionData?.errors || {});
+  const [errors] = useState(actionData?.errors || {});
 
   const [formData, setFormData] = useState({
     id: data.post.id,
@@ -150,7 +165,6 @@ export default function PostRoute() {
     published: data.post.published,
     postImg: data.post.postImg,
     categories: actionData?.fields?.categories || [],
-
   });
 
   const handleInputChange = (
@@ -186,7 +200,11 @@ export default function PostRoute() {
         <div className="text-base md:text-5xl font-extrabold">
           Make changes to your post
         </div>
-        {isPublished ? (<> You are editing a published post</>) : (<> You are editing an unpublished Draft</>)}
+        {isPublished ? (
+          <> You are editing a published post</>
+        ) : (
+          <> You are editing an unpublished Draft</>
+        )}
         <form method="post" className="form-primary">
           <FormField
             htmlFor="id"
@@ -199,8 +217,7 @@ export default function PostRoute() {
           />{" "}
           <FormField
             htmlFor="title"
-            label="title"
-            labelClass="uppercase"
+            label="Title"
             name="title"
             type="textarea"
             value={formData.title}
@@ -209,7 +226,7 @@ export default function PostRoute() {
           />
           <p>
             <label className="uppercase">
-              Content:{" "}
+              Content
               <textarea
                 name="body"
                 className="form-field-primary"
@@ -220,25 +237,26 @@ export default function PostRoute() {
           </p>
           <FormField
             htmlFor="postImg"
-            label="Post Image"
+            label="Image"
             labelClass="uppercase"
             name="postImg"
             value={formData.postImg}
             onChange={(event: any) => handleInputChange(event, "postImg")}
-          />  <div>
-          <select className="text-black dark:text-white dark:bg-gray-400"                name="categories"
-                  multiple={true}
-                  onChange={(event:any)=>handleInputChange(event,"categories")}
-
-          >
-            {categories.map((option) => (
+          />{" "}
+          <div>
+            <select
+              className="appearance-none text-black dark:text-white dark:bg-gray-400"
+              name="categories"
+              multiple={true}
+              onChange={(event: any) => handleInputChange(event, "categories")}
+            >
+              {categories.map((option) => (
                 <option key={option.id} value={option.name}>
                   {option.name}
                 </option>
-            ))}
-
-          </select>
-        </div>
+              ))}
+            </select>
+          </div>
           <ImageUploader
             onChange={handleFileUpload}
             postImg={formData.postImg || ""}
@@ -247,46 +265,81 @@ export default function PostRoute() {
           {formData.published ? (
             <>
               <div className="max-w-full flex flex-row flex-end text-container">
-                <Tooltip message="unpublish this post">
-                  <button type="submit" name="_action" value="unpublish" className='btn-primary'>
+                <Tooltip message="Unpublish this post">
+                  <button
+                    type="submit"
+                    name="_action"
+                    value="unpublish"
+                    className="btn-primary"
+                  >
                     UnPublish
                   </button>
                 </Tooltip>
-                <Tooltip message="delete this post">
-                  <button type="submit" name="_action" value="delete" className='btn-primary'>
+                <Tooltip message="Delete this post">
+                  <button
+                    type="submit"
+                    name="_action"
+                    value="delete"
+                    className="btn-primary"
+                  >
                     Delete
                   </button>
                 </Tooltip>
                 <div className="max-w-full text-container">
                   <Tooltip message="Save and Publish">
-                    <button type="submit" name='_action' value='save' className='btn-primary'>Save Post</button>
+                    <button
+                      type="submit"
+                      name="_action"
+                      value="save"
+                      className="btn-primary"
+                    >
+                      Save Post
+                    </button>
                   </Tooltip>
                 </div>
               </div>
             </>
           ) : (
-              <div className="max-w-full flex flex-row flex-end text-container">
-                <Tooltip message="Save as a draft">
-                <button type="submit" name="_action" value="save" className='btn-primary'>
+            <div className="max-w-full flex flex-row flex-end text-container">
+              <Tooltip message="Save as a draft">
+                <button
+                  type="submit"
+                  name="_action"
+                  value="save"
+                  className="btn-primary"
+                >
                   Save Post Draft
                 </button>
               </Tooltip>
               <Tooltip message="Save and Publish">
-                <button type="submit" name="_action" value="updateAndPublish" className='btn-primary'>
+                <button
+                  type="submit"
+                  name="_action"
+                  value="updateAndPublish"
+                  className="btn-primary"
+                >
                   Save and Publish Post
                 </button>
               </Tooltip>
               <Tooltip message="Delete this post">
-                <button type="submit" name="_action" value="delete" className='btn-primary'>
+                <button
+                  type="submit"
+                  name="_action"
+                  value="delete"
+                  className="btn-primary"
+                >
                   Delete
                 </button>
               </Tooltip>
               <div className="max-w-full text-container">
                 <Tooltip message="Publish">
-                  <button type="submit" name="_action" value="publish" className="">
-<span className="material-symbols-outlined">
-save
-</span>
+                  <button
+                    type="submit"
+                    name="_action"
+                    value="publish"
+                    className=""
+                  >
+                    <span className="material-symbols-outlined">save</span>
                   </button>
                 </Tooltip>
               </div>
