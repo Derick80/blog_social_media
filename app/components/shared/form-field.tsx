@@ -20,17 +20,17 @@ export default function FormField({
   label,
   type,
   value,
-  className = "form-field-primary",
+  className = 'form-field-primary',
   checked,
   onClick = () => {},
   onChange = () => {},
-  error = "",
-  labelClass = "block text-sm font-semibold",
+  error = '',
+  labelClass = 'block text-sm font-semibold'
 }: FormFieldProps) {
-  const [errorText, setErrorText] = useState(error);
+  const [errorText, setErrorText] = useState(error)
   useEffect(() => {
-    setErrorText(error);
-  }, [error]);
+    setErrorText(error)
+  }, [error])
   return (
     <>
       <label htmlFor={htmlFor} className={labelClass}>
@@ -38,9 +38,9 @@ export default function FormField({
       </label>
       <input
         className={className}
-        onChange={(event) => {
-          onChange(event);
-          setErrorText("");
+        onChange={event => {
+          onChange(event)
+          setErrorText('')
         }}
         type={type}
         checked={checked}
@@ -48,7 +48,7 @@ export default function FormField({
         name={htmlFor}
         value={value}
       />
-      <div>{errorText || ""}</div>
+      <div>{errorText || ''}</div>
     </>
-  );
+  )
 }

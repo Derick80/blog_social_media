@@ -1,7 +1,6 @@
 import type { Post, User } from '@prisma/client'
 import { prisma } from './prisma.server'
-import type { CreateOrEditPost } from './types.server'
-import { UpdatePost } from './types.server'
+import type { CreateOrEditPost, UpdatePost } from './types.server'
 
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
@@ -25,14 +24,13 @@ export async function getPosts() {
 
 export async function getPost({
   id,
-  userId,
-}: Pick<Post, "id"> & { userId: User["id"] }) {
-  const post= await prisma.post.findUnique({
+  userId
+}: Pick<Post, 'id'> & { userId: User['id'] }) {
+  const post = await prisma.post.findUnique({
     where: { id: id },
-    include: { user: { select: { email: true } },
-    categories: true,},
-  });
-  return  post ;
+    include: { user: { select: { email: true } }, categories: true }
+  })
+  return post
 }
 
 export async function createDraft({
@@ -40,8 +38,8 @@ export async function createDraft({
   body,
   postImg,
   userId,
-    categories,
-}: Omit<CreateOrEditPost, "id" & "userId"> & { userId: User["id"] }) {
+  categories
+}: Omit<CreateOrEditPost, 'id' & 'userId'> & { userId: User['id'] }) {
   await prisma.post.create({
     data: {
       title,
@@ -49,155 +47,170 @@ export async function createDraft({
       postImg,
       user: {
         connect: {
-          id: userId,
-        },
+          id: userId
+        }
       },
-        categories: {
-            connectOrCreate: categories.map((category) => ({  where: { name: category.name }, create: { name: category.name } })),      },  },  });
+      categories: {
+        connectOrCreate: categories.map(category => ({
+          where: { name: category.name },
+          create: { name: category.name }
+        }))
+      }
+    }
+  })
 }
-
 
 export async function getUserDrafts(userId: string) {
   const userDrafts = await prisma.post.findMany({
     where: {
       userId: userId,
-      published: false,
+      published: false
     },
     include: {
-        user: {
-            select: {email: true}
-        },
-        categories: true,
+      user: {
+        select: { email: true }
+      },
+      categories: true
     },
     orderBy: {
-      createdAt: "asc",
-    },
-  });
-  return  userDrafts ;
+      createdAt: 'asc'
+    }
+  })
+  return userDrafts
 }
 
-export async function updatePost({ id, title, body, postImg , categories}:CreateOrEditPost) {
-  try{
-    const  updatePost = await prisma.post.update({
+export async function updatePost({
+  id,
+  title,
+  body,
+  postImg,
+  categories
+}: CreateOrEditPost) {
+  try {
+    const updatePost = await prisma.post.update({
       where: { id: id },
       data: {
         title,
         body,
-        postImg,
-      },
-    });
-    return { updatePost };
+        postImg
+      }
+    })
+    return { updatePost }
   } catch (error) {
-    throw new Error("Unable to save post draft");
+    throw new Error('Unable to save post draft')
   }
 }
-export async function updateAndPublish({ id, title, body, postImg }: CreateOrEditPost) {
-  try{
-    const  updateAndPublish = await prisma.post.update({
+export async function updateAndPublish({
+  id,
+  title,
+  body,
+  postImg
+}: CreateOrEditPost) {
+  try {
+    const updateAndPublish = await prisma.post.update({
       where: { id: id },
       data: {
         title,
         body,
         postImg,
-        published: true,
-      },
-    });
-    return { updateAndPublish };
+        published: true
+      }
+    })
+    return { updateAndPublish }
   } catch (error) {
-    throw new Error("Unable to update AND Publish post");
+    throw new Error('Unable to update AND Publish post')
   }
 }
 export async function publishPost(id: string) {
- try{
-   const publish =  await prisma.post.update({
-     where: { id: id },
-     data: { published: true },
-   });
-    return publish;
-    }catch(error){
-      throw new Error("error in publish");
-    }
-
+  try {
+    const publish = await prisma.post.update({
+      where: { id: id },
+      data: { published: true }
+    })
+    return publish
+  } catch (error) {
+    throw new Error('error in publish')
+  }
 }
 
 export async function unpublishPost(id: string) {
-  try{
-   await prisma.post.update({
+  try {
+    await prisma.post.update({
       where: { id: id },
-      data: { published: false },
-    });
-    return true;
-  }catch (error){
-    throw new Error("error in unpublish");
+      data: { published: false }
+    })
+    return true
+  } catch (error) {
+    throw new Error('error in unpublish')
   }
 }
 
 export async function deletePost(id: string) {
   try {
-   await prisma.post.delete({
-      where: { id: id },
-    });
+    await prisma.post.delete({
+      where: { id: id }
+    })
     return true
   } catch (error) {
-    throw new Error("Unable to delete post");
+    throw new Error('Unable to delete post')
   }
 }
 
-export async function getPostsByCategory(categoryName:string){
+export async function getPostsByCategory(categoryName: string) {
   const postsByCategory = await prisma.post.findMany({
-    where:{
-        categories:{
-         some:{
-              name:categoryName
-         }
+    where: {
+      categories: {
+        some: {
+          name: categoryName
         }
+      }
     },
     include: {
       user: {
-        select: {email: true}
+        select: { email: true }
       },
-        categories: true
+      categories: true
     },
     orderBy: {
-      createdAt: "asc",
-    },
-
-  })
-    return postsByCategory
-}
-
-export const updatePostWithCategory = async (form:UpdatePost)=>{
-  const selected = form.categories.map((category)=>category.name) as []
-
-const updatedPostCategories = await prisma.post.update({
-  where : {
-    id:form.id
-  },
-  data:{
-    title:form.title,
-    body:form.body,
-    postImg:form.postImg,
-    categories:{
-        set:selected
+      createdAt: 'asc'
     }
-
-  },
-})
-
+  })
+  return postsByCategory
 }
 
-export const removeCategoryFromPost = async (postId:string, categoryName:string)=>{
+export const updatePostWithCategory = async (form: UpdatePost) => {
+  const selected = form.categories.map(category => category.name) as []
+
   const updatedPostCategories = await prisma.post.update({
-    where : {
-      id:postId
+    where: {
+      id: form.id
     },
-    data:{
-      categories:{
-          disconnect:{
-            name:categoryName
-          }
+    data: {
+      title: form.title,
+      body: form.body,
+      postImg: form.postImg,
+      categories: {
+        set: selected
       }
+    }
+  })
+}
+
+export const removeCategoryFromPost = async (
+  postId: string,
+  categoryName: string
+) => {
+  const updatedPostCategories = await prisma.post.update({
+    where: {
+      id: postId
     },
+    data: {
+      categories: {
+        disconnect: {
+          name: categoryName
+        }
+      }
+    }
   })
   return updatedPostCategories
 }

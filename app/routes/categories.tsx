@@ -18,104 +18,104 @@ export const loader: LoaderFunction = async () => {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
+  const formData = await request.formData()
   // const name = formData.get('name')
-  const categories = formData.getAll("categories") as string[];
+  const categories = formData.getAll('categories') as string[]
   if (
     // typeof name !==
-    typeof categories !== "object"
+    typeof categories !== 'object'
   ) {
     return json(
       {
-        error: "invalid form data",
-        form: action,
+        error: 'invalid form data',
+        form: action
       },
       { status: 400 }
-    );
+    )
   }
 
   const errors = {
     // name: validateText(name as string),
-  };
+  }
 
   if (Object.values(errors).some(Boolean))
     return json(
       {
         errors,
         fields: { categories },
-        form: action,
+        form: action
       },
       { status: 400 }
-    );
-  const selected = categories.map((category) => category) as [];
+    )
+  const selected = categories.map(category => category) as []
 
-  await console.log("await", categories);
-  await console.log("await", selected);
+  await console.log('await', categories)
+  await console.log('await', selected)
 
-  return redirect("/categories");
-};
+  return redirect('/categories')
+}
 
 export default function Categories() {
-  const data = useLoaderData();
-  const actionData = useActionData();
-  const [formError, setFormError] = useState(actionData?.error || "");
-  const [errors, setErrors] = useState(actionData?.errors || {});
+  const data = useLoaderData()
+  const actionData = useActionData()
+  const [formError, setFormError] = useState(actionData?.error || '')
+  const [errors, setErrors] = useState(actionData?.errors || {})
   const [formData, setFormData] = useState({
-    name: actionData?.fields?.name || "",
-    categories: actionData?.fields?.categories || [],
-  });
-  console.log("categories for formData", actionData?.fields?.categories);
-  console.log(Array.isArray(formData?.categories));
+    name: actionData?.fields?.name || '',
+    categories: actionData?.fields?.categories || []
+  })
+  console.log('categories for formData', actionData?.fields?.categories)
+  console.log(Array.isArray(formData?.categories))
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     field: string
   ) => {
-    event.preventDefault();
-    setFormData((form) => ({ ...form, [field]: event.target.value }));
-  };
+    event.preventDefault()
+    setFormData(form => ({ ...form, [field]: event.target.value }))
+  }
   const handleChange = (
     event: ChangeEvent<HTMLSelectElement>,
     field: string
   ) => {
-    setFormData((form) => ({ ...form, [field]: event.target.value }));
-    console.log(event.target.value);
-  };
+    setFormData(form => ({ ...form, [field]: event.target.value }))
+    console.log(event.target.value)
+  }
 
   const handleChange2 = (
     event: ChangeEvent<HTMLSelectElement>,
     field: string
   ) => {
-    setFormData((form) => ({ ...form, [field]: event.target.value }));
-    console.log("name", event.target.name);
-    console.log("value", event.target.value);
-  };
+    setFormData(form => ({ ...form, [field]: event.target.value }))
+    console.log('name', event.target.name)
+    console.log('value', event.target.value)
+  }
 
   return (
     <ContentContainer>
-      <div className="w-full md:w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4">
-        <div className="text-base md:text-5xl font-extrabold">
+      <div className='w-full md:w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4'>
+        <div className='text-base md:text-5xl font-extrabold'>
           Create a New Category
         </div>
-        <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full mb-2">
+        <div className='text-xs font-semibold text-center tracking-wide text-red-500 w-full mb-2'>
           {formError}
         </div>
-        <form method="post" className="form-primary">
+        <form method='post' className='form-primary'>
           <FormField
-            htmlFor="name"
-            label="name"
-            labelClass="uppercase"
-            name="name"
-            type="textarea"
+            htmlFor='name'
+            label='name'
+            labelClass='uppercase'
+            name='name'
+            type='textarea'
             value={formData.name}
-            onChange={(event: any) => handleInputChange(event, "name")}
+            onChange={(event: any) => handleInputChange(event, 'name')}
             error={errors?.name}
           />
           <SelectBox
-            className="text-black dark:text-white dark:bg-gray-400"
+            className='text-black dark:text-white dark:bg-gray-400'
             options={data.categories}
-            onChange={(event) => handleChange2(event, "categories")}
-            name="categories"
+            onChange={event => handleChange2(event, 'categories')}
+            name='categories'
             value={formData.categories}
             multiple={true}
           />
@@ -126,12 +126,12 @@ export default function Categories() {
       <CategoryContainer categories={data.categories} isPost={false} />
 
       <div>
-        <form method="post">
-          <button type="submit">Save</button>
+        <form method='post'>
+          <button type='submit'>Save</button>
         </form>
       </div>
     </ContentContainer>
-  );
+  )
 }
 //
 // <div>
