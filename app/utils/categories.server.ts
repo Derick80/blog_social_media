@@ -1,5 +1,5 @@
 import {prisma} from './prisma.server'
-import {CategoryForm} from '~/utils/types.server'
+import {CategoryForm, UpdateCategoryForm} from '~/utils/types.server'
 import {json} from '@remix-run/node'
 
 
@@ -39,3 +39,23 @@ export const createCategory = async(form: CategoryForm)=>{
     return {newCategory}
 }
 
+export async function updateCategory(form: UpdateCategoryForm) {
+    const category = await prisma.category.update({
+        where: { id: form.id },
+        data: { name: form.name },
+    });
+    return category
+}
+
+// only use this in the categories page
+export async function deleteCategory(categoryName:string){
+    try{
+        await prisma.category.delete({
+            where:{
+                name:categoryName
+            }
+        })
+    }catch (error){
+        throw new Error("Unable to delete category");
+    }
+}

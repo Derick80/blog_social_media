@@ -13,10 +13,10 @@ type PostsProps = {
         categories: Array<{ id: string; name: string }>;
     }
     isOwner: boolean;
-
+isPost: boolean;
 
 }
-export default function Posts({posts, isOwner}: PostsProps) {
+export default function Posts({posts, isOwner, isPost}: PostsProps) {
 
     return(
         <div
@@ -37,7 +37,7 @@ export default function Posts({posts, isOwner}: PostsProps) {
                 <div className="text-base md:text-2xl">{posts.body}</div>
             </div>
 <div>
-    <CategoryContainer categories={     posts.categories} />
+    <CategoryContainer categories={     posts.categories}  isPost={isPost} />
 </div>
             {isOwner ? (
   <Tooltip message="Edit Post">

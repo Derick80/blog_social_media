@@ -9,13 +9,15 @@ import Posts from '~/components/posts'
 
 type LoaderData = {
   user: { email: string };
-  userDrafts: Array<{
+  userDrafts: {
     id: string;
     title: string;
     body: string;
     postImg: string;
     published: boolean;
-  }>;
+    categories: Array<{ id: string; name: string }>;
+
+  }
   id: string;
 
     role: string;
@@ -27,7 +29,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await getUser(request);
   const role = await process.env.ADMIN;
 const isOwner = user?.email === role;
-  const { userDrafts } = await getUserDrafts(userId);
+  const userDrafts  = await getUserDrafts(userId);
 
 
   return json({     userDrafts,
@@ -52,7 +54,7 @@ export default function Drafts() {
       <div className="text-base md:text-5xl font-extrabold">Drafts</div>
 
       {userDrafts.map((posts: typeof userDrafts) => (
-          <Posts posts={posts} isOwner={isOwner}  />
+          <Posts key={posts.id} posts={posts} isOwner={isOwner}  isPost={true} />
       ))}
     </ContentContainer>
   );

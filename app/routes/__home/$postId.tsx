@@ -1,4 +1,3 @@
-import type {Post} from '@prisma/client'
 import type {ActionFunction, LoaderFunction} from '@remix-run/node'
 import {json, redirect} from '@remix-run/node'
 import {useActionData, useLoaderData} from '@remix-run/react'
@@ -10,10 +9,23 @@ import Tooltip from '~/components/shared/tooltip'
 import {getUser, getUserId} from '~/utils/auth.server'
 import {deletePost, getPost, publishPost, unpublishPost, updateAndPublish, updatePost} from '~/utils/post.server'
 import {validateText} from '~/utils/validators.server'
+import CategoryContainer from '~/components/shared/category-container'
 
 
 type LoaderData = {
-  post: Post;
+  post: {
+    id: string;
+    title: string;
+    body: string;
+    postImg: string;
+    published: boolean;
+    user:{
+        email: string;
+    }
+    categories: Array<{ id: string; name: string }>;
+  }
+  categories: Array<{ id: string; name: string }>;
+
   isPublished: boolean;
   postId: string;
 };
@@ -33,12 +45,14 @@ export const loader: LoaderFunction = async ({ params, request }) => {
       status: 401,
     });
   }
+  const categories = post.categories.map((category) => category);
   let data: LoaderData = {
     post,
     isPublished,
     postId,
+    categories,
   };
-  return json({ data, user, isPublished });
+  return json({ data, user, isPublished,categories });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -119,7 +133,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 };
 export default function PostRoute() {
-  const { data, user, isPublished } = useLoaderData();
+  const { data, user, isPublished ,categories} = useLoaderData();
   console.log(isPublished)
   const actionData = useActionData();
   const [errors, setErrors] = useState(actionData?.errors || {});
@@ -209,6 +223,7 @@ export default function PostRoute() {
             onChange={handleFileUpload}
             postImg={formData.postImg || ""}
           />
+          <CategoryContainer categories={categories} isPost={true} />
           {formData.published ? (
             <>
               <div className="max-w-full flex flex-row flex-end text-container">

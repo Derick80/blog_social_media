@@ -10,10 +10,13 @@ import FormField from '~/components/shared/form-field'
 import {getUser, getUserId, requireUserId} from '~/utils/auth.server'
 import {createDraft} from '~/utils/post.server'
 import {validateText} from '~/utils/validators.server'
+import {getCategories} from '~/utils/categories.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
   const user = await getUser(request);
+  const {categories} = await getCategories()
+
   if (!userId) {
     throw new Response("Unauthorized", { status: 401 });
   }
@@ -25,7 +28,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       status: 401,
     });
   }
-  return json({ userId });
+  return json({ userId , categories});
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -34,13 +37,16 @@ export const action: ActionFunction = async ({ request }) => {
   const title = formData.get("title");
   const body = formData.get("body");
   const postImg = formData.get("postImg");
+  const categories = formData.getAll('categories') as []
+
 
   // || typeof body !== "string" || typeof postImg !== "string"
 
   if (
     typeof title !== "string" ||
     typeof body !== "string" ||
-    typeof postImg !== "string"
+    typeof postImg !== "string" ||
+      typeof categories !== 'object'
   ) {
     return json(
       {
@@ -62,23 +68,26 @@ export const action: ActionFunction = async ({ request }) => {
     return json(
       {
         errors,
-        fields: { title, body, postImg },
+        fields: { title, body, postImg, categories },
         form: action,
       },
       { status: 400 }
     );
+  const converted = categories.map((category)=>{return {name:category}})
+
   await createDraft({
     title,
     body,
     postImg,
     userId,
+    categories: converted,
   });
 
   return redirect("drafts");
 };
 
 export default function NewPostRoute() {
-  const { userId } = useLoaderData();
+  const { userId,categories } = useLoaderData();
   const actionData = useActionData();
   const firstLoad = useRef(true);
   const [formError, setFormError] = useState(actionData?.error || "");
@@ -88,6 +97,7 @@ export default function NewPostRoute() {
     title: actionData?.fields?.title || "",
     body: actionData?.fields?.body || "",
     postImg: actionData?.fields?.postImg || "",
+    categories: actionData?.fields?.categories || [],
 
     userId: userId,
   });
@@ -105,7 +115,6 @@ export default function NewPostRoute() {
     event: React.ChangeEvent<HTMLInputElement>,
     field: string
   ) => {
-    event.preventDefault();
     setFormData((form) => ({ ...form, [field]: event.target.value }));
   };
   const handleFileUpload = async (file: File) => {
@@ -162,7 +171,20 @@ export default function NewPostRoute() {
               />
             </label>
           </p>
+          <div>
+            <select className="text-black dark:text-white dark:bg-gray-400"                name="categories"
+                    multiple={true}
+                    onChange={(event:any)=>handleInputChange(event,"categories")}
 
+            >
+              {categories.map((option) => (
+                  <option key={option.id} value={option.name}>
+                    {option.name}
+                  </option>
+              ))}
+
+            </select>
+          </div>
           <FormField
             htmlFor="postImg"
             label=""

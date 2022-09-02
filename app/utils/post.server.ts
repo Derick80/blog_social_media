@@ -1,6 +1,7 @@
 import type {Post, User} from '@prisma/client'
 import {prisma} from './prisma.server'
 import type {CreateOrEditPost} from './types.server'
+import {UpdatePost} from './types.server'
 
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
@@ -19,7 +20,6 @@ export async function getPosts() {
       createdAt: "asc",
     },
   });
-  console.log("ts userPosts", { userPosts });
   return { userPosts };
 }
 
@@ -27,10 +27,12 @@ export async function getPost({
   id,
   userId,
 }: Pick<Post, "id"> & { userId: User["id"] }) {
-  return prisma.post.findUnique({
+  const post= await prisma.post.findUnique({
     where: { id: id },
-    include: { user: { select: { email: true } } },
+    include: { user: { select: { email: true } },
+    categories: true,},
   });
+  return  post ;
 }
 
 export async function createDraft({
@@ -38,6 +40,7 @@ export async function createDraft({
   body,
   postImg,
   userId,
+    categories,
 }: Omit<CreateOrEditPost, "id" & "userId"> & { userId: User["id"] }) {
   await prisma.post.create({
     data: {
@@ -49,9 +52,10 @@ export async function createDraft({
           id: userId,
         },
       },
-    },
-  });
+        categories: {
+            connectOrCreate: categories.map((category) => ({  where: { name: category.name }, create: { name: category.name } })),      },  },  });
 }
+    
 
 export async function getUserDrafts(userId: string) {
   const userDrafts = await prisma.post.findMany({
@@ -62,13 +66,14 @@ export async function getUserDrafts(userId: string) {
     include: {
         user: {
             select: {email: true}
-        }
+        },
+        categories: true,
     },
     orderBy: {
       createdAt: "asc",
     },
   });
-  return { userDrafts };
+  return  userDrafts ;
 }
 
 export async function updatePost({ id, title, body, postImg }: Partial<Post>) {
@@ -136,4 +141,63 @@ export async function deletePost(id: string) {
   } catch (error) {
     throw new Error("Unable to delete post");
   }
+}
+
+export async function getPostsByCategory(categoryName:string){
+  const postsByCategory = await prisma.post.findMany({
+    where:{
+        categories:{
+         some:{
+              name:categoryName
+         }
+        }
+    },
+    include: {
+      user: {
+        select: {email: true}
+      },
+        categories: true
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+
+  })
+    return postsByCategory
+}
+
+export const updatePostWithCategory = async (form:UpdatePost)=>{
+  const selected = form.categories.map((category)=>category.name) as []
+
+const updatedPostCategories = await prisma.post.update({
+  where : {
+    id:form.id
+  },
+  data:{
+    title:form.title,
+    body:form.body,
+    postImg:form.postImg,
+    categories:{
+        set:selected
+    }
+
+  },
+})
+
+}
+
+export const removeCategoryFromPost = async (postId:string, categoryName:string)=>{
+  const updatedPostCategories = await prisma.post.update({
+    where : {
+      id:postId
+    },
+    data:{
+      categories:{
+          disconnect:{
+            name:categoryName
+          }
+      }
+    },
+  })
+  return updatedPostCategories
 }

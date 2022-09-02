@@ -1,8 +1,7 @@
 import {ActionFunction, json, LoaderFunction, redirect} from '@remix-run/node'
-import {createCategory, getCategories} from '~/utils/categories.server'
+import {getCategories} from '~/utils/categories.server'
 import {useActionData, useLoaderData} from '@remix-run/react'
-import {validateText} from '~/utils/validators.server'
-import React, {useState} from 'react'
+import React, {ChangeEvent, useState} from 'react'
 import FormField from '~/components/shared/form-field'
 import ContentContainer from '~/components/shared/content-container'
 import CategoryContainer from '~/components/shared/category-container'
@@ -10,16 +9,21 @@ import CategoryContainer from '~/components/shared/category-container'
 
 export const loader: LoaderFunction = async()=>{
     const {categories} = await getCategories()
+    const selected = categories.map((category)=>category.name)
+    console.log("selected",selected)
+    console.log(Array.isArray(selected))
+    console.log("categories",categories)
     return json({categories})
 
 }
 
 export const action: ActionFunction = async({request})=>{
     const formData = await request.formData();
-    const name = formData.get('name')
-
+    // const name = formData.get('name')
+    const categories = formData.getAll('categories') as string[]
     if(
-        typeof name !== 'string'
+        // typeof name !==
+        typeof categories !== 'object'
     ){
         return json(
             {
@@ -30,20 +34,22 @@ export const action: ActionFunction = async({request})=>{
     }
 
     const errors = {
-        name: validateText(name as string),
+        // name: validateText(name as string),
     }
 
     if(Object.values(errors).some(Boolean))
         return json(
             {
                 errors,
-                fields: {name},
+                fields: {categories},
         form: action,
             },
         {status: 400}
         )
+    const selected = categories.map((category)=>category) as []
 
-    await createCategory({name})
+    await console.log("await",categories)
+    await console.log("await",selected)
 
     return redirect("/categories")
 };
@@ -55,7 +61,10 @@ export default function Categories(){
     const [errors, setErrors] = useState(actionData?.errors || {});
 const [formData, setFormData] = useState({
     name: actionData?.fields?.name || "",
+    categories: actionData?.fields?.categories || [],
 })
+    console.log("categories for formData", actionData?.fields?.categories)
+    console.log(Array.isArray(formData?.categories))
 
     const handleInputChange = (
         event: React.ChangeEvent<HTMLInputElement>,
@@ -64,6 +73,20 @@ const [formData, setFormData] = useState({
         event.preventDefault();
         setFormData((form) => ({ ...form, [field]: event.target.value }));
     };
+    const handleChange = (event: ChangeEvent<HTMLSelectElement>, field: string) => {
+        setFormData((form) => ({ ...form, [field]: event.target.value }));
+        console.log(event.target.value)
+
+    }
+
+    const handleChange2= (event: ChangeEvent<HTMLSelectElement>, field: string) => {
+        setFormData((form) => ({ ...form, [field]: event.target.value }));
+        console.log("name",event.target.name)
+        console.log("value",event.target.value)
+
+    }
+
+
     return(
         <ContentContainer>
 
@@ -90,12 +113,50 @@ const [formData, setFormData] = useState({
                         error={errors?.name}
                     />
 
-                    <button type="submit">Save new category to DB</button>
+                    {/*<button type="submit">Save new category to DB</button>*/}
                 </form>
 
             </div>
-            <CategoryContainer categories={     data.categories} />
+            <CategoryContainer categories={ data.categories} isPost={false} />
+
+<div>
+    <form method="post">
+        <div>
+            <select className="text-black dark:text-white dark:bg-gray-400"                name="categories"
+                    multiple={true}
+                    onChange={(event:any)=>handleChange2(event,"categories")}
+
+            >
+                {data.categories.map((option) => (
+                    <option key={option.id} value={option.id}>
+                        {option.name}
+                    </option>
+                ))}
+
+            </select>
+        </div>
+        <button type="submit">Save</button>
+    </form>
+</div>
         </ContentContainer>
     )
 
 }
+
+//
+// <form method="post">
+//     <div>
+//         <select className=" text-black dark:text-white dark:bg-gray-400"                name="categories"
+//                 multiple={true}
+//                 onChange={(event:any)=>handleChange2(event,"categories")}
+//
+//         >
+//             <option value="1">1</option>
+//             <option value="2">2</option>
+//             <option value="3">3</option>
+//
+//
+//         </select>
+//     </div>
+//     <button type="submit">Save</button>
+// </form>

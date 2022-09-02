@@ -1,10 +1,10 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
-import React, { useState } from "react";
-import FormField from "~/components/shared/form-field";
-import { getUser, login, register } from "~/utils/auth.server";
-import { validateEmail, validatePassword } from "~/utils/validators.server";
+import type {ActionFunction, LoaderFunction} from '@remix-run/node'
+import {json, redirect} from '@remix-run/node'
+import {useActionData} from '@remix-run/react'
+import React, {useState} from 'react'
+import FormField from '~/components/shared/form-field'
+import {getUser, login, register} from '~/utils/auth.server'
+import {validateEmail, validatePassword} from '~/utils/validators.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
   return (await getUser(request)) ? redirect("/") : null;
@@ -116,7 +116,8 @@ export default function Login() {
           </div>
         </form>
         <button
-          onClick={() => setAction(action == "login" ? "register" : "login")}
+          onClick={() => setAction(action == "login" ? "register" : "" +
+              "in")}
           className="rounded-xl dark:bg-light-blue font-semibold px-3 py-2 transition duration-300 ease-in-out hover:dark:bg-light-orange-400"
         >
           {action === "login" ? "Register" : "Sign In"}
