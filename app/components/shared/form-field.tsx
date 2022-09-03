@@ -13,6 +13,7 @@ export interface FormFieldProps {
   className?: string
   labelClass?: string
   defaultValue?: string | boolean
+  autocomplete?: string
 }
 
 export default function FormField({
@@ -25,7 +26,8 @@ export default function FormField({
   onClick = () => {},
   onChange = () => {},
   error = '',
-  labelClass = 'block text-sm font-semibold'
+  labelClass = 'block text-sm font-semibold',
+  autocomplete
 }: FormFieldProps) {
   const [errorText, setErrorText] = useState(error)
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function FormField({
         checked={checked}
         id={htmlFor}
         name={htmlFor}
-        value={value}
+        value={value˙}'[]'
       />
       <div>{errorText || ''}</div>
     </>

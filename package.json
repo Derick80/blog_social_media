@@ -9,7 +9,7 @@
     "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css",
     "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
-    "vercel-build": "prisma migrate reset --skip-seed prisma db push && prisma db seed && prisma migrate deploy && remix build",
+    "vercel-build": "prisma db push && prisma db seed && prisma migrate deploy && remix build",
     "prisma:generate": "prisma generate"
   },
   "dependencies": {

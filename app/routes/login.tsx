@@ -129,6 +129,7 @@ export default function Login() {
             type='password'
             onChange={event => handleInputChange(event, 'password')}
             error={errors?.password}
+            autocomplete='current-password'
           />
 
           <div className='w-full text-center'>
