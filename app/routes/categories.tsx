@@ -54,7 +54,7 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect('/categories')
 }
 
-export default function Categories () {
+export default function Categories() {
   const data = useLoaderData()
   const actionData = useActionData()
   const [formError, setFormError] = useState(actionData?.error || '')
@@ -97,7 +97,7 @@ export default function Categories () {
           Create a New Category
         </div>
         <div className='text-xs font-semibold text-center tracking-wide text-red-500 w-full mb-2'>
-          { formError }
+          {formError}
         </div>
         <form method='post' className='form-primary'>
           <FormField
@@ -106,23 +106,23 @@ export default function Categories () {
             labelClass='uppercase'
             name='name'
             type='textarea'
-            value={ formData.name }
-            onChange={ (event: any) => handleInputChange(event, 'name') }
-            error={ errors?.name }
+            value={formData.name}
+            onChange={(event: any) => handleInputChange(event, 'name')}
+            error={errors?.name}
           />
           <SelectBox
             className='text-black dark:text-white dark:bg-gray-400'
-            options={ data.categories }
-            onChange={ event => handleChange2(event, 'categories') }
+            options={data.categories}
+            onChange={event => handleChange2(event, 'categories')}
             name='categories'
-            value={ formData.categories }
-            multiple={ true }
+            value={formData.categories}
+            multiple={true}
           />
 
-          {/*<button type="submit">Save new category to DB</button>*/ }
+          {/*<button type="submit">Save new category to DB</button>*/}
         </form>
       </div>
-      <CategoryContainer categories={ data.categories } isPost={ false } />
+      <CategoryContainer categories={data.categories} isPost={false} />
 
       <div>
         <form method='post'>

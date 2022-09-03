@@ -1,41 +1,41 @@
 export interface LoginForm {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 export interface RegisterForm {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 export interface CreateOrEditPost {
-  id?: string;
-  title: string;
-  body: string;
-  postImg: string;
+  id?: string
+  title: string
+  body: string
+  postImg: string
   categories: Array<{
-    name: string;
+    name: string
   }>
 
-  userId: string;
+  userId: string
 }
 
 export interface UpdatePost {
-    id: string;
-  title: string;
-  body: string;
-  postImg: string;
+  id: string
+  title: string
+  body: string
+  postImg: string
   categories: Array<{
-    name: string;
+    name: string
   }>
-  userId: string;
+  userId: string
 }
 
 export interface CategoryForm {
-    name: string;
+  name: string
 }
 
-export interface UpdateCategoryForm{
-    id: string;
-    name: string;
+export interface UpdateCategoryForm {
+  id: string
+  name: string
 }

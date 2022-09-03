@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import type { ReactNode } from 'react'
 import AppBar from './appBar'
 
 export interface IContent {
@@ -6,9 +6,11 @@ export interface IContent {
   isOwner?: boolean
 }
 
-export default function ContentContainer ({ children }: IContent) {
-  return <div className="w-full flex flex-col items-center">
-    <AppBar />
-    { children }
-  </div>
+export default function ContentContainer({ children }: IContent) {
+  return (
+    <div className='w-full flex flex-col items-center'>
+      <AppBar />
+      {children}
+    </div>
+  )
 }

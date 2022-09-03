@@ -17,13 +17,11 @@ type LoaderData = {
     postImg: string
     published: boolean
     categories: Array<{ id: string; name: string }>
-
   }
   id: string
 
   role: string
   isOwner: boolean
-
 }
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request)
@@ -31,7 +29,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const role = await process.env.ADMIN
   const isOwner = user?.email === role
   const userDrafts = await getUserDrafts(userId)
-
 
   return json({
     userDrafts,
@@ -42,22 +39,21 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireUserId(request)
-
 }
-export default function Drafts () {
-  const { userDrafts,
+export default function Drafts() {
+  const {
+    userDrafts,
 
-    isOwner } = useLoaderData()
+    isOwner
+  } = useLoaderData()
   const actionData = useActionData()
-
-
 
   return (
     <>
       <Sectionheader>Drafts</Sectionheader>
-      { userDrafts.map((posts: typeof userDrafts) => (
-        <Posts key={ posts.id } posts={ posts } isOwner={ isOwner } isPost={ false } />
-      )) }
+      {userDrafts.map((posts: typeof userDrafts) => (
+        <Posts key={posts.id} posts={posts} isOwner={isOwner} isPost={false} />
+      ))}
     </>
   )
 }

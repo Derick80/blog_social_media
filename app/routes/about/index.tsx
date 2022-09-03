@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(data)
 }
 
-export default function About () {
+export default function About() {
   const data = useLoaderData<LoaderData>()
   const {
     id,
@@ -65,44 +65,39 @@ export default function About () {
   } = data.userProfile
 
   return (
-    <Layout isOwner={ data.isOwner }>
-      { data.userProfile ? (
-        <div key={ id }>
+    <Layout isOwner={data.isOwner}>
+      {data.userProfile ? (
+        <div key={id}>
           <div>
             <h1 className='text-xl underline font-semibold'>
-              { firstName } { lastName }{ ' ' }
+              {firstName} {lastName}{' '}
             </h1>
           </div>
           <div className='max-w-md mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl'>
             <img
               className='inline max-h-100 max-w-100 md:max-h-600 md:max-w-600'
-              src={ profilePicture }
+              src={profilePicture}
               alt='profile'
             />
 
             <div>
               <div>
+                <h1 className='text-xl underline font-semibold'>About Me</h1>
+                <div>{bio}</div>
                 <h1 className='text-xl underline font-semibold'>
-                  About Me</h1>
-                <div>{ bio }</div>
-
-
-                <h1 className='text-xl underline font-semibold'>
-
-                  Birthday</h1>                    { format(new Date(birthDay), 'MMMM, do') }
-
-
+                  Birthday
+                </h1>{' '}
+                {format(new Date(birthDay), 'MMMM, do')}
                 <div>Current City</div>
-                { currentLocation }
-
+                {currentLocation}
                 <div>My Pronouns</div>
-                { pronouns }
+                {pronouns}
                 <div>
                   <div>My Occupation</div>
-                  { occupation }
+                  {occupation}
                 </div>
                 <div>Email me</div>
-                { email }
+                {email}
               </div>
             </div>
           </div>
@@ -148,20 +143,20 @@ export default function About () {
               </a>
             </div>
           </div>
-          { data.isOwner ? (
+          {data.isOwner ? (
             <Tooltip message='Edit Profile'>
               <Link
-                to={ `/about/${id}` }
+                to={`/about/${id}`}
                 className='text-green-600 dark:text-white'
               >
                 <Icon icon='edit_document' />
               </Link>
             </Tooltip>
-          ) : null }
+          ) : null}
         </div>
       ) : (
         <>Loading...</>
-      ) }
+      )}
     </Layout>
   )
 }

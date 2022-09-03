@@ -1,17 +1,14 @@
-import {User} from '@prisma/client'
+import { User } from '@prisma/client'
 
-
-export type CommentProps={
-    comment: {
-        id: string,
-        message: string,
-        user: User[],
-        createdAt: string,
-    }
+export type CommentProps = {
+  comment: {
+    id: string
+    message: string
+    user: User[]
+    createdAt: string
+  }
 }
 
-export default function Comment({ comment }:CommentProps) {
-
-
-    return (<></>)
+export default function Comment({ comment }: CommentProps) {
+  return <></>
 }
