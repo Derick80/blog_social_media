@@ -1,7 +1,7 @@
 import Tooltip from '~/components/shared/tooltip'
 import { Link } from '@remix-run/react'
 import Icon from '~/components/shared/icon'
-import CategoryContainer from '~/components/shared/category-container'
+import CategoryContainer from '~/components/category-container'
 
 type PostsProps = {
     posts: {

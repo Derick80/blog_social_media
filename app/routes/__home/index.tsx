@@ -34,12 +34,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Home () {
     const data = useLoaderData<LoaderData>()
     return (
-        <ContentContainer>
-            <div className="text-base md:text-5xl font-extrabold">Posts</div>
+        <>
+            <div className="text-base md:text-3xl font-extrabold uppercase underline">Posts</div>
             { data.userPosts.map((post) => (
                 <Posts key={ post.id } posts={ post } isOwner={ data.isOwner } isPost={ false } />
             )) }
-        </ContentContainer>
+        </>
 
     )
 }

@@ -1,9 +1,15 @@
-import React from "react";
+import React from "react"
+import AdminContainer from './navbar/admin-container'
+import ContentContainer from './navbar/content-container'
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout ({ children, isOwner }: { children: React.ReactNode, isOwner: boolean }) {
   return (
-    <div className="h-screen w-full gap-1 md:gap-3 md:grid-cols-12 text-black  dark:text-white">
-      {children}
-    </div>
-  );
+    isOwner ? (
+      <> <AdminContainer isOwner={ isOwner } >{ children }</AdminContainer>
+
+      </>
+    ) : <>
+      <ContentContainer>{ children }</ContentContainer>
+    </>
+  )
 }

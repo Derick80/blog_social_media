@@ -1,7 +1,7 @@
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
-import AppBar from '~/components/appBar'
+import AppBar from '~/components/navbar/appBar'
 import Layout from '~/components/layout'
 import { getUser } from '~/utils/auth.server'
 
@@ -23,8 +23,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Home () {
     const { isOwner }: LoaderData = useLoaderData()
     return (
-        <Layout>
-            <AppBar isOwner={ isOwner } />
+        <Layout isOwner={ isOwner }>
+
             <Outlet />
         </Layout>
     )

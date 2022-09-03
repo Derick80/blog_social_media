@@ -4,13 +4,13 @@ import { useActionData, useLoaderData } from '@remix-run/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { ImageUploader } from '~/components/image-uploader'
 import Button from '~/components/shared/button'
-import ContentContainer from '~/components/shared/content-container'
 import FormField from '~/components/shared/form-field'
 
 import { getUser, getUserId, requireUserId } from '~/utils/auth.server'
 import { createDraft } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
 import { getCategories } from '~/utils/categories.server'
+import Sectionheader from '~/components/shared/section-header'
 export function ErrorBoundary () {
   return (
     <div className="error-container">
@@ -154,11 +154,11 @@ export default function NewPostRoute () {
   }
   return (
 
-    <ContentContainer>
+    <>
       <div className="w-full md:w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 mt-4 mb-4">
-        <div className="text-base md:text-5xl font-extrabold">
-          Write a New Post
-        </div>
+        <Sectionheader>
+          Write a new post
+        </Sectionheader>
         <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full mb-2">
           { formError }
         </div>
@@ -234,6 +234,6 @@ export default function NewPostRoute () {
           postImg={ formData.postImg || "" }
         />
       </div>
-    </ContentContainer>
+    </>
   )
 }

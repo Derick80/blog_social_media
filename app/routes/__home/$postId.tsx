@@ -3,7 +3,6 @@ import { json, redirect } from '@remix-run/node'
 import { Link, useActionData, useCatch, useLoaderData, useParams } from '@remix-run/react'
 import React, { useState } from 'react'
 import { ImageUploader } from '~/components/image-uploader'
-import ContentContainer from '~/components/shared/content-container'
 import FormField from '~/components/shared/form-field'
 import Tooltip from '~/components/shared/tooltip'
 import { getUser, getUserId } from '~/utils/auth.server'
@@ -16,7 +15,8 @@ import {
   updatePost
 } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
-import CategoryContainer from '~/components/shared/category-container'
+import CategoryContainer from '~/components/category-container'
+import Sectionheader from '~/components/shared/section-header'
 
 
 type LoaderData = {
@@ -196,11 +196,15 @@ export default function PostRoute () {
   }
 
   return (
-    <ContentContainer>
+    <>
       <div className='w-full md:w-1/2 rounded-xl shadow-2xl text-xl shadow-grey-300 p-2 md:mt-4 mb-4'>
-        <div className='text-base md:text-5xl font-extrabold'>
+
+        <Sectionheader>
           Make changes to your post
-        </div>
+
+
+        </Sectionheader>
+
         { isPublished ? (
           <> You are editing a published post</>
         ) : (
@@ -348,7 +352,7 @@ export default function PostRoute () {
           ) }
         </form>
       </div>
-    </ContentContainer>
+    </>
   )
 }
 
