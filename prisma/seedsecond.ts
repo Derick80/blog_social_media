@@ -6,16 +6,13 @@ const prisma = new PrismaClient()
 
 async function seed() {
   const email = 'iderick@gmail.com'
-const toHash = process.env.PASS_HASH
-if (!(toHash)) {
-    throw new Error(`Storage is missing required configuration.`)
-  }
+
   // cleanup the existing database
   await prisma.user.delete({ where: { email: email } }).catch(() => {
     // no worries if it doesn't exist yet
   })
 
-  const hashedPassword = await bcrypt.hash('toHash', 10)
+  const hashedPassword = await bcrypt.hash('1234567', 10)
 
   const user = await prisma.user.create({
     data: {
