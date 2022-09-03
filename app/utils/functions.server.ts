@@ -1,5 +1,5 @@
 export const handleFileUpload = async (file: File) => {
-  let inputFormData = new FormData()
+  const inputFormData = new FormData()
   inputFormData.append('postImg', file)
   const response = await fetch('/image', {
     method: 'POST',

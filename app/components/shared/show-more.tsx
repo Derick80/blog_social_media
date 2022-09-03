@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 function ShowButton({ ...props }) {
-  let content = props.content
-  let className = props.className
+  const content = props.content
+  const className = props.className
   const [more, setMore] = useState(false)
 
   function onClick() {

@@ -42,23 +42,23 @@ type LoaderData = {
   postId: string
 }
 export const loader: LoaderFunction = async ({ params, request }) => {
-  let userId = await getUserId(request)
+  const userId = await getUserId(request)
   const user = await getUser(request)
   const postId = params.postId as string
 
-  let post = userId ? await getPost({ id: postId, userId }) : null
+  const post = userId ? await getPost({ id: postId, userId }) : null
   if (!post) {
     throw new Response('Post not found', { status: 404 })
   }
-  let isPublished = post.published
-  let email = post.user.email
+  const isPublished = post.published
+  const email = post.user.email
   if (email != user?.email) {
     throw new Response('You are not authorized to edit this post', {
       status: 401
     })
   }
   const categories = post.categories.map(category => category)
-  let data: LoaderData = {
+  const data: LoaderData = {
     post,
     isPublished,
     postId,
@@ -70,12 +70,12 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const postId = params.postId as string
   const userId = await getUserId(request)
-  let formData = await request.formData()
+  const formData = await request.formData()
   const id = formData.get('id')
-  let published = formData.get('published')
-  let title = formData.get('title')
-  let body = formData.get('body')
-  let postImg = formData.get('postImg')
+  const published = formData.get('published')
+  const title = formData.get('title')
+  const body = formData.get('body')
+  const postImg = formData.get('postImg')
   const categories = formData.getAll('categories') as []
 
   const action = formData.get('_action')
@@ -184,7 +184,7 @@ export default function PostRoute() {
   }
 
   const handleFileUpload = async (file: File) => {
-    let inputFormData = new FormData()
+    const inputFormData = new FormData()
     inputFormData.append('postImg', file)
     const response = await fetch('/image', {
       method: 'POST',

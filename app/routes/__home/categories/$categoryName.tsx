@@ -21,12 +21,12 @@ type LoaderData = {
   categoryName: string
 }
 export const loader: LoaderFunction = async ({ params, request }) => {
-  let categoryName = params.categoryName as string
+  const categoryName = params.categoryName as string
   const user = await getUser(request)
   const role = await process.env.ADMIN
   const isOwner = user?.email === role
   console.log('catId', categoryName)
-  let postsByCategory = await getPostsByCategory(categoryName)
+  const postsByCategory = await getPostsByCategory(categoryName)
   if (!postsByCategory) {
     throw new Response("Couldn't find any posts with that category", {
       status: 401

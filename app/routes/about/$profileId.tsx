@@ -27,16 +27,16 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const userId = (await getUserId(request)) as string
-  let profileId = params.profileId as string
+  const profileId = params.profileId as string
   const user = await getUser(request)
   const role = (await process.env.ADMIN) as string
   console.log(role)
 
-  let profile = userId ? await getProfile(profileId) : null
+  const profile = userId ? await getProfile(profileId) : null
   if (!profile) {
     throw new Response('Profile not found', { status: 404 })
   }
-  let data: LoaderData = {
+  const data: LoaderData = {
     profile,
     userId,
     role
@@ -54,18 +54,18 @@ export const action: ActionFunction = async ({ request, params }) => {
   const userId = await getUserId(request)
   const profileId = params.profileId as string
 
-  let formData = await request.formData()
-  let id = formData.get('id')
-  let firstName = formData.get('firstName')
-  let lastName = formData.get('lastName')
-  let bio = formData.get('bio')
+  const formData = await request.formData()
+  const id = formData.get('id')
+  const firstName = formData.get('firstName')
+  const lastName = formData.get('lastName')
+  const bio = formData.get('bio')
   // @ts-ignore
-  let birthDay = new Date(formData.get('birthDay'))
-  let currentLocation = formData.get('currentLocation')
-  let pronouns = formData.get('pronouns')
-  let occupation = formData.get('occupation')
-  let postImg = formData.get('postImg')
-  let email = formData.get('email')
+  const birthDay = new Date(formData.get('birthDay'))
+  const currentLocation = formData.get('currentLocation')
+  const pronouns = formData.get('pronouns')
+  const occupation = formData.get('occupation')
+  const postImg = formData.get('postImg')
+  const email = formData.get('email')
   console.log(
     'birthday',
     birthDay,
@@ -166,7 +166,7 @@ export default function ProfileRoute() {
   }
 
   const handleFileUpload = async (file: File) => {
-    let inputFormData = new FormData()
+    const inputFormData = new FormData()
     inputFormData.append('postImg', file)
     const response = await fetch('/image', {
       method: 'POST',
