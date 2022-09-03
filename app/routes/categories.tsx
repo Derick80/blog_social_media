@@ -59,8 +59,8 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Categories() {
   const data = useLoaderData()
   const actionData = useActionData()
-  const [formError, setFormError] = useState(actionData?.error || '')
-  const [errors, setErrors] = useState(actionData?.errors || {})
+  const [formError] = useState(actionData?.error || '')
+  const [errors] = useState(actionData?.errors || {})
   const [formData, setFormData] = useState({
     name: actionData?.fields?.name || '',
     categories: actionData?.fields?.categories || data.cats
@@ -112,14 +112,20 @@ export default function Categories() {
             onChange={(event: any) => handleInputChange(event, 'name')}
             error={errors?.name}
           />
-          <SelectBox
-            className='text-black dark:text-white dark:bg-gray-400'
-            options={data.categories}
-            onChange={event => handleChange2(event, 'categories')}
-            name='categories'
-            value={formData.categories}
-            multiple={true}
-          />
+           <div>
+            <select
+              className='appearance-none text-black dark:text-white dark:bg-gray-400'
+              name='categories'
+              multiple={true}
+              onChange={(event: any) => handleInputChange(event, 'categories')}
+            >
+              {data.categories.map(option => (
+                <option key={option.id} value={option.name}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/*<button type="submit">Save new category to DB</button>*/}
         </form>
