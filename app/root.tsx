@@ -26,7 +26,7 @@ function Document ({
     title?: string
 }) {
     return (
-        <html lang="en" className='font-Condensed h-screen w-full dark:bg-zinc-700 dark:text-white'>
+        <html lang="en" className='font-Condensed h-screen w-full dark:bg-zinc-800 dark:text-white'>
             <head>
                 <Meta />
                 <title>{ title }</title>

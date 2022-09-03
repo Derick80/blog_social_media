@@ -33,7 +33,7 @@ export default function Posts ({ posts, isOwner, isPost }: PostsProps) {
                     src={ posts.postImg }
                     alt="profile"
                 />
-                <div className="text-base md:text-2xl">{ posts.body }</div>
+                <div className="text-base max-w-prose md:text-2xl">{ posts.body }</div>
             </div>
             <div>
                 <CategoryContainer categories={ posts.categories } isPost={ isPost } />

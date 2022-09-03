@@ -9,14 +9,7 @@ import Posts from '~/components/posts'
 
 
 type LoaderData = {
-    userPosts: Array<{
-        id: string
-        title: string
-        body: string
-        postImg: string
-        published: boolean
-        categories: Array<{ id: string; name: string }>
-    }>
+    userPosts: Awaited<ReturnType<typeof getPosts>>
     isOwner: boolean
 
 }
@@ -25,7 +18,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const user = await getUser(request)
     const role = await process.env.ADMIN
     const isOwner = user?.email === role
-    const { userPosts } = await getPosts()
+    const userPosts = await getPosts()
 
     if (!userPosts) {
         throw new Response(`No posts found`, {

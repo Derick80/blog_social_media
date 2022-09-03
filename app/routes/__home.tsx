@@ -7,40 +7,33 @@ import { getUser } from '~/utils/auth.server'
 
 export const meta: MetaFunction = () => ({
     title: `Derick's Personal Blog Feed`,
-    description: `See what I've been up to lately`,
+    description: `See what I've been up to lately`
 })
 type LoaderData = {
-    user: { id: string; email: string }
-    role: string
-    email: string
     isOwner: boolean
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
     const user = await getUser(request)
-    const role = await process.env.ADMIN as string
-    const isOwner = user?.email === role
+    const isOwner = user?.role == 'ADMIN'
 
-    return json({ user, role, isOwner })
+    return json({ isOwner })
 }
 
 export default function Home () {
-
-    const { user, isOwner }: LoaderData = useLoaderData()
+    const { isOwner }: LoaderData = useLoaderData()
     return (
         <Layout>
-            <AppBar user={ user } isOwner={ isOwner } />
+            <AppBar isOwner={ isOwner } />
             <Outlet />
-
         </Layout>
     )
 }
 
-
 export function ErrorBoundary () {
     return (
-        <div className="error-container">
-            Uh oh something is really wrong.  Try again later!
+        <div className='error-container'>
+            Uh oh something is really wrong. Try again later!
         </div>
     )
 }

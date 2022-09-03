@@ -11,7 +11,7 @@ export async function getPosts() {
       categories: true,
       user: {
         select: {
-          email: true
+          role: true
         }
       }
     },
@@ -19,7 +19,7 @@ export async function getPosts() {
       createdAt: 'asc'
     }
   })
-  return { userPosts }
+  return userPosts
 }
 
 export async function getPost({

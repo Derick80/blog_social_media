@@ -1,16 +1,25 @@
 export const handleFileUpload = async (file: File) => {
-  let inputFormData = new FormData();
-  inputFormData.append("postImg", file);
-  const response = await fetch("/image", {
-    method: "POST",
-    body: inputFormData,
-  });
+  let inputFormData = new FormData()
+  inputFormData.append('postImg', file)
+  const response = await fetch('/image', {
+    method: 'POST',
+    body: inputFormData
+  })
 
-  const { imageUrl } = await response.json();
-  console.log("imageUrl", imageUrl);
+  const { imageUrl } = await response.json()
+  console.log('imageUrl', imageUrl)
 
   setFormData({
     ...formData,
-    postImg: imageUrl,
-  });
-};
+    postImg: imageUrl
+  })
+}
+export const toCapitalizeAll = (string: string): string => {
+  const words = string.toLowerCase().split(' ')
+
+  const newWords = words.map(word => word[0].toUpperCase() + word.substring(1))
+
+  const newString = newWords.join(' ')
+
+  return newString
+}
