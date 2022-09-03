@@ -19,23 +19,27 @@ export function ErrorBoundary() {
     </div>
   )
 }
+
+
+type LoaderData = {
+  categories: Array<{ id: string; name: string }>
+  isOwner:boolean
+}
+
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await getUserId(request)
   const user = await getUser(request)
   const { categories } = await getCategories()
-
-  if (!userId) {
+const isOwner = user?.role == 'ADMIN'
+  if (!isOwner) {
     throw new Response('Unauthorized', { status: 401 })
   }
 
-  const role = await process.env.ADMIN
-
-  if (role != user?.email) {
-    throw new Response('You are not authorized to edit this post', {
-      status: 401
-    })
+  const data: LoaderData = {
+    categories,
+    isOwner
   }
-  return json({ userId, categories })
+
+  return json(data)
 }
 
 type ActionData = {
@@ -107,7 +111,8 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function NewPostRoute() {
-  const { userId, categories } = useLoaderData()
+
+  const { isOwner, categories } = useLoaderData<LoaderData>()
   const actionData = useActionData()
   const firstLoad = useRef(true)
   const [formError, setFormError] = useState(actionData?.error || '')
@@ -119,7 +124,7 @@ export default function NewPostRoute() {
     postImg: actionData?.fields?.postImg || '',
     categories: actionData?.categories || [],
 
-    userId: userId
+
   })
   useEffect(() => {
     if (!firstLoad.current) {
