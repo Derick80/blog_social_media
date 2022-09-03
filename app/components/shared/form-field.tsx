@@ -48,7 +48,8 @@ export default function FormField({
         checked={checked}
         id={htmlFor}
         name={htmlFor}
-        value={value˙}'[]'
+        value={value}
+        autoComplete={autocomplete}
       />
       <div>{errorText || ''}</div>
     </>
