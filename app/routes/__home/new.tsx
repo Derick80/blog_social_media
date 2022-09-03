@@ -33,6 +33,9 @@ const isOwner = user?.role == 'ADMIN'
   if (!isOwner) {
     throw new Response('Unauthorized', { status: 401 })
   }
+  if(!categories){
+    throw new Response('No Categories', { status: 404 })
+  }
 
   const data: LoaderData = {
     categories,

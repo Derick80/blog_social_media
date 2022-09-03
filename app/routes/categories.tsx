@@ -7,13 +7,15 @@ import React, { useState } from 'react'
 import FormField from '~/components/shared/form-field'
 import CategoryContainer from '~/components/category-container'
 import { SelectBox } from '~/components/shared/select-box'
+import { initialCategories } from '~/utils/constants'
 
 export const loader: LoaderFunction = async () => {
   const { categories } = await getCategories()
+  const cats= await initialCategories
   if (!categories) {
     throw new Response('No Categories Found', { status: 404 })
   }
-  return json({ categories })
+  return json({ cats,categories })
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -61,7 +63,7 @@ export default function Categories() {
   const [errors, setErrors] = useState(actionData?.errors || {})
   const [formData, setFormData] = useState({
     name: actionData?.fields?.name || '',
-    categories: actionData?.fields?.categories || []
+    categories: actionData?.fields?.categories || data.cats
   })
   console.log('categories for formData', actionData?.fields?.categories)
   console.log(Array.isArray(formData?.categories))
