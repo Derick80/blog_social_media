@@ -14,13 +14,13 @@ export default function CategoryContainer({
   isPost
 }: CategoryContainerProps) {
   return (
-    <div className='w-full flex flex-row flex-wrap font-semibold mb-2 mt-2 text-xl justify-center gap-1 md:gap-3 uppercase p-2'>
+    <div className='flex flex-row content font-semibold mb-2 mt-2 text-sm md:text-xl gap-1 md:gap-3 uppercase'>
       {categories.map(category => (
         <div
           key={category.id}
-          className='flex flex-row border-2 dark:bg-blue-400'
+          className='max-w-fit h-fit text-center border-2 dark:bg-blue-400'
         >
-          <div className='flex p-2 tracking-wide hover:cursor-pointer'>
+          <div className='md:p-2 md:tracking-wide hover:cursor-pointer'>
             <Link to={`/categories/${category.name}`}>{category.name}</Link>
           </div>
           {isPost ? (

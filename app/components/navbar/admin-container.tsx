@@ -1,3 +1,4 @@
+import Footer from '../footer'
 import AdminBar from './AdminBar'
 
 export default function AdminContainer({
