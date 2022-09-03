@@ -6,3 +6,23 @@ node_modules
 .env
 prisma/seed.ts
 audio-server.ts
+.idea/modules.xml
+.idea/my-blog.iml
+.idea/prettier.xml
+.idea/vcs.xml
+.idea/codeStyles/codeStyleConfig.xml
+.idea/dictionaries/void_nation.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/jsLinters/eslint.xml
+prisma/seedsecond.ts
+public/.DS_Store
+public/audio/Black Marble - It's Immaterial - 10 Portland U.mp3
+public/audio/Thomas Happ - Axiom Verge Soundtrack - 16 Without Place.flac
+public/images/draft.svg
+public/images/GitHub-Mark-Light-64px.png
+.prettierignore
+.idea/.gitignore
+.prettierrc.json
+.idea/workspace.xml
+.idea/shelf/Changes.xml
+.idea/shelf/Changes/shelved.patch

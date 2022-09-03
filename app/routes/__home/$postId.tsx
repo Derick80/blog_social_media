@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { useActionData, useLoaderData } from '@remix-run/react'
+import { Link, useActionData, useCatch, useLoaderData, useParams } from '@remix-run/react'
 import React, { useState } from 'react'
 import { ImageUploader } from '~/components/image-uploader'
 import ContentContainer from '~/components/shared/content-container'
@@ -17,6 +17,7 @@ import {
 } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
 import CategoryContainer from '~/components/shared/category-container'
+
 
 type LoaderData = {
   post: {
@@ -152,7 +153,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       throw new Error('Unexpected action')
   }
 }
-export default function PostRoute() {
+export default function PostRoute () {
   const { data, isPublished, categories } = useLoaderData()
   console.log(isPublished)
   const actionData = useActionData()
@@ -200,29 +201,29 @@ export default function PostRoute() {
         <div className='text-base md:text-5xl font-extrabold'>
           Make changes to your post
         </div>
-        {isPublished ? (
+        { isPublished ? (
           <> You are editing a published post</>
         ) : (
           <> You are editing an unpublished Draft</>
-        )}
+        ) }
         <form method='post' className='form-primary'>
           <FormField
             htmlFor='id'
             label=''
             name='id'
             type='hidden'
-            value={formData.id}
-            onChange={(event: any) => handleInputChange(event, 'id')}
-            error={errors?.id}
-          />{' '}
+            value={ formData.id }
+            onChange={ (event: any) => handleInputChange(event, 'id') }
+            error={ errors?.id }
+          />{ ' ' }
           <FormField
             htmlFor='title'
             label='Title'
             name='title'
             type='textarea'
-            value={formData.title}
-            onChange={(event: any) => handleInputChange(event, 'title')}
-            error={errors?.title}
+            value={ formData.title }
+            onChange={ (event: any) => handleInputChange(event, 'title') }
+            error={ errors?.title }
           />
           <p>
             <label className='uppercase'>
@@ -230,8 +231,8 @@ export default function PostRoute() {
               <textarea
                 name='body'
                 className='form-field-primary'
-                value={formData.body}
-                onChange={(event: any) => handleInputChange(event, 'body')}
+                value={ formData.body }
+                onChange={ (event: any) => handleInputChange(event, 'body') }
               />
             </label>
           </p>
@@ -240,29 +241,29 @@ export default function PostRoute() {
             label='Image'
             labelClass='uppercase'
             name='postImg'
-            value={formData.postImg}
-            onChange={(event: any) => handleInputChange(event, 'postImg')}
-          />{' '}
+            value={ formData.postImg }
+            onChange={ (event: any) => handleInputChange(event, 'postImg') }
+          />{ ' ' }
           <div>
             <select
               className='appearance-none text-black dark:text-white dark:bg-gray-400'
               name='categories'
-              multiple={true}
-              onChange={(event: any) => handleInputChange(event, 'categories')}
+              multiple={ true }
+              onChange={ (event: any) => handleInputChange(event, 'categories') }
             >
-              {categories.map(option => (
-                <option key={option.id} value={option.name}>
-                  {option.name}
+              { categories.map(option => (
+                <option key={ option.id } value={ option.name }>
+                  { option.name }
                 </option>
-              ))}
+              )) }
             </select>
           </div>
           <ImageUploader
-            onChange={handleFileUpload}
-            postImg={formData.postImg || ''}
+            onChange={ handleFileUpload }
+            postImg={ formData.postImg || '' }
           />
-          <CategoryContainer categories={categories} isPost={true} />
-          {formData.published ? (
+          <CategoryContainer categories={ categories } isPost={ true } />
+          { formData.published ? (
             <>
               <div className='max-w-full flex flex-row flex-end text-container'>
                 <Tooltip message='Unpublish this post'>
@@ -344,9 +345,28 @@ export default function PostRoute() {
                 </Tooltip>
               </div>
             </div>
-          )}
+          ) }
         </form>
       </div>
     </ContentContainer>
+  )
+}
+
+export function CatchBoundary () {
+  const caught = useCatch()
+
+  if (caught.status === 401) {
+    return (
+      <div className="error-container">
+        <p>You must be logged in to create a joke.</p>
+        <Link to="/login">Login</Link>
+      </div>
+    )
+  }
+}
+export function ErrorBoundary () {
+  const { postId } = useParams()
+  return (
+    <div className="error-container">{ `There was an error loading the post you requested ${postId}. Sorry.` }</div>
   )
 }

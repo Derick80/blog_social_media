@@ -1,42 +1,69 @@
-import type {ActionFunction, LoaderFunction} from '@remix-run/node'
-import {json, redirect} from '@remix-run/node'
-import {useActionData, useLoaderData} from '@remix-run/react'
-import React, {useEffect, useRef, useState} from 'react'
-import {ImageUploader} from '~/components/image-uploader'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+import { useActionData, useLoaderData } from '@remix-run/react'
+import React, { useEffect, useRef, useState } from 'react'
+import { ImageUploader } from '~/components/image-uploader'
 import Button from '~/components/shared/button'
 import ContentContainer from '~/components/shared/content-container'
 import FormField from '~/components/shared/form-field'
 
-import {getUser, getUserId, requireUserId} from '~/utils/auth.server'
-import {createDraft} from '~/utils/post.server'
-import {validateText} from '~/utils/validators.server'
-import {getCategories} from '~/utils/categories.server'
-
+import { getUser, getUserId, requireUserId } from '~/utils/auth.server'
+import { createDraft } from '~/utils/post.server'
+import { validateText } from '~/utils/validators.server'
+import { getCategories } from '~/utils/categories.server'
+export function ErrorBoundary () {
+  return (
+    <div className="error-container">
+      Sorry, something went wrong loading the create new Post page.  Please try again later!
+    </div>
+  )
+}
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await getUserId(request);
-  const user = await getUser(request);
-  const {categories} = await getCategories()
+  const userId = await getUserId(request)
+  const user = await getUser(request)
+  const { categories } = await getCategories()
 
   if (!userId) {
-    throw new Response("Unauthorized", { status: 401 });
+    throw new Response("Unauthorized", { status: 401 })
   }
 
-  const role = await process.env.ADMIN;
+  const role = await process.env.ADMIN
 
   if (role != user?.email) {
     throw new Response("You are not authorized to edit this post", {
       status: 401,
-    });
+    })
   }
-  return json({ userId , categories});
-};
+  return json({ userId, categories })
+}
 
+type ActionData = {
+  formError?: string
+  fieldErrors?: {
+    title: string | undefined
+    body: string | undefined
+    categories?: object | undefined
+    postImg: string | undefined
+  }
+  fields?: {
+    title: string
+    body: string
+    postImg: string
+
+  }
+  categories?: Array<{ id: string; name: string }>
+
+}
+
+const badRequest = (data: ActionData) => {
+  json(data, { status: 400 })
+}
 export const action: ActionFunction = async ({ request }) => {
-  const userId = await requireUserId(request);
-  const formData = await request.formData();
-  const title = formData.get("title");
-  const body = formData.get("body");
-  const postImg = formData.get("postImg");
+  const userId = await requireUserId(request)
+  const formData = await request.formData()
+  const title = formData.get("title")
+  const body = formData.get("body")
+  const postImg = formData.get("postImg")
   const categories = formData.getAll('categories') as []
 
 
@@ -46,93 +73,85 @@ export const action: ActionFunction = async ({ request }) => {
     typeof title !== "string" ||
     typeof body !== "string" ||
     typeof postImg !== "string" ||
-      typeof categories !== 'object'
+    typeof categories !== 'object'
   ) {
-    return json(
-      {
-        error: "invalid form data",
-        form: action,
-      },
-      { status: 400 }
-    );
+    return badRequest({
+      formError: "Form not submitted correctly",
+    })
   }
 
-  const errors = {
+  const fieldErrors = {
     title: validateText(title as string),
-
     body: validateText(body as string),
     postImg: validateText(postImg as string),
-  };
+  }
 
-  if (Object.values(errors).some(Boolean))
-    return json(
-      {
-        errors,
-        fields: { title, body, postImg, categories },
-        form: action,
-      },
-      { status: 400 }
-    );
-  const converted = categories.map((category)=>{return {name:category}})
+  const fields = { title, body, postImg }
+
+  if (Object.values(fieldErrors).some(Boolean)) {
+    return badRequest({
+      fieldErrors, fields
+    })
+  }
+
+  const converted = categories.map((category) => { return { name: category } })
 
   await createDraft({
-    title,
-    body,
-    postImg,
+    ...fields,
     userId,
     categories: converted,
-  });
+  })
 
-  return redirect("drafts");
-};
+  return redirect("drafts")
+}
 
-export default function NewPostRoute() {
-  const { userId,categories } = useLoaderData();
-  const actionData = useActionData();
-  const firstLoad = useRef(true);
-  const [formError, setFormError] = useState(actionData?.error || "");
-  const [errors, setErrors] = useState(actionData?.errors || {});
-  console.log(actionData);
+export default function NewPostRoute () {
+  const { userId, categories } = useLoaderData()
+  const actionData = useActionData()
+  const firstLoad = useRef(true)
+  const [formError, setFormError] = useState(actionData?.error || "")
+  const [errors, setErrors] = useState(actionData?.errors || {})
+  console.log(actionData)
   const [formData, setFormData] = useState({
     title: actionData?.fields?.title || "",
     body: actionData?.fields?.body || "",
     postImg: actionData?.fields?.postImg || "",
-    categories: actionData?.fields?.categories || [],
+    categories: actionData?.categories || [],
 
     userId: userId,
-  });
+  })
   useEffect(() => {
     if (!firstLoad.current) {
-      setFormError("");
+      setFormError("")
     }
-  }, [formData]);
+  }, [formData])
 
   useEffect(() => {
-    firstLoad.current = false;
-  }, []);
+    firstLoad.current = false
+  }, [])
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     field: string
   ) => {
-    setFormData((form) => ({ ...form, [field]: event.target.value }));
-  };
+    setFormData((form) => ({ ...form, [field]: event.target.value }))
+  }
   const handleFileUpload = async (file: File) => {
-    let inputFormData = new FormData();
-    inputFormData.append("postImg", file);
+    let inputFormData = new FormData()
+    inputFormData.append("postImg", file)
     const response = await fetch("/image", {
       method: "POST",
       body: inputFormData,
-    });
+    })
 
-    const { imageUrl } = await response.json();
-    console.log("imageUrl", imageUrl);
+    const { imageUrl } = await response.json()
+    console.log("imageUrl", imageUrl)
 
     setFormData({
       ...formData,
       postImg: imageUrl,
-    });
-  };
+    })
+  }
   return (
 
     <ContentContainer>
@@ -141,47 +160,61 @@ export default function NewPostRoute() {
           Write a New Post
         </div>
         <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full mb-2">
-          {formError}
+          { formError }
         </div>
         <form
           method="post"
-          onSubmit={(e) =>
+          onSubmit={ (e) =>
             !confirm("Are you sure?") ? e.preventDefault() : true
           }
           className="form-primary"
         >
           <FormField
             htmlFor="title"
-            label="title"
-            labelClass="uppercase"
+            label="Title"
             name="title"
             type="textarea"
-            value={formData.title}
-            onChange={(event: any) => handleInputChange(event, "title")}
-            error={errors?.title}
+            value={ formData.title }
+            onChange={ (event: any) => handleInputChange(event, "title") }
+            aria-invalid={
+              Boolean(actionData?.fieldErrors?.title) ||
+              undefined
+            }
+            aria-errormessage={
+              actionData?.fieldErrors?.title
+                ? "title-error"
+                : undefined
+            }
           />
+          { actionData?.fieldErrors?.title ? (
+            <p className="form-validation-error"
+              role="alert"
+              id="title-error">
+              { actionData.fieldErrors.title }
+            </p>
+          ) : null }
           <p>
             <label className="uppercase">
-              Content:{" "}
+              Content:{ " " }
               <textarea
                 name="body"
                 className="form-field-primary"
-                value={formData.body}
-                onChange={(event: any) => handleInputChange(event, "body")}
+                value={ formData.body }
+                onChange={ (event: any) => handleInputChange(event, "body") }
               />
             </label>
           </p>
           <div>
-            <select className="text-black dark:text-white dark:bg-gray-400"                name="categories"
-                    multiple={true}
-                    onChange={(event:any)=>handleInputChange(event,"categories")}
+            <select className="text-black dark:text-white dark:bg-gray-400" name="categories"
+              multiple={ true }
+              onChange={ (event: any) => handleInputChange(event, "categories") }
 
             >
-              {categories.map((option) => (
-                  <option key={option.id} value={option.name}>
-                    {option.name}
-                  </option>
-              ))}
+              { categories.map((option) => (
+                <option key={ option.id } value={ option.name }>
+                  { option.name }
+                </option>
+              )) }
 
             </select>
           </div>
@@ -191,16 +224,16 @@ export default function NewPostRoute() {
             labelClass="uppercase"
             name="postImg"
             type="hidden"
-            value={formData.postImg}
-            onChange={(event: any) => handleInputChange(event, "postImg")}
+            value={ formData.postImg }
+            onChange={ (event: any) => handleInputChange(event, "postImg") }
           />
           <Button type="submit">Save as a Draft</Button>
         </form>
         <ImageUploader
-          onChange={handleFileUpload}
-          postImg={formData.postImg || ""}
+          onChange={ handleFileUpload }
+          postImg={ formData.postImg || "" }
         />
       </div>
     </ContentContainer>
-  );
+  )
 }
