@@ -20,7 +20,7 @@ model User {
   password  String
   posts     Post[]
   profile   Profile?
-  role      Role     @default(USER)
+  role      Role     @default(ADMIN)
 }
 
 model Post {
