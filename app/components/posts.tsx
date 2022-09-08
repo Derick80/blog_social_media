@@ -2,12 +2,16 @@ import Tooltip from '~/components/shared/tooltip'
 import { Link } from '@remix-run/react'
 import Icon from '~/components/shared/icon'
 import CategoryContainer from '~/components/category-container'
+import Sectionheader from './shared/section-header'
+import { format } from 'date-fns'
 
 type PostsProps = {
   posts: {
     id: string
     title: string
     body: string
+    createdAt: string
+    updatedAt: string
     postImg: string
     categories: Array<{ id: string; name: string }>
   }
@@ -18,24 +22,19 @@ export default function Posts({ posts, isOwner, isPost }: PostsProps) {
   return (
     <div
       key={posts.id}
-      className='w-full rounded-xl shadow-2xl shadow-grey-300 p-2 md:w-1/2 mt-2 md:mt-4 md:mb-4'
+      className='rounded-2xl shadow-xl p-2 md:p-4 mb-10 md:mb-14 md:col-span-11'
     >
+      <Sectionheader>{posts.title}</Sectionheader>
+      <CategoryContainer categories={posts.categories} isPost={isPost} />
+      <div className='flex flex-col items-start md:flex-row md:gap-4'>
+        <img className='object-cover object-top w-1/2 h-full md:rounded-md mb-6 shadow' src={posts.postImg} alt='profile' />
+        <div className='text-base max-w-prose md:text-2xl'>
+          {posts.body}
+        </div>
 
-        <h1 className='text-xl md:my-6 border-b-2 md:text-2xl'>
-          {posts.title}
-        </h1>
-
-      <div className='flex flex-col-reverse p-2 md:flex md:flex-row md:p-2 md:space-x-10'>
-        <img
-          className='object-contain w-1/2 rounded'
-          src={posts.postImg}
-          alt='profile'
-        />
-        <div className='text-base max-w-prose md:text-2xl'>{posts.body}</div>
-
-        <CategoryContainer categories={posts.categories} isPost={isPost} />
 
       </div>
+      <div className='text-m-p-sm md:text-d-psm'>   {format(new Date(posts.createdAt), 'MMMM do, yyyy')}</div>
 
       {isOwner ? (
         <Tooltip message='Edit Post'>

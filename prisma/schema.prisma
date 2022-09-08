@@ -50,6 +50,7 @@ model Profile {
   id              String   @id @unique @default(uuid())
   firstName       String
   lastName        String
+  title           String
   bio             String
   birthDay        DateTime
   currentLocation String

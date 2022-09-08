@@ -3,7 +3,6 @@ import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '~/utils/auth.server'
 import { getPosts } from '~/utils/post.server'
-import ContentContainer from '~/components/shared/content-container'
 import Posts from '~/components/posts'
 
 type LoaderData = {
@@ -30,10 +29,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Home() {
   const data = useLoaderData<LoaderData>()
   return (
-    <>
-      <div className='text-base md:text-3xl font-extrabold uppercase underline'>
-        Posts
-      </div>
+<>
+
       {data.userPosts.map(post => (
         <Posts
           key={post.id}

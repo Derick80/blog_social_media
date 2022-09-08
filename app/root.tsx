@@ -35,14 +35,14 @@ function Document({
   return (
     <html
       lang='en'
-      className='font-Condensed h-screen w-full dark:bg-zinc-800 dark:text-white'
+
     >
       <head>
         <Meta />
         <title>{title}</title>
         <Links />
       </head>
-      <body>
+      <body  className='flex flex-col font-Condensed min-h-screen w-full dark:bg-zinc-800 dark:text-white'>
         {children}
         <ScrollRestoration />
         <Scripts />

@@ -6,6 +6,7 @@ import type {
 import { json, redirect } from '@remix-run/node'
 import { useActionData } from '@remix-run/react'
 import React, { useState } from 'react'
+import Layout from '~/components/layout'
 import FormField from '~/components/shared/form-field'
 import { getUser, login, register } from '~/utils/auth.server'
 import {
@@ -100,9 +101,10 @@ export default function Login() {
   }
   return (
     <>
-      <div className='w-full flex flex-col items-center'>
-        <h2 className='text-5xl font-extrabold'>Welcome to my bank</h2>
-        <p className='text-2xl font-semibold'>
+     <Layout isOwner={false}>
+     <div className='w-full flex flex-col items-center'>
+        <h2 className='text-5xl font-extrabold m-10'>Welcome to my Blog</h2>
+        <p className='text-2xl font-semibold m-5'>
           {action === 'login'
             ? 'Please Login to leave a comment on a Post'
             : 'Sign up to start commenting'}
@@ -112,7 +114,6 @@ export default function Login() {
             {formError}
           </div>
           <FormField
-            className='border'
             htmlFor='email'
             label='Email'
             labelClass='text-2xl font-semibold my-2 px-2'
@@ -121,7 +122,6 @@ export default function Login() {
             error={errors?.email}
           />
           <FormField
-            className='border'
             htmlFor='password'
             label='Password'
             labelClass='text-2xl font-semibold my-2 px-2'
@@ -129,22 +129,23 @@ export default function Login() {
             type='password'
             onChange={event => handleInputChange(event, 'password')}
             error={errors?.password}
-            autocomplete='current-password'
+            autocomplete='new-password'
           />
 
           <div className='w-full text-center'>
             <button type='submit' name='_action' value={action}>
-              {action === 'login' ? 'Please log in' : 'Sign up'}
+              {action === 'login' ? `Login` :  `Sign Up`}
             </button>
           </div>
         </form>
         <button
-          onClick={() => setAction(action == 'login' ? 'register' : '' + 'in')}
+          onClick={() => setAction(action == 'login' ? `don't have an account? Sign up!` : '' + 'in')}
           className='rounded-xl dark:bg-light-blue font-semibold px-3 py-2 transition duration-300 ease-in-out hover:dark:bg-light-orange-400'
         >
-          {action === 'login' ? 'Register' : 'Sign In'}
+          {action === 'login' ? `Don't have an account? Sign up!` : 'Already have an account? Sign In'}
         </button>{' '}
       </div>
+     </Layout>
     </>
   )
 }

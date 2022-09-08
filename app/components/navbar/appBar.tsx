@@ -4,7 +4,7 @@ import Tooltip from '~/components/shared/tooltip'
 export default function AppBar() {
   return (
     <>
-      <nav className='w-full p-2 mt-2 font-semibold uppercase flex flex-wrap mx-auto text-center justify-around'>
+      <header className='w-full p-2 mt-2 font-semibold uppercase flex flex-wrap mx-auto text-center justify-around'>
         <Tooltip message='View Posts'>
           <NavLink
             to='/'
@@ -33,7 +33,7 @@ export default function AppBar() {
             About
           </NavLink>
         </Tooltip>
-      </nav>
+      </header>
     </>
   )
 }

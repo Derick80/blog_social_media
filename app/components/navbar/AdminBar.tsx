@@ -4,7 +4,7 @@ import Tooltip from '../shared/tooltip'
 
 export default function AdminBar() {
   return (
-    <nav className='w-full p-2 mt-2 font-semibold uppercase flex flex-wrap mx-auto text-center justify-around'>
+    <header className='w-full p-2 mt-2 font-semibold uppercase flex flex-wrap mx-auto text-center justify-around'>
       <Tooltip message='View posts'>
         <NavLink
           to='/'
@@ -72,6 +72,6 @@ export default function AdminBar() {
           </button>
         </Tooltip>
       </form>
-    </nav>
+    </header>
   )
 }

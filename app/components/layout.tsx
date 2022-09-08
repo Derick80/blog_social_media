@@ -13,7 +13,11 @@ export default function Layout({
   return isOwner ? (
     <>
       {' '}
-      <AdminContainer isOwner={isOwner}>{children}
+      <AdminContainer isOwner={isOwner}>
+
+      <main className='flex flex-col flex-1 items-center container mt-5 md:mt-12 lg:mt-32' tabIndex={-1}>
+      {children}
+      </main>
 
       </AdminContainer>
       <Footer/>

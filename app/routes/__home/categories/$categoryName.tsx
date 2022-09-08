@@ -14,6 +14,8 @@ type LoaderData = {
     body: string
     email: string
     postImg: string
+    createdAt: string
+    updatedAt: string
     published: boolean
     categories: Array<{ id: string; name: string }>
   }>
@@ -39,12 +41,12 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 export default function CategoryView() {
   const { postsByCategory, isOwner, categoryName }: LoaderData = useLoaderData()
   return (
-    <>
+    <div className='flex flex-col'>
       <Sectionheader>Posts with the {categoryName} Tag</Sectionheader>
 
       {postsByCategory.map(post => (
         <Posts key={post.id} posts={post} isOwner={isOwner} isPost={false} />
       ))}
-    </>
+    </div>
   )
 }

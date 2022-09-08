@@ -61,20 +61,22 @@ export default function About() {
     pronouns,
     occupation,
     email,
-    profilePicture
+    profilePicture,
+    title
   } = data.userProfile
 
   return (
     <Layout isOwner={data.isOwner}>
       {data.userProfile ? (
-        <div key={id} className="p-1 md:p-2">
+        <div key={id} className=''>
 
           <div className='max-w-md mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl'>
 
-            <div className='text-base md:text-xl underline font-semibold'>
+            <div className='text-base md:text-xl underline font-semibold uppercase'>
               {firstName} {lastName}{' '}
 
           </div>
+         <p className='italic'> {title}</p>
             <img
               className='inline max-h-100 max-w-100 md:max-h-600 md:max-w-600'
               src={profilePicture}
@@ -85,6 +87,7 @@ export default function About() {
               <div>
                 <div className='text-base md:text-xl underline font-semibold'>About Me</div>
                 <div>{bio}</div>
+                <a href="mailto:derickchoskinson@gmail.com">Send email to me</a>
 
               </div>
             </div>
