@@ -5,15 +5,11 @@
     "seed": "node --require esbuild-register prisma/seed.ts"
   },
   "scripts": {
+    "build": "npm run build:css && remix build",
     "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css",
-    "build:remix": "remix build",
-    "build": "run-s build:*",
-    "start": "remix-serve build",
-    "build:prisma": "prisma migrate deploy",
-    "generate:css": "tailwindcss -o ./app/styles/tailwind.css",
     "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
-    "vercel-build": "prisma generate && prisma migrate deploy && remix build",
+    "vercel-build": "prisma db push && prisma db seed && prisma migrate deploy && remix build",
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
