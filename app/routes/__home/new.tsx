@@ -13,7 +13,8 @@ import { getCategories } from '~/utils/categories.server'
 import Sectionheader from '~/components/shared/section-header'
 export function ErrorBoundary() {
   return (
-    <div className='error-container'>
+    <div className='text-black dark:text-white bg-white dark:bg-slate-500'>
+
       Sorry, something went wrong loading the create new Post page. Please try
       again later!
     </div>

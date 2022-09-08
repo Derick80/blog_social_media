@@ -371,6 +371,7 @@ export function CatchBoundary() {
 export function ErrorBoundary() {
   const { postId } = useParams()
   return (
-    <div className='error-container'>{`There was an error loading the post you requested ${postId}. Sorry.`}</div>
+    <div className='text-black dark:text-white bg-white dark:bg-slate-500'>
+    {`There was an error loading the post you requested ${postId}. Sorry.`}</div>
   )
 }

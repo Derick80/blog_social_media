@@ -75,7 +75,7 @@ export function CatchBoundary() {
 export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <Document title='Uh-oh!'>
-      <div className='error-container'>
+    <div className='text-black dark:text-white bg-white dark:bg-slate-500'>
         <h1>App Error</h1>
         <pre>{error.message}</pre>
       </div>

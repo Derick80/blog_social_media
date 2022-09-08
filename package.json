@@ -5,14 +5,19 @@
     "seed": "node --require esbuild-register prisma/seed.ts"
   },
   "scripts": {
-    "build": "npm run build:css && remix build",
     "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css",
+    "build:remix": "remix build",
+    "build": "run-s build:*",
+    "start": "remix-serve build",
+    "build:prisma": "prisma migrate deploy",
+    "generate:css": "tailwindcss -o ./app/styles/tailwind.css",
     "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
     "vercel-build": "prisma generate && prisma migrate resolve && remix build",
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "^4.1.1",
     "@remix-run/node": "^1.6.7",
     "@remix-run/react": "^1.6.7",
     "@remix-run/serve": "^1.6.7",
@@ -25,7 +30,6 @@
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@prisma/client": "^4.1.1",
     "@remix-run/dev": "^1.6.7",
     "@remix-run/eslint-config": "^1.6.7",
     "@remix-run/vercel": "^1.7.0",
@@ -40,6 +44,7 @@
     "esbuild-register": "^3.3.3",
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.16",
     "prettier": "2.7.1",
     "tailwindcss": "^3.1.8",

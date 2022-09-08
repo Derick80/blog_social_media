@@ -52,13 +52,17 @@ async function seed() {
       published: true,
       userId: user.id,
       categories: {
-        create: [
-          { name: 'Coding' },
+        connectOrCreate: [
           {
-            name: 'Typescript'
-          }
-        ]
-      }
+            where: { name: 'Coding' },
+            create: { name: 'Coding' }
+          },
+          {
+            where: { name: 'Prisma' },
+            create: { name: 'Prisma' }
+          },
+        ],
+    },
     }
   })
 
@@ -70,11 +74,10 @@ const post2 = await prisma.post.create({
       published: false,
       userId: user.id,
       categories: {
-        create: [
-          { name: 'React' },
-          {
-            name: 'Learning'
-          }
+        connectOrCreate: [
+       {where:{name:'React'},create:{name:'React'}},
+        {where:{name:'Typescript'},create:{name:'Typescript'}},
+
         ]
       }
     }
@@ -87,11 +90,10 @@ const post2 = await prisma.post.create({
       published: true,
       userId: user.id,
       categories: {
-        create: [
-          { name: 'Genetics' },
-          {
-            name: 'Science'
-          }
+        connectOrCreate: [
+       {where:{name:'Genetics'},create:{name:'Genetics'}},
+        {where:{name:'Science'},create:{name:'Science'}},
+
         ]
       }
     }

@@ -45,7 +45,8 @@ export default function Home() {
 
 export function ErrorBoundary() {
   return (
-    <div className='error-container'>
+    <div className='text-black dark:text-white bg-white dark:bg-slate-500'>
+
       Sorry, something went wrong! :/ Please try again later.
     </div>
   )
