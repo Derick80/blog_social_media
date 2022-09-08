@@ -3,8 +3,8 @@ import { CategoryForm, UpdateCategoryForm } from '~/utils/types.server'
 import { json } from '@remix-run/node'
 
 export async function getCategories() {
-  const categories = await prisma.category.findMany({})
-  return { categories }
+  const allCategories = await prisma.category.findMany({})
+  return { allCategories }
 }
 
 export const createCategory = async (form: CategoryForm) => {

@@ -22,12 +22,21 @@ export default function Posts({ posts, isOwner, isPost }: PostsProps) {
   return (
     <div
       key={posts.id}
-      className='rounded-2xl shadow-xl p-2 md:p-4 mb-10 md:mb-14 md:col-span-11'
+      className='dark:bg-zinc-600 rounded-2xl shadow-xl p-2 md:p-4 mb-10 md:mb-14 md:col-span-11'
     >
       <Sectionheader>{posts.title}</Sectionheader>
+      <hr className="w-3/4 my-3 h-px bg-white-200 border-0 dark:bg-white"/>
+
       <CategoryContainer categories={posts.categories} isPost={isPost} />
-      <div className='flex flex-col items-start md:flex-row md:gap-4'>
-        <img className='object-cover object-top w-1/2 h-full md:rounded-md mb-6 shadow' src={posts.postImg} alt='profile' />
+      <hr className="my-3 h-px bg-white-200 border-0 dark:bg-white"/>
+
+      <div className='flex flex-col items-start md:flex-row md:gap-6'>
+        <img className='object-cover object-top w-1/2 h-full md:rounded-md mb-6 shadow'
+         style={{
+          backgroundSize: 'cover',
+          ...(posts.postImg ? { backgroundImage: `url(${posts.postImg})` } : {})
+        }}
+        src={posts.postImg} alt='profile' />
         <div className='text-base max-w-prose md:text-2xl'>
           {posts.body}
         </div>
@@ -37,11 +46,13 @@ export default function Posts({ posts, isOwner, isPost }: PostsProps) {
       <div className='text-m-p-sm md:text-d-psm'>   {format(new Date(posts.createdAt), 'MMMM do, yyyy')}</div>
 
       {isOwner ? (
-        <Tooltip message='Edit Post'>
-          <Link to={`/${posts.id}`} className='text-green-600 dark:text-white'>
-            Edit Post
+       <div className='flex flex-row justify-end'>
+         <Tooltip message='Edit Post'>
+          <Link to={`/${posts.id}`} className='dark:text-white font-semibold'>
+            EDIT
           </Link>
         </Tooltip>
+        </div>
       ) : null}
     </div>
   )

@@ -23,6 +23,7 @@ import {
 import { validateText } from '~/utils/validators.server'
 import CategoryContainer from '~/components/category-container'
 import Sectionheader from '~/components/shared/section-header'
+import { getCategories } from '~/utils/categories.server'
 
 type LoaderData = {
   post: {
@@ -36,14 +37,22 @@ type LoaderData = {
     }
     categories: Array<{ id: string; name: string }>
   }
-  categories: Array<{ id: string; name: string }>
+  allCategories: Array<{ id: string; name: string }>
 
   isPublished: boolean
   postId: string
 }
+
+const badRequest = (data: ActionData) => {
+  json(data, { status: 400 })
+}
 export const loader: LoaderFunction = async ({ params, request }) => {
   const userId = await getUserId(request)
   const user = await getUser(request)
+  const { allCategories } = await getCategories()
+
+  console.log(allCategories)
+
   const postId = params.postId as string
 
   const post = userId ? await getPost({ id: postId, userId }) : null
@@ -58,13 +67,28 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     })
   }
   const categories = post.categories.map(category => category)
+  console.log(categories);
+
+  const catResults = allCategories.map(category => {
+    const cat = categories.find(cat => cat.id == category.id)
+    if (cat) {
+      return { ...category, checked: true }
+    } else {
+      return { ...category, checked: false }
+    }
+  })
+  console.log(catResults);
+
+
   const data: LoaderData = {
     post,
     isPublished,
     postId,
-    categories
+    categories,
+    allCategories,
+    catResults
   }
-  return json({ data, user, isPublished, categories })
+  return json({ data, user, isPublished, categories, allCategories, catResults })
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -82,24 +106,28 @@ export const action: ActionFunction = async ({ request, params }) => {
   const converted = categories.map(category => {
     return { name: category }
   })
+  if (
+    typeof id !== 'string' ||
+    typeof title !== 'string' ||
+    typeof body !== 'string' ||
+    typeof userId !== 'string' ||
+    typeof postImg !== 'string' ||
+    typeof categories !== 'object'
+  ) {
+    return json({ error: 'invalid form data' }, { status: 400 })
+  }
 
+  const errors = {
+    title: validateText(title as string),
+
+    body: validateText(body as string),
+    postImg: validateText(postImg as string),
+  }
   switch (action) {
     case 'save':
-      if (
-        typeof id !== 'string' ||
-        typeof title !== 'string' ||
-        typeof body !== 'string' ||
-        typeof userId !== 'string' ||
-        typeof postImg !== 'string'
-      ) {
-        return json({ error: 'invalid form data' }, { status: 400 })
-      }
 
-      const errors = {
-        title: validateText(title as string),
 
-        body: validateText(body as string)
-      }
+
 
       if (Object.values(errors).some(Boolean))
         return json(
@@ -114,7 +142,7 @@ export const action: ActionFunction = async ({ request, params }) => {
           { status: 400 }
         )
 
-      await updatePost({ id, userId, title, body, postImg, categories })
+      await updatePost({ id, userId, title, body, postImg, categories: converted })
       return redirect(`/${id}`)
     case 'updateAndPublish':
       if (
@@ -159,7 +187,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 }
 export default function PostRoute() {
-  const { data, isPublished, categories } = useLoaderData()
+  const { data, isPublished, categories,allCategories, catResults } = useLoaderData()
   console.log(isPublished)
   const actionData = useActionData()
   const [errors] = useState(actionData?.errors || {})
@@ -174,7 +202,7 @@ export default function PostRoute() {
   })
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement |HTMLTextAreaElement>,
     field: string
   ) => {
     setFormData(form => ({
@@ -217,7 +245,7 @@ export default function PostRoute() {
             name='id'
             type='hidden'
             value={formData.id}
-            onChange={(event: any) => handleInputChange(event, 'id')}
+            onChange={event => handleInputChange(event, 'id')}
             error={errors?.id}
           />{' '}
           <FormField
@@ -226,7 +254,7 @@ export default function PostRoute() {
             name='title'
             type='textarea'
             value={formData.title}
-            onChange={(event: any) => handleInputChange(event, 'title')}
+            onChange={event => handleInputChange(event, 'title')}
             error={errors?.title}
           />
           <p>
@@ -249,14 +277,18 @@ export default function PostRoute() {
             onChange={(event: any) => handleInputChange(event, 'postImg')}
           />{' '}
           <div>
+            <label className='uppercase'>Tag your post </label>
+
             <select
-              className='appearance-none text-black dark:text-white dark:bg-gray-400'
+              className='form-field-primary'
               name='categories'
               multiple={true}
-              onChange={(event: any) => handleInputChange(event, 'categories')}
+              onChange={(event) => handleInputChange(event, 'categories')}
             >
-              {categories.map(option => (
-                <option key={option.id} value={option.name}>
+              {catResults.map(option => (
+                <option key={option.id} value={option.name}
+                selected={option.checked ? true : false}
+>
                   {option.name}
                 </option>
               ))}
@@ -372,6 +404,7 @@ export function ErrorBoundary() {
   const { postId } = useParams()
   return (
     <div className='text-black dark:text-white bg-white dark:bg-slate-500'>
-    {`There was an error loading the post you requested ${postId}. Sorry.`}</div>
+      {`There was an error loading the post you requested ${postId}. Sorry.`}
+    </div>
   )
 }

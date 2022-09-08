@@ -141,7 +141,7 @@ export default function NewPostRoute() {
   }, [])
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement |HTMLTextAreaElement>,
     field: string
   ) => {
     setFormData(form => ({ ...form, [field]: event.target.value }))
@@ -182,7 +182,7 @@ export default function NewPostRoute() {
             name='title'
             type='textarea'
             value={formData.title}
-            onChange={(event: any) => handleInputChange(event, 'title')}
+            onChange={(event) => handleInputChange(event, 'title')}
             aria-invalid={Boolean(actionData?.fieldErrors?.title) || undefined}
             aria-errormessage={
               actionData?.fieldErrors?.title ? 'title-error' : undefined
@@ -195,21 +195,23 @@ export default function NewPostRoute() {
           ) : null}
           <p>
             <label className='uppercase'>
-              Content:{' '}
+              Content
               <textarea
                 name='body'
                 className='form-field-primary'
                 value={formData.body}
-                onChange={(event: any) => handleInputChange(event, 'body')}
+                onChange={(event) => handleInputChange(event, 'body')}
               />
             </label>
           </p>
           <div>
+            <label className='uppercase'>Tag your post </label>
             <select
-              className='text-black dark:text-white dark:bg-gray-400'
+                            className='form-field-primary'
+
               name='categories'
               multiple={true}
-              onChange={(event: any) => handleInputChange(event, 'categories')}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>,) => handleInputChange(event, 'categories')}
             >
               {categories.map(option => (
                 <option key={option.id} value={option.name}>
@@ -225,14 +227,17 @@ export default function NewPostRoute() {
             name='postImg'
             type='hidden'
             value={formData.postImg}
-            onChange={(event: any) => handleInputChange(event, 'postImg')}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, 'postImg')}
           />
-          <Button type='submit'>Save as a Draft</Button>
-        </form>
-        <ImageUploader
+
+          <ImageUploader
           onChange={handleFileUpload}
           postImg={formData.postImg || ''}
         />
+          <button className='py-2 px-4 bg-green-400 hover:bg-green-600 rounded-full' type='submit'>Save as a Draft</button>
+
+        </form>
+
       </div>
     </>
   )

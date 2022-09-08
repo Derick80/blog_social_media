@@ -85,17 +85,23 @@ export async function updatePost({
   body,
   postImg,
   categories
-}: CreateOrEditPost) {
+}: Omit<CreateOrEditPost,  'userId'> & { userId: User['id'] }) {
   try {
     const updatePost = await prisma.post.update({
       where: { id: id },
       data: {
         title,
         body,
-        postImg
+        postImg,
+
+      categories: {
+        connectOrCreate: categories.map(category => ({
+          where: { name: category.name },
+          create: { name: category.name }
+        }))
       }
+    }
     })
-    return { updatePost }
   } catch (error) {
     throw new Error('Unable to save post draft')
   }
@@ -104,7 +110,8 @@ export async function updateAndPublish({
   id,
   title,
   body,
-  postImg
+  postImg,
+  categories
 }: CreateOrEditPost) {
   try {
     const updateAndPublish = await prisma.post.update({
@@ -113,10 +120,15 @@ export async function updateAndPublish({
         title,
         body,
         postImg,
-        published: true
+        published: true,
+        categories: {
+          connectOrCreate: categories.map(category => ({
+            where: { name: category.name },
+            create: { name: category.name }
+          }))
+        }
       }
     })
-    return { updateAndPublish }
   } catch (error) {
     throw new Error('Unable to update AND Publish post')
   }
