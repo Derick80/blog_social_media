@@ -22,7 +22,7 @@ export default function Posts({ posts, isOwner, isPost }: PostsProps) {
   return (
     <div
       key={posts.id}
-      className='dark:bg-zinc-600 rounded-2xl shadow-xl p-2 md:p-4 mb-10 md:mb-14 md:col-span-11'
+      className='dark:bg-zinc-600 rounded-2xl shadow-xl p-2 md:p-4 mb-10 md:mb-14 col-span-6 Eatmd:col-span-11'
     >
       <Sectionheader>{posts.title}</Sectionheader>
       <hr className="w-3/4 my-3 h-px bg-white-200 border-0 dark:bg-white"/>

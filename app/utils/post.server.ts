@@ -209,12 +209,12 @@ export const updatePostWithCategory = async (form: UpdatePost) => {
 }
 
 export const removeCategoryFromPost = async (
-  postId: string,
+  id: string,
   categoryName: string
 ) => {
   const updatedPostCategories = await prisma.post.update({
     where: {
-      id: postId
+      id: id
     },
     data: {
       categories: {

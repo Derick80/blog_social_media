@@ -16,6 +16,7 @@ import {
   deletePost,
   getPost,
   publishPost,
+  removeCategoryFromPost,
   unpublishPost,
   updateAndPublish,
   updatePost
@@ -37,6 +38,7 @@ type LoaderData = {
     }
     categories: Array<{ id: string; name: string }>
   }
+
   allCategories: Array<{ id: string; name: string }>
 
   isPublished: boolean
@@ -51,7 +53,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const user = await getUser(request)
   const { allCategories } = await getCategories()
 
-  console.log(allCategories)
 
   const postId = params.postId as string
 
@@ -67,7 +68,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     })
   }
   const categories = post.categories.map(category => category)
-  console.log(categories);
 
   const catResults = allCategories.map(category => {
     const cat = categories.find(cat => cat.id == category.id)
@@ -77,7 +77,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
       return { ...category, checked: false }
     }
   })
-  console.log(catResults);
 
 
   const data: LoaderData = {
@@ -182,6 +181,18 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
       await deletePost(id)
       return redirect('drafts')
+      case 'removeCategory':
+        if (typeof id !== 'string') {
+          return json({
+            error: 'invalid form data removeCategory'
+          })
+        }
+        await removeCategoryFromPost(postId,
+
+          )
+
+
+        return redirect(`/edit/${id}`)
     default:
       throw new Error('Unexpected action')
   }
@@ -274,7 +285,7 @@ export default function PostRoute() {
             labelClass='uppercase'
             name='postImg'
             value={formData.postImg}
-            onChange={(event: any) => handleInputChange(event, 'postImg')}
+            onChange={(event) => handleInputChange(event, 'postImg')}
           />{' '}
           <div>
             <label className='uppercase'>Tag your post </label>
@@ -379,6 +390,16 @@ export default function PostRoute() {
                     <span className='material-symbols-outlined'>save</span>
                   </button>
                 </Tooltip>
+                <Tooltip message='Delete this category'>
+                <button
+                  type='submit'
+                  name='_action'
+                  value='removeCategory'
+                  className='btn-primary'
+                >
+                  Delete
+                </button>
+              </Tooltip>
               </div>
             </div>
           )}

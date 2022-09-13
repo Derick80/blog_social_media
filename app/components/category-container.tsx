@@ -26,7 +26,10 @@ export default function CategoryContainer({
           {isPost ? (
             <div>
               <div className='dark:text-red-600'>
-                <button className=''>
+                <button className=''
+                action='_action'
+                value='removeCategory'
+                >
                   <Icon icon='close' />
                 </button>
               </div>
