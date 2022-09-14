@@ -695,12 +695,12 @@ video {
   z-index: 10;
 }
 
-.col-span-6{
-  grid-column: span 6 / span 6;
-}
-
 .col-span-1{
   grid-column: span 1 / span 1;
+}
+
+.col-span-6{
+  grid-column: span 6 / span 6;
 }
 
 .m-10{
@@ -1286,6 +1286,10 @@ video {
 }
 
 @media (min-width: 768px){
+  .md\:col-span-11{
+    grid-column: span 11 / span 11;
+  }
+
   .md\:col-start-2{
     grid-column-start: 2;
   }
