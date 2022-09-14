@@ -37,7 +37,9 @@ type LoaderData = {
       email: string
     }
     categories: Array<{ id: string; name: string }>
-  }
+  },
+  categories: Array<{ id: string; name: string }>,
+  catResults: Array<{ id: string; name: string }>,
 
   allCategories: Array<{ id: string; name: string }>
 
@@ -45,9 +47,9 @@ type LoaderData = {
   postId: string
 }
 
-const badRequest = (data: ActionData) => {
-  json(data, { status: 400 })
-}
+// const badRequest = (data: ActionData) => {
+//   json(data, { status: 400 })
+// }
 export const loader: LoaderFunction = async ({ params, request }) => {
   const userId = await getUserId(request)
   const user = await getUser(request)
@@ -79,7 +81,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   })
 
 
-  const data: LoaderData = {
+  const data = {
     post,
     isPublished,
     postId,
@@ -181,18 +183,18 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
       await deletePost(id)
       return redirect('drafts')
-      case 'removeCategory':
-        if (typeof id !== 'string') {
-          return json({
-            error: 'invalid form data removeCategory'
-          })
-        }
-        await removeCategoryFromPost(postId,
+      // case 'removeCategory':
+      //   if (typeof id !== 'string') {
+      //     return json({
+      //       error: 'invalid form data removeCategory'
+      //     })
+      //   }
+      //   await removeCategoryFromPost(postId,
 
-          )
+      //     )
 
 
-        return redirect(`/edit/${id}`)
+        // return redirect(`/edit/${id}`)
     default:
       throw new Error('Unexpected action')
   }

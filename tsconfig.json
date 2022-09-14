@@ -5,6 +5,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "target": "ES2019",
@@ -18,5 +19,5 @@
     // Remix takes care of building everything in `remix build`.
     "noEmit": true
   },
-  "exclude": ["node_modules", "build", ".cache", ".idea"]
+  "exclude": [ ".idea"]
 }
