@@ -4,6 +4,7 @@ node_modules
 /build
 /public/build
 .env
+/prisma/seed.ts
 audio-server.ts
 .idea/modules.xml
 .idea/my-blog.iml
