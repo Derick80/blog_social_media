@@ -47,28 +47,14 @@ This starts your app in development mode, rebuilding assets on file changes.
 
 ## Deployment
 
-First, build your app for production:
 
-```sh
-npm run build
-````
+to get a seeded prod db
+fly deploy
+fly ssh console -s
+--pick instance.  For some reason only the 2nd one worked
+then
+npx prisma db push
+npx prisma db seed
 
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app
-server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
 
 I tried to cite all sources used but if I missed one, please let me know and I will add it. Thanks!
