@@ -22,7 +22,7 @@ export const meta: MetaFunction = ({
     }
   }
   return {
-    title: `"${data.userProfile}"'s Profile`,
+    title: `"${data.userProfile?.firstName}"'s Profile`,
     description: `"${data.userProfile?.firstName}"'s About me and more`
   }
 }
