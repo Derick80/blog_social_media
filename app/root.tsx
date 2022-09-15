@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/node'
+import type { LinksFunction, MetaFunction } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -9,7 +9,6 @@ import {
   useCatch
 } from '@remix-run/react'
 import styles from './styles/app.css'
-
 export const meta: MetaFunction = () => {
   const description = `See what I've been up to`
   return {
@@ -21,8 +20,10 @@ export const meta: MetaFunction = () => {
   }
 }
 
-export function links() {
-  return [{ rel: 'stylesheet', href: styles }]
+export const links:LinksFunction =()=> {
+  return [{ rel: 'stylesheet', href: styles },
+{rel:'email_contact', href:'../public/icons/contact_mail.png'},
+]
 }
 
 function Document({

@@ -3,12 +3,11 @@ import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { format } from 'date-fns'
 import React from 'react'
-import Icon from '~/components/shared/icon'
 import Tooltip from '~/components/shared/tooltip'
 import { getUser } from '~/utils/auth.server'
 import { getUserProfile } from '~/utils/profile.server'
 import Layout from '~/components/layout'
-import AppBar from '~/components/navbar/appBar'
+// keep a list of the icon ids we put in the symbol
 
 export const meta: MetaFunction = ({
   data
@@ -26,6 +25,9 @@ export const meta: MetaFunction = ({
     description: `${data.userProfile?.firstName}'s About me and more`
   }
 }
+
+
+
 type LoaderData = {
   userProfile: Awaited<ReturnType<typeof getUserProfile>>
   isOwner: boolean
@@ -50,6 +52,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function About() {
+  const icons = ["icon-1", "icon-2"];
   const data = useLoaderData<LoaderData>()
   const {
     id,
@@ -87,8 +90,14 @@ export default function About() {
               <div>
                 <div className='text-base md:text-xl underline font-semibold'>About Me</div>
                 <div>{bio}</div>
-                <a href="mailto:derickchoskinson@gmail.com">Send email to me</a>
 
+
+                <a href="mailto:derickchoskinson@gmail.com">Send email to me</a>
+<button className='flex flex-row items-center text-xs font-medium w-24 h-10 pl-2 pr-2 pt-6 pb-6 rounded dark:bg-green-700 gap-2'>
+<img src='contact_mail.svg' alt="email" className="w-5 h-5 stroke-white" />
+<a href="mailto:derickchoskinson@gmail.com">Email me</a>
+
+</button>
               </div>
             </div>
             {data.isOwner ? (
