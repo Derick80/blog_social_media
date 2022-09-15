@@ -25,8 +25,8 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ params, request }) => {
   const categoryName = params.categoryName as string
   const user = await getUser(request)
-  const role = await process.env.ADMIN
-  const isOwner = user?.email === role
+  const isOwner = user?.role === 'ADMIN'
+
   console.log('catId', categoryName)
   const postsByCategory = await getPostsByCategory(categoryName)
   if (!postsByCategory) {

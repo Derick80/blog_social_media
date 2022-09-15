@@ -22,15 +22,13 @@ type LoaderData = {
   profile: Profile
   userId: string
 
-  role: string
-}
+isOwner:boolean}
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const userId = (await getUserId(request)) as string
   const profileId = params.profileId as string
   const user = await getUser(request)
-  const role = (await process.env.ADMIN) as string
-  console.log(role)
+  const isOwner = user?.role === 'ADMIN'
 
   const profile = userId ? await getProfile(profileId) : null
   if (!profile) {
@@ -39,10 +37,10 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const data: LoaderData = {
     profile,
     userId,
-    role
+    isOwner
   }
 
-  if (role != profile.email) {
+  if (!isOwner ) {
     throw new Response('You are not authorized to edit this post', {
       status: 401
     })

@@ -13,7 +13,7 @@ import { getCategories } from '~/utils/categories.server'
 import Sectionheader from '~/components/shared/section-header'
 export function ErrorBoundary() {
   return (
-    <div className='text-black dark:text-white bg-white dark:bg-slate-500'>
+    <div >
 
       Sorry, something went wrong loading the create new Post page. Please try
       again later!
@@ -23,23 +23,23 @@ export function ErrorBoundary() {
 
 
 type LoaderData = {
-  categories: Array<{ id: string; name: string }>
+  allCategories: Array<{ id: string; name: string }>
   isOwner:boolean
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
-  const { categories } = await getCategories()
+  const { allCategories } = await getCategories()
 const isOwner = user?.role == 'ADMIN'
   if (!isOwner) {
     throw new Response('Unauthorized', { status: 401 })
   }
-  if(!categories){
+  if(!allCategories){
     throw new Response('No Categories', { status: 404 })
   }
 
   const data: LoaderData = {
-    categories,
+    allCategories,
     isOwner
   }
 
@@ -116,7 +116,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function NewPostRoute() {
 
-  const { isOwner, categories } = useLoaderData<LoaderData>()
+  const { isOwner, allCategories } = useLoaderData<LoaderData>()
   const actionData = useActionData()
   const firstLoad = useRef(true)
   const [formError, setFormError] = useState(actionData?.error || '')
@@ -213,7 +213,7 @@ export default function NewPostRoute() {
               multiple={true}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>,) => handleInputChange(event, 'categories')}
             >
-              {categories.map(option => (
+              {allCategories.map(option => (
                 <option key={option.id} value={option.name}>
                   {option.name}
                 </option>

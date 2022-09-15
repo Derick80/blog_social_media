@@ -58,3 +58,7 @@ npx prisma db seed
 
 
 I tried to cite all sources used but if I missed one, please let me know and I will add it. Thanks!
+
+
+## To use pgAdmin to directly edit the production data base run this command
+fly proxy 6543:5432 -a <dch-blog> and leave running.

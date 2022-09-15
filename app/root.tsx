@@ -64,7 +64,8 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <div className='error-container'>
+      <div >
+        <h1>CatchBoundry</h1>
         <h1>
           {caught.status} {caught.statusText}
         </h1>

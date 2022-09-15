@@ -11,8 +11,7 @@ type LoaderData = {
 }
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
-  const role = await process.env.ADMIN
-  const isOwner = user?.email === role
+  const isOwner = user?.role === 'ADMIN'
   const userPosts = await getPosts()
 
   if (!userPosts) {
@@ -45,7 +44,7 @@ export default function Home() {
 
 export function ErrorBoundary() {
   return (
-    <div className='text-black dark:text-white bg-white dark:bg-slate-500'>
+    <div>
 
       Sorry, something went wrong! :/ Please try again later.
     </div>

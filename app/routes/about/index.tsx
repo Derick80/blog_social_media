@@ -22,8 +22,8 @@ export const meta: MetaFunction = ({
     }
   }
   return {
-    title: `"${data.userProfile?.firstName}"'s Profile`,
-    description: `"${data.userProfile?.firstName}"'s About me and more`
+    title: `${data.userProfile?.firstName}'s Profile`,
+    description: `${data.userProfile?.firstName}'s About me and more`
   }
 }
 type LoaderData = {

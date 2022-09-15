@@ -10,12 +10,12 @@ import { SelectBox } from '~/components/shared/select-box'
 import { initialCategories } from '~/utils/constants'
 
 export const loader: LoaderFunction = async () => {
-  const { categories } = await getCategories()
+  const { allCategories } = await getCategories()
   const cats= await initialCategories
-  if (!categories) {
+  if (!allCategories) {
     throw new Response('No Categories Found', { status: 404 })
   }
-  return json({ cats,categories })
+  return json({ cats,allCategories })
 }
 
 export const action: ActionFunction = async ({ request }) => {
