@@ -30,5 +30,5 @@ export default function Home() {
 }
 
 export function ErrorBoundary() {
-  return <div>Uh oh something is really wrong. Try again later!</div>;
+  return <div>Uh oh something is really wrong with the __home loader. Try again later!</div>;
 }
