@@ -101,22 +101,21 @@ export default function Login() {
   };
   return (
     <>
-      <Layout isOwner={false}>
-        <div className="w-full flex flex-col items-center">
-          <h2 className="text-5xl font-extrabold m-10">Welcome to my Blog</h2>
-          <p className="text-2xl font-semibold m-5">
+      <div>
+          <h2 >Welcome to my Blog</h2>
+          <p >
             {action === "login"
               ? "Please Login to leave a comment on a Post"
               : "Sign up to start commenting"}
           </p>
-          <form method="post" className="md:text-xl font-semibold">
-            <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full">
+          <form method="post" >
+            <div >
               {formError}
             </div>
             <FormField
               htmlFor="email"
               label="Email"
-              labelClass="text-2xl font-semibold my-2 px-2"
+
               value={formData.email}
               onChange={(event) => handleInputChange(event, "email")}
               error={errors?.email}
@@ -124,7 +123,7 @@ export default function Login() {
             <FormField
               htmlFor="password"
               label="Password"
-              labelClass="text-2xl font-semibold my-2 px-2"
+
               value={formData.password}
               type="password"
               onChange={(event) => handleInputChange(event, "password")}
@@ -132,7 +131,7 @@ export default function Login() {
               autocomplete="new-password"
             />
 
-            <div className="w-full text-center">
+            <div >
               <button type="submit" name="_action" value={action}>
                 {action === "login" ? `Login` : `Sign Up`}
               </button>
@@ -146,14 +145,12 @@ export default function Login() {
                   : "" + "in"
               )
             }
-            className="rounded-xl dark:bg-light-blue font-semibold px-3 py-2 transition duration-300 ease-in-out hover:dark:bg-light-orange-400"
           >
             {action === "login"
               ? `Don't have an account? Sign up!`
               : "Already have an account? Sign In"}
           </button>{" "}
         </div>
-      </Layout>
     </>
   );
 }

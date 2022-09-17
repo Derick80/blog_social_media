@@ -3,10 +3,9 @@ import { json, redirect } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
 import React, { useEffect, useRef, useState } from "react";
 import { ImageUploader } from "~/components/image-uploader";
-import Button from "~/components/shared/button";
 import FormField from "~/components/shared/form-field";
 
-import { getUser, getUserId, requireUserId } from "~/utils/auth.server";
+import { getUser,  requireUserId } from "~/utils/auth.server";
 import { createDraft } from "~/utils/post.server";
 import { validateText } from "~/utils/validators.server";
 import { getCategories } from "~/utils/categories.server";
@@ -113,7 +112,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function NewPostRoute() {
-  const { isOwner, allCategories } = useLoaderData<LoaderData>();
+  const { allCategories } = useLoaderData<LoaderData>();
   const actionData = useActionData();
   const firstLoad = useRef(true);
   const [formError, setFormError] = useState(actionData?.error || "");
