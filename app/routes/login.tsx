@@ -102,9 +102,17 @@ export default function Login() {
   };
   return (
     <>
-      <div>
-          <h2 >Welcome to my Blog</h2>
-          <p >
+      <div className='w-1/4  p-2 mx-auto'>
+      <button
+                    onClick={() => setAction(action == 'login' ? 'register' : 'login')}
+                    className='absolute top-8 right-8 text-center bg-green-600 text-white p-2 rounded-md uppercase font-semibold'
+                >
+
+                  {action === 'login' ? 'Sign Up' : 'Sign In'}
+
+                  </button>
+          <h2 className='text-center text-xl font-semibold pb-2'>Welcome to my Blog</h2>
+          <p className='text-center text-sm italic pb-2' >
             {action === 'login'
               ? 'Please Login to leave a comment on a Post'
               : 'Sign up to start commenting'}
@@ -113,8 +121,7 @@ export default function Login() {
             <div >
               {formError}
             </div>
-            {/* <input type="hidden" name="redirectTo" value={redirectTo || "/"} />
-            <input type="hidden" name="token" value={token || ""} /> */}
+
 
             <FormField
               htmlFor='email'
@@ -135,24 +142,12 @@ export default function Login() {
             />
 
             <div >
-              <button type='submit' name='_action' value={action}>
+              <button className='w-full text-center bg-green-600 text-white p-2 rounded-md uppercase' type='submit' name='_action' value={action}>
                 {action === 'login' ? `Login` : `Sign Up`}
               </button>
             </div>
           </form>
-          <button
-            onClick={() =>
-              setAction(
-                action == 'login'
-                  ? `don't have an account? Sign up!`
-                  : '' + 'in'
-              )
-            }
-          >
-            {action === 'login'
-              ? `Don't have an account? Sign up!`
-              : 'Already have an account? Sign In'}
-          </button>{' '}
+
         </div>
     </>
   );

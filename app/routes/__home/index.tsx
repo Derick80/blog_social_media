@@ -15,7 +15,6 @@ export const loader: LoaderFunction = async ({  request }) => {
   const isLoggedIn = user?.role === "USER" || user?.role === "ADMIN";
   const isOwner = user?.role === "ADMIN";
   const userPosts = await getPosts();
-console.log(isLoggedIn);
 
 
   if (!userPosts) {
@@ -35,7 +34,7 @@ console.log(isLoggedIn);
 export default function Home() {
   const data = useLoaderData<LoaderData>();
   return (
-    <div className='flex flex-col w-1/2 md:w-3/4 px-4 mx-auto items-center justify-center'>
+    <main className='flex flex-col w-1/2 md:w-3/4 px-4 mx-auto items-center justify-center'>
       {data.userPosts.map((post) => (
         <Posts
           key={post.id}
@@ -44,7 +43,7 @@ export default function Home() {
           isPost={false}
         />
       ))}
-    </div>
+    </main>
   );
 }
 
