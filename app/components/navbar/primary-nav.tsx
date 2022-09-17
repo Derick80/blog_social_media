@@ -1,7 +1,11 @@
 import { NavLink } from '@remix-run/react'
 import Tooltip from '../shared/tooltip'
 
-export default function NavigationBar(){
+
+type PrimaryNavProps = {
+  isloggedIn: boolean
+}
+export default function NavigationBar() {
     return(
         <>
         <Tooltip message="View posts">
@@ -33,9 +37,6 @@ export default function NavigationBar(){
           </NavLink>
         </Tooltip>
 
-        {isOwner && (
-
-        ): null}
         </>
     )
 }

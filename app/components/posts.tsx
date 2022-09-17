@@ -23,7 +23,7 @@ type PostsProps = {
     }>;
     categories: Array<{ id: string; name: string }>;
   };
-  userId: string;
+  userId?: string;
   isOwner: boolean;
   isPost: boolean;
 };

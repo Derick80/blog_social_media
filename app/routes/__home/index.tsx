@@ -8,16 +8,14 @@ import Posts from "~/components/posts";
 
 type LoaderData = {
   userPosts: Awaited<ReturnType<typeof getPosts>>;
-  isLoggedin: boolean;
   isOwner: boolean;
-  userId: string;
 };
 export const loader: LoaderFunction = async ({  request }) => {
   const user = await getUser(request);
-  const userId = user?.id as string;
-  const isLoggedin = user?.role === "USER";
+  const isLoggedIn = user?.role === "USER" || user?.role === "ADMIN";
   const isOwner = user?.role === "ADMIN";
   const userPosts = await getPosts();
+console.log(isLoggedIn);
 
 
   if (!userPosts) {
@@ -29,9 +27,7 @@ export const loader: LoaderFunction = async ({  request }) => {
 
   const data: LoaderData = {
     userPosts,
-    isLoggedin,
     isOwner,
-    userId,
   };
   return json(data);
 };
@@ -46,7 +42,6 @@ export default function Home() {
           posts={post}
           isOwner={data.isOwner}
           isPost={false}
-          userId={data.userId}
         />
       ))}
     </div>
