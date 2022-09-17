@@ -1,10 +1,8 @@
 import Tooltip from "~/components/shared/tooltip";
 import { Link } from "@remix-run/react";
-import Icon from "~/components/shared/icon";
 import CategoryContainer from "~/components/category-container";
 import Sectionheader from "./shared/section-header";
 import { format } from "date-fns";
-import LikeContainer from "./like-container";
 import LikeButton from './shared/like-button'
 
 type PostsProps = {
@@ -20,7 +18,6 @@ type PostsProps = {
     updatedAt: string;
     postImg: string;
     likes: Array<{
-      id: string;
       userId: string;
       postId: string;
     }>;
@@ -30,7 +27,7 @@ type PostsProps = {
   isOwner: boolean;
   isPost: boolean;
 };
-export default function Posts({ posts, isOwner, isPost, userId }: PostsProps) {
+export default function Posts({ posts, isOwner, isPost }: PostsProps) {
 
   return (
     <div key={posts.id}>
