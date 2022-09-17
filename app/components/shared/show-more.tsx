@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 function ShowButton({ ...props }) {
-  const content = props.content
-  const className = props.className
-  const [more, setMore] = useState(false)
+  const content = props.content;
+  const className = props.className;
+  const [more, setMore] = useState(false);
 
   function onClick() {
-    setMore(!more)
+    setMore(!more);
   }
 
   if (content && content.length < 100) {
@@ -14,21 +14,21 @@ function ShowButton({ ...props }) {
       <>
         <p>{content}</p>
       </>
-    )
+    );
   } else {
     return (
       <>
         {more ? content : `${content?.substring(0, 100)}`}
-        <button className='btn-icon-filled' role='switch' onClick={onClick}>
-          <span className='material-icons'>
-            {' '}
-            {more ? 'expand_less' : 'expand_more'}
+        <button className="btn-icon-filled" role="switch" onClick={onClick}>
+          <span className="material-icons">
+            {" "}
+            {more ? "expand_less" : "expand_more"}
           </span>
-          {more ? 'less...' : 'more...'}
+          {more ? "less..." : "more..."}
         </button>
       </>
-    )
+    );
   }
 }
 
-export default ShowButton
+export default ShowButton;

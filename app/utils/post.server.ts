@@ -1,36 +1,60 @@
-import type { Post, User } from '@prisma/client'
-import { prisma } from './prisma.server'
-import type { CreateOrEditPost, UpdatePost } from './types.server'
+import type { Post, User } from "@prisma/client";
+import { prisma } from "./prisma.server";
+import type { CreateOrEditPost, UpdatePost } from "./types.server";
 
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
     where: {
-      published: true
+      published: true,
     },
     include: {
       categories: true,
+      comments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      likes: true,
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
       user: {
         select: {
-          role: true
-        }
-      }
+          role: true,
+        },
+      },
     },
     orderBy: {
-      createdAt: 'asc'
-    }
-  })
-  return userPosts
+      createdAt: "asc",
+    },
+  });
+  return userPosts;
 }
 
-export async function getPost({
-  id,
-  userId
-}: Pick<Post, 'id'> & { userId: User['id'] }) {
+export async function getPost({ id }: Pick<Post, "id">) {
   const post = await prisma.post.findUnique({
     where: { id: id },
-    include: { user: { select: { email: true } }, categories: true }
-  })
-  return post
+    include: {
+      user: { select: { email: true } },
+      categories: true,
+      comments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      likes: true,
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
+    },
+  });
+  return post;
 }
 
 export async function createDraft({
@@ -38,8 +62,8 @@ export async function createDraft({
   body,
   postImg,
   userId,
-  categories
-}: Omit<CreateOrEditPost, 'id' & 'userId'> & { userId: User['id'] }) {
+  categories,
+}: Omit<CreateOrEditPost, "id" & "userId"> & { userId: User["id"] }) {
   await prisma.post.create({
     data: {
       title,
@@ -47,36 +71,48 @@ export async function createDraft({
       postImg,
       user: {
         connect: {
-          id: userId
-        }
+          id: userId,
+        },
       },
       categories: {
-        connectOrCreate: categories.map(category => ({
+        connectOrCreate: categories.map((category) => ({
           where: { name: category.name },
-          create: { name: category.name }
-        }))
-      }
-    }
-  })
+          create: { name: category.name },
+        })),
+      },
+    },
+  });
 }
 
 export async function getUserDrafts(userId: string) {
   const userDrafts = await prisma.post.findMany({
     where: {
       userId: userId,
-      published: false
+      published: false,
     },
     include: {
       user: {
-        select: { email: true }
+        select: { email: true },
       },
-      categories: true
+      categories: true,
+      comments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      likes: true,
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
     },
     orderBy: {
-      createdAt: 'asc'
-    }
-  })
-  return userDrafts
+      createdAt: "asc",
+    },
+  });
+  return userDrafts;
 }
 
 export async function updatePost({
@@ -84,8 +120,8 @@ export async function updatePost({
   title,
   body,
   postImg,
-  categories
-}: Omit<CreateOrEditPost,  'userId'> & { userId: User['id'] }) {
+  categories,
+}: Omit<CreateOrEditPost, "userId"> & { userId: User["id"] }) {
   try {
     const updatePost = await prisma.post.update({
       where: { id: id },
@@ -94,16 +130,16 @@ export async function updatePost({
         body,
         postImg,
 
-      categories: {
-        connectOrCreate: categories.map(category => ({
-          where: { name: category.name },
-          create: { name: category.name }
-        }))
-      }
-    }
-    })
+        categories: {
+          connectOrCreate: categories.map((category) => ({
+            where: { name: category.name },
+            create: { name: category.name },
+          })),
+        },
+      },
+    });
   } catch (error) {
-    throw new Error('Unable to save post draft')
+    throw new Error("Unable to save post draft");
   }
 }
 export async function updateAndPublish({
@@ -111,7 +147,7 @@ export async function updateAndPublish({
   title,
   body,
   postImg,
-  categories
+  categories,
 }: CreateOrEditPost) {
   try {
     const updateAndPublish = await prisma.post.update({
@@ -122,26 +158,26 @@ export async function updateAndPublish({
         postImg,
         published: true,
         categories: {
-          connectOrCreate: categories.map(category => ({
+          connectOrCreate: categories.map((category) => ({
             where: { name: category.name },
-            create: { name: category.name }
-          }))
-        }
-      }
-    })
+            create: { name: category.name },
+          })),
+        },
+      },
+    });
   } catch (error) {
-    throw new Error('Unable to update AND Publish post')
+    throw new Error("Unable to update AND Publish post");
   }
 }
 export async function publishPost(id: string) {
   try {
     const publish = await prisma.post.update({
       where: { id: id },
-      data: { published: true }
-    })
-    return publish
+      data: { published: true },
+    });
+    return publish;
   } catch (error) {
-    throw new Error('error in publish')
+    throw new Error("error in publish");
   }
 }
 
@@ -149,22 +185,22 @@ export async function unpublishPost(id: string) {
   try {
     await prisma.post.update({
       where: { id: id },
-      data: { published: false }
-    })
-    return true
+      data: { published: false },
+    });
+    return true;
   } catch (error) {
-    throw new Error('error in unpublish')
+    throw new Error("error in unpublish");
   }
 }
 
 export async function deletePost(id: string) {
   try {
     await prisma.post.delete({
-      where: { id: id }
-    })
-    return true
+      where: { id: id },
+    });
+    return true;
   } catch (error) {
-    throw new Error('Unable to delete post')
+    throw new Error("Unable to delete post");
   }
 }
 
@@ -173,40 +209,52 @@ export async function getPostsByCategory(categoryName: string) {
     where: {
       categories: {
         some: {
-          name: categoryName
-        }
-      }
+          name: categoryName,
+        },
+      },
     },
     include: {
       user: {
-        select: { email: true }
+        select: { email: true },
       },
-      categories: true
+      categories: true,
+      comments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      likes: true,
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
     },
     orderBy: {
-      createdAt: 'asc'
-    }
-  })
-  return postsByCategory
+      createdAt: "asc",
+    },
+  });
+  return postsByCategory;
 }
 
 export const updatePostWithCategory = async (form: UpdatePost) => {
-  const selected = form.categories.map(category => category.name) as []
+  const selected = form.categories.map((category) => category.name) as [];
 
   const updatedPostCategories = await prisma.post.update({
     where: {
-      id: form.id
+      id: form.id,
     },
     data: {
       title: form.title,
       body: form.body,
       postImg: form.postImg,
       categories: {
-        set: selected
-      }
-    }
-  })
-}
+        set: selected,
+      },
+    },
+  });
+};
 
 export const removeCategoryFromPost = async (
   id: string,
@@ -214,15 +262,77 @@ export const removeCategoryFromPost = async (
 ) => {
   const updatedPostCategories = await prisma.post.update({
     where: {
-      id: id
+      id: id,
     },
     data: {
       categories: {
         disconnect: {
-          name: categoryName
-        }
-      }
-    }
-  })
-  return updatedPostCategories
-}
+          name: categoryName,
+        },
+      },
+    },
+  });
+  return updatedPostCategories;
+};
+
+export const likePost = async (postId: string, userId: string) => {
+  console.log("likePost functiondb", postId, "user", userId);
+
+  const liked = await prisma.post.findUnique({
+    where: {
+      id: postId,
+    },
+    select: {
+      likes: {
+        where: {
+          userId: userId,
+        },
+      },
+    },
+  });
+
+  if (!liked) {
+    return await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likes: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+  } else {
+    return await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likes: {
+          disconnect: {
+            id: userId,
+          },
+        },
+      },
+    });
+  }
+};
+
+// .then(()=>{
+//   return  prisma.post.findUnique({
+//     where: {
+//       id: postId
+
+//   },
+//   select:{
+//     likes: true,
+//      _count: {
+//         select: {
+//           likes: true
+//         }
+//       }
+//   }
+//     })
+// })

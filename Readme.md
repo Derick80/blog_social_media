@@ -41,7 +41,7 @@ $ npm install
 $ npm run dev
 ```
 
-````
+```
 
 This starts your app in development mode, rebuilding assets on file changes.
 
@@ -62,3 +62,4 @@ I tried to cite all sources used but if I missed one, please let me know and I w
 
 ## To use pgAdmin to directly edit the production data base run this command
 fly proxy 6543:5432 -a <dch-blog> and leave running.
+```

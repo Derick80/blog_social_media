@@ -1,38 +1,34 @@
-import type { LoaderFunction, MetaFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { Outlet, useLoaderData } from '@remix-run/react'
-import AppBar from '~/components/navbar/appBar'
-import Layout from '~/components/layout'
-import { getUser } from '~/utils/auth.server'
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
+import AppBar from "~/components/navbar/appBar";
+import Layout from "~/components/layout";
+import { getUser } from "~/utils/auth.server";
 
 export const meta: MetaFunction = () => ({
   title: `Derick's Personal Blog Feed`,
-  description: `See what I've been up to lately`
-})
+  description: `See what I've been up to lately`,
+});
 type LoaderData = {
-  isOwner: boolean
-}
+  isOwner: boolean;
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request)
-  const isOwner = user?.role == 'ADMIN'
+  const user = await getUser(request);
+  const isOwner = user?.role == "ADMIN";
 
-  return json({ isOwner })
-}
+  return json({ isOwner });
+};
 
 export default function Home() {
-  const { isOwner }: LoaderData = useLoaderData()
+  const { isOwner }: LoaderData = useLoaderData();
   return (
     <Layout isOwner={isOwner}>
       <Outlet />
     </Layout>
-  )
+  );
 }
 
 export function ErrorBoundary() {
-  return (
-    <div className='text-black dark:text-white bg-white dark:bg-slate-500'>
-      Uh oh something is really wrong. Try again later!
-    </div>
-  )
+  return <div>Uh oh something is really wrong. Try again later!</div>;
 }

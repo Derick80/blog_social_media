@@ -1,18 +1,17 @@
-import { NavLink } from '@remix-run/react'
-import Icon from '../shared/icon'
-import Tooltip from '../shared/tooltip'
+import { NavLink } from "@remix-run/react";
+import Tooltip from "../shared/tooltip";
 
 export default function AdminBar() {
   return (
-    <header className='w-full p-2 mt-2 font-semibold uppercase flex flex-wrap mx-auto text-center justify-around'>
-      <Tooltip message='View posts'>
+    <header>
+      <Tooltip message="View posts">
         <NavLink
-          to='/'
+          to="/"
           className={({ isActive }) =>
             ` ${
               isActive
-                ? 'underline text-base md:text-xl'
-                : 'uppercase text-base md:text-xl'
+                ? "underline text-base md:text-xl"
+                : "uppercase text-base md:text-xl"
             }`
           }
         >
@@ -20,58 +19,53 @@ export default function AdminBar() {
         </NavLink>
       </Tooltip>
 
-      <Tooltip message='Write a new blog post'>
+      <Tooltip message="Write a new blog post">
         <NavLink
-          to='/new'
+          to="/new"
           className={({ isActive }) =>
             ` ${
               isActive
-                ? 'uppercase underline text-base md:text-xl'
-                : 'uppercase text-base md:text-xl'
+                ? "uppercase underline text-base md:text-xl"
+                : "uppercase text-base md:text-xl"
             }`
           }
         >
           Write a New Post
         </NavLink>
       </Tooltip>
-      <Tooltip message='View drafts'>
+      <Tooltip message="View drafts">
         <NavLink
-          to='/drafts'
+          to="/drafts"
           className={({ isActive }) =>
             ` ${
               isActive
-                ? 'uppercase underline text-base md:text-xl'
-                : 'uppercase text-base md:text-xl'
+                ? "uppercase underline text-base md:text-xl"
+                : "uppercase text-base md:text-xl"
             }`
           }
         >
           Drafts
         </NavLink>
       </Tooltip>
-      <Tooltip message='My Profile'>
+      <Tooltip message="My Profile">
         <NavLink
-          to='/about'
+          to="/about"
           className={({ isActive }) =>
             ` ${
               isActive
-                ? 'uppercase underline text-base md:text-xl'
-                : 'uppercase text-base md:text-xl'
+                ? "uppercase underline text-base md:text-xl"
+                : "uppercase text-base md:text-xl"
             }`
           }
         >
           About
         </NavLink>
       </Tooltip>
-      <form action='/logout' method='post' className='flex flex-col'>
-        <Tooltip message='signout'>
-          <button
-            type='submit'
-            className='flex flex-row items-center rounded-xl bg-red-500 font-semibold justify-items-center text-white-600 px-3 py-2 transition duration-300 ease-in-out hover:bg-yellow-400 hover:-translate-y-1'
-          >
-            SignOut
-          </button>
+      <form action="/logout" method="post">
+        <Tooltip message="signout">
+          <button type="submit">SignOut</button>
         </Tooltip>
       </form>
     </header>
-  )
+  );
 }

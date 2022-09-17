@@ -1,17 +1,17 @@
-import type { Profile } from '@prisma/client'
-import { prisma } from './prisma.server'
+import type { Profile } from "@prisma/client";
+import { prisma } from "./prisma.server";
 
 export const getUserProfile = async (userId: string) => {
   const userProfile = await prisma.profile.findFirst({
-    where: { userId: userId }
-  })
-  return userProfile
-}
+    where: { userId: userId },
+  });
+  return userProfile;
+};
 export const getProfile = async (profileId: string) => {
   return await prisma.profile.findFirst({
-    where: { id: profileId }
-  })
-}
+    where: { id: profileId },
+  });
+};
 
 export async function updateProfile({
   userId,
@@ -24,8 +24,8 @@ export async function updateProfile({
   pronouns,
   occupation,
   profilePicture,
-  email
-}: Omit<Profile, 'createdAt' | 'updatedAt'>) {
+  email,
+}: Omit<Profile, "createdAt" | "updatedAt">) {
   return await prisma.profile.update({
     where: { id: id },
     data: {
@@ -38,7 +38,7 @@ export async function updateProfile({
       pronouns,
       occupation,
       profilePicture,
-      email
-    }
-  })
+      email,
+    },
+  });
 }

@@ -1,52 +1,53 @@
-import { json, LoaderFunction } from '@remix-run/node'
-import { getPostsByCategory } from '~/utils/post.server'
-import { useLoaderData } from '@remix-run/react'
-import { getUser } from '~/utils/auth.server'
-import Posts from '~/components/posts'
-import Sectionheader from '~/components/shared/section-header'
+import { json, LoaderFunction } from "@remix-run/node";
+import { getPostsByCategory } from "~/utils/post.server";
+import { useLoaderData } from "@remix-run/react";
+import { getUser } from "~/utils/auth.server";
+import Posts from "~/components/posts";
+import Sectionheader from "~/components/shared/section-header";
 
 // use this to look at json
 // http://192.168.86.32:5322/categories?_data=routes%2Fcategories
 type LoaderData = {
   postsByCategory: Array<{
-    id: string
-    title: string
-    body: string
-    email: string
-    postImg: string
-    createdAt: string
-    updatedAt: string
-    published: boolean
-    categories: Array<{ id: string; name: string }>
-  }>
-  isOwner: boolean
-  categoryName: string
-}
+    id: string;
+    title: string;
+    body: string;
+    email: string;
+    postImg: string;
+    createdAt: string;
+    updatedAt: string;
+    published: boolean;
+    categories: Array<{ id: string; name: string }>;
+  }>;
+  isOwner: boolean;
+  categoryName: string;
+};
 export const loader: LoaderFunction = async ({ params, request }) => {
-  const categoryName = params.categoryName as string
-  const user = await getUser(request)
-  const isOwner = user?.role === 'ADMIN'
+  const categoryName = params.categoryName as string;
+  const user = await getUser(request);
+  const isOwner = user?.role === "ADMIN";
 
-  console.log('catId', categoryName)
-  const postsByCategory = await getPostsByCategory(categoryName)
+  console.log("catId", categoryName);
+  const postsByCategory = await getPostsByCategory(categoryName);
   if (!postsByCategory) {
     throw new Response("Couldn't find any posts with that category", {
-      status: 401
-    })
+      status: 401,
+    });
   }
 
-  return json({ postsByCategory, isOwner, categoryName })
-}
+  return json({ postsByCategory, isOwner, categoryName });
+};
 
 export default function CategoryView() {
-  const { postsByCategory, isOwner, categoryName }: LoaderData = useLoaderData()
+  const { postsByCategory, isOwner, categoryName }: LoaderData =
+    useLoaderData();
   return (
-    <div className='flex flex-col'>
+    <div className="flex flex-col">
       <Sectionheader>Posts with the {categoryName} Tag</Sectionheader>
 
-      {postsByCategory.map(post => (
+      {postsByCategory.map((post) => (
         <Posts key={post.id} posts={post} isOwner={isOwner} isPost={false} />
       ))}
     </div>
-  )
+  );
 }

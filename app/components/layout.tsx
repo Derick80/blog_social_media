@@ -1,33 +1,28 @@
-import React from 'react'
-import Footer from './footer'
-import AdminContainer from './navbar/admin-container'
-import ContentContainer from './navbar/content-container'
+import React from "react";
+import Footer from "./footer";
+import AdminContainer from "./navbar/admin-container";
+import ContentContainer from "./navbar/content-container";
 
 export default function Layout({
   children,
-  isOwner
+  isOwner,
 }: {
-  children: React.ReactNode
-  isOwner: boolean
+  children: React.ReactNode;
+  isOwner: boolean;
 }) {
   return isOwner ? (
     <>
-      {' '}
+      {" "}
       <AdminContainer isOwner={isOwner}>
-
-      <main className='flex flex-col flex-1 items-center container mt-5 md:mt-12 lg:mt-32' tabIndex={-1}>
-      {children}
-      </main>
-
+        <main tabIndex={-1}>{children}</main>
       </AdminContainer>
-      <Footer/>
+      <Footer />
     </>
-
   ) : (
     <>
-      <ContentContainer>{children}</ContentContainer>
-      <Footer/>
-
+      <Footer />
     </>
-  )
+  );
 }
+
+// className='flex flex-col justify-center flex-1 items-center container mt-5 md:mt-12 lg:mt-32'

@@ -1,17 +1,17 @@
-import Footer from '../footer'
-import AdminBar from './AdminBar'
+import Footer from "../footer";
+import AdminBar from "./AdminBar";
 
 export default function AdminContainer({
   children,
-  isOwner
+  isOwner,
 }: {
-  children: React.ReactNode
-  isOwner: boolean
+  children: React.ReactNode;
+  isOwner: boolean;
 }) {
   return (
-    <div className='w-full flex flex-col items-center'>
+    <div>
       <AdminBar />
       {children}
     </div>
-  )
+  );
 }
