@@ -5,6 +5,7 @@ import CategoryContainer from "~/components/category-container";
 import Sectionheader from "./shared/section-header";
 import { format } from "date-fns";
 import LikeContainer from "./like-container";
+import LikeButton from './shared/like-button'
 
 type PostsProps = {
   posts: {
@@ -30,18 +31,7 @@ type PostsProps = {
   isPost: boolean;
 };
 export default function Posts({ posts, isOwner, isPost, userId }: PostsProps) {
-  const likeArray = [
-    {
-      id: "1",
-      userId: "1",
-      postId: "1",
-    },
-    {
-      id: "2",
-      userId: "2",
-      postId: "1",
-    },
-  ];
+
   return (
     <div key={posts.id}>
       <Sectionheader>{posts.title}</Sectionheader>
@@ -70,8 +60,8 @@ export default function Posts({ posts, isOwner, isPost, userId }: PostsProps) {
       <div>
         {posts?._count.likes ? <>{posts._count.likes}</> : <>no likes yet</>}
       </div>
-      <LikeContainer postId={posts.id} likes={likeArray} currentUser={userId} />
 
+<LikeButton post={posts} />
       {isOwner ? (
         <div className="flex flex-row justify-end">
           <Tooltip message="Edit Post">

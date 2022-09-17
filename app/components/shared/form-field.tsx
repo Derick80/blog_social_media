@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 
-export interface FormFieldProps {
+export interface FormFieldProps extends React.HTMLAttributes<HTMLInputElement> {
   htmlFor: string;
   label: string;
   type?: string;
   value: any;
   name?: string;
-  onChange: (...args: unknown[]) => void;
+  onChange: (...args: any[]) => void;
   onClick?: (...args: any) => unknown;
   checked?: boolean;
   error?: string;
   className?: string;
   labelClass?: string;
-  defaultValue?: string | boolean;
   autocomplete?: string;
 }
 
@@ -21,7 +20,7 @@ export default function FormField({
   label,
   type,
   value,
-  className,
+  className='form-field-primary',
   checked,
   onClick = () => {},
   onChange = () => {},

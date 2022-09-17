@@ -95,29 +95,10 @@ export default function Login() {
   });
 
 
-  const token = searchParams.get("token");
-  const redirectTo = searchParams.get("redirectTo");
+  // const token = searchParams.get("token");
+  // const redirectTo = searchParams.get("redirectTo");
 
-  useEffect(() => {
-    if (!firstLoad.current) {
-      const newState = {
-        email: '',
-        password: '',
 
-      }
-      setErrors(newState)
-      setFormError('')
-      setFormData(newState)
-    }
-  }, [action])
-
-  useEffect(() => {
-    if (!firstLoad.current) {
-      setFormError('')
-    }
-  }, [formData])
-
-  useEffect(() => { firstLoad.current = false }, [])
 
 
 
@@ -139,12 +120,12 @@ export default function Login() {
               ? 'Please Login to leave a comment on a Post'
               : 'Sign up to start commenting'}
           </p>
-          <Form method='post' className='form-primary' >
+          <form method='post' className='form-primary' >
             <div >
               {formError}
             </div>
-            <input type="hidden" name="redirectTo" value={redirectTo || "/"} />
-            <input type="hidden" name="token" value={token || ""} />
+            {/* <input type="hidden" name="redirectTo" value={redirectTo || "/"} />
+            <input type="hidden" name="token" value={token || ""} /> */}
 
             <FormField
               htmlFor='email'
@@ -169,7 +150,7 @@ export default function Login() {
                 {action === 'login' ? `Login` : `Sign Up`}
               </button>
             </div>
-          </Form>
+          </form>
           <button
             onClick={() =>
               setAction(
