@@ -5,15 +5,17 @@ import { getUser } from "~/utils/auth.server";
 import { getPosts } from "~/utils/post.server";
 import Posts from "~/components/posts";
 
-;
+
 type LoaderData = {
   userPosts: Awaited<ReturnType<typeof getPosts>>;
+  isLoggedin: boolean;
   isOwner: boolean;
   userId: string;
 };
 export const loader: LoaderFunction = async ({  request }) => {
   const user = await getUser(request);
   const userId = user?.id as string;
+  const isLoggedin = user?.role === "USER";
   const isOwner = user?.role === "ADMIN";
   const userPosts = await getPosts();
 
@@ -27,6 +29,7 @@ export const loader: LoaderFunction = async ({  request }) => {
 
   const data: LoaderData = {
     userPosts,
+    isLoggedin,
     isOwner,
     userId,
   };
@@ -36,7 +39,7 @@ export const loader: LoaderFunction = async ({  request }) => {
 export default function Home() {
   const data = useLoaderData<LoaderData>();
   return (
-    <>
+    <div className='flex flex-col w-1/2 md:w-3/4 px-4 mx-auto items-center justify-center'>
       {data.userPosts.map((post) => (
         <Posts
           key={post.id}
@@ -46,7 +49,7 @@ export default function Home() {
           userId={data.userId}
         />
       ))}
-    </>
+    </div>
   );
 }
 

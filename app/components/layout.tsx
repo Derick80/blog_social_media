@@ -13,7 +13,7 @@ export default function Layout({
     <>
 
       <AdminContainer isOwner={isOwner}>
-        <main tabIndex={-1}>{children}</main>
+        <main  tabIndex={-1}>{children}</main>
       </AdminContainer>
       <Footer />
     </>

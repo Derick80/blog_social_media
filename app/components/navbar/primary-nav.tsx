@@ -4,34 +4,38 @@ import Tooltip from '../shared/tooltip'
 export default function NavigationBar(){
     return(
         <>
-         <Tooltip message="Write a new blog post">
+        <Tooltip message="View posts">
         <NavLink
-          to="/new"
+          to="/"
           className={({ isActive }) =>
             ` ${
               isActive
-                ? "uppercase underline text-base md:text-xl"
+                ? "underline text-base md:text-xl"
                 : "uppercase text-base md:text-xl"
             }`
           }
         >
-          Write a New Post
+          Blog Feed
         </NavLink>
       </Tooltip>
-      <Tooltip message="View drafts">
-        <NavLink
-          to="/drafts"
-          className={({ isActive }) =>
-            ` ${
-              isActive
-                ? "uppercase underline text-base md:text-xl"
-                : "uppercase text-base md:text-xl"
-            }`
-          }
-        >
-          Drafts
-        </NavLink>
-      </Tooltip>
+      <Tooltip message="My Profile">
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              ` ${
+                isActive
+                  ? "uppercase underline text-sm md:text-xl"
+                  : "uppercase text-sm md:text-xl"
+              }`
+            }
+          >
+            About
+          </NavLink>
+        </Tooltip>
+
+        {isOwner && (
+
+        ): null}
         </>
     )
 }

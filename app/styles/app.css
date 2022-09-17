@@ -759,6 +759,10 @@ video {
   width: 0.75rem;
 }
 
+.w-1\/2{
+  width: 50%;
+}
+
 .min-w-\[0\.75rem\]{
   min-width: 0.75rem;
 }
@@ -792,6 +796,10 @@ video {
 
 .flex-col{
   flex-direction: column;
+}
+
+.content-center{
+  align-content: center;
 }
 
 .items-center{
@@ -1045,6 +1053,10 @@ video {
 
   .md\:w-1\/2{
     width: 50%;
+  }
+
+  .md\:w-3\/4{
+    width: 75%;
   }
 
   .md\:text-5xl{
