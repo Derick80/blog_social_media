@@ -2,18 +2,18 @@ import type {
   ActionFunction,
   LoaderFunction,
   MetaFunction,
-} from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
-import React, { useState } from "react";
-import Layout from "~/components/layout";
-import FormField from "~/components/shared/form-field";
-import { getUser, login, register } from "~/utils/auth.server";
+} from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { Form, useActionData, useSearchParams, useTransition } from '@remix-run/react';
+import React, { useEffect, useRef, useState } from 'react';
+import Layout from '~/components/layout';
+import FormField from '~/components/shared/form-field';
+import { getUser, login, register } from '~/utils/auth.server';
 import {
   validateEmail,
   validatePassword,
   validateText,
-} from "~/utils/validators.server";
+} from '~/utils/validators.server';
 
 export const meta: MetaFunction = () => {
   return {
@@ -38,21 +38,21 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  return (await getUser(request)) ? redirect("/") : null;
+  return (await getUser(request)) ? redirect('/') : null;
 };
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
-  const action = form.get("_action");
-  const email = form.get("email");
-  const password = form.get("password");
+  const action = form.get('_action');
+  const email = form.get('email');
+  const password = form.get('password');
 
   if (
-    typeof action !== "string" ||
-    typeof email !== "string" ||
-    typeof password !== "string"
+    typeof action !== 'string' ||
+    typeof email !== 'string' ||
+    typeof password !== 'string'
   ) {
     return badRequest({
-      formError: "Invalid form submission",
+      formError: 'Invalid form submission',
     });
   }
 
@@ -68,27 +68,58 @@ export const action: ActionFunction = async ({ request }) => {
     return badRequest({ fieldErrors, fields });
 
   switch (action) {
-    case "login": {
+    case 'login': {
       return await login({ email, password });
     }
-    case "register": {
+    case 'register': {
       return await register({ email, password });
     }
     default:
-      return badRequest({ fields, formError: "Invalid Login" });
+      return badRequest({ fields, formError: 'Invalid Login' });
   }
 };
 
 export default function Login() {
   const actionData = useActionData<ActionData>();
-  const [formError] = useState(actionData?.fieldErrors || "");
-  const [errors] = useState(actionData?.fieldErrors || {});
-  const [action, setAction] = useState("login");
+  const [searchParams] = useSearchParams();
+  const transition = useTransition();
+
+  const firstLoad = useRef(true);
+  const [errors, setErrors] = useState(actionData?.fieldErrors || {});
+  const [formError, setFormError] = useState(actionData?.fieldErrors || '');
+  const [action, setAction] = useState('login');
 
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: actionData?.fields?.email || '',
+    password: actionData?.fields?.password || '',
   });
+
+
+  const token = searchParams.get("token");
+  const redirectTo = searchParams.get("redirectTo");
+
+  useEffect(() => {
+    if (!firstLoad.current) {
+      const newState = {
+        email: '',
+        password: '',
+
+      }
+      setErrors(newState)
+      setFormError('')
+      setFormData(newState)
+    }
+  }, [action])
+
+  useEffect(() => {
+    if (!firstLoad.current) {
+      setFormError('')
+    }
+  }, [formData])
+
+  useEffect(() => { firstLoad.current = false }, [])
+
+
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -104,52 +135,54 @@ export default function Login() {
       <div>
           <h2 >Welcome to my Blog</h2>
           <p >
-            {action === "login"
-              ? "Please Login to leave a comment on a Post"
-              : "Sign up to start commenting"}
+            {action === 'login'
+              ? 'Please Login to leave a comment on a Post'
+              : 'Sign up to start commenting'}
           </p>
-          <form method="post" >
+          <Form method='post' className='form-primary' >
             <div >
               {formError}
             </div>
-            <FormField
-              htmlFor="email"
-              label="Email"
+            <input type="hidden" name="redirectTo" value={redirectTo || "/"} />
+            <input type="hidden" name="token" value={token || ""} />
 
+            <FormField
+              htmlFor='email'
+              label='Email'
               value={formData.email}
-              onChange={(event) => handleInputChange(event, "email")}
+              onChange={(event) => handleInputChange(event, 'email')}
               error={errors?.email}
             />
             <FormField
-              htmlFor="password"
-              label="Password"
+              htmlFor='password'
+              label='Password'
 
               value={formData.password}
-              type="password"
-              onChange={(event) => handleInputChange(event, "password")}
+              type='password'
+              onChange={(event) => handleInputChange(event, 'password')}
               error={errors?.password}
-              autocomplete="new-password"
+              autocomplete='new-password'
             />
 
             <div >
-              <button type="submit" name="_action" value={action}>
-                {action === "login" ? `Login` : `Sign Up`}
+              <button type='submit' name='_action' value={action}>
+                {action === 'login' ? `Login` : `Sign Up`}
               </button>
             </div>
-          </form>
+          </Form>
           <button
             onClick={() =>
               setAction(
-                action == "login"
+                action == 'login'
                   ? `don't have an account? Sign up!`
-                  : "" + "in"
+                  : '' + 'in'
               )
             }
           >
-            {action === "login"
+            {action === 'login'
               ? `Don't have an account? Sign up!`
-              : "Already have an account? Sign In"}
-          </button>{" "}
+              : 'Already have an account? Sign In'}
+          </button>{' '}
         </div>
     </>
   );

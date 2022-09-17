@@ -8,6 +8,13 @@ export interface RegisterForm {
   password: string;
 }
 
+// Authinput will eventually replace login/reg form
+export interface AuthInput {
+  email: string;
+  password: string;
+  redirectTo?: string;
+  token?: string;
+}
 export interface CreateOrEditPost {
   id?: string;
   title: string;

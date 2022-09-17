@@ -3,7 +3,7 @@ import Tooltip from "~/components/shared/tooltip";
 
 export default function AppBar() {
   return (
-    <>
+
       <header>
         <Tooltip message="View Posts">
           <NavLink
@@ -34,6 +34,5 @@ export default function AppBar() {
           </NavLink>
         </Tooltip>
       </header>
-    </>
   );
 }

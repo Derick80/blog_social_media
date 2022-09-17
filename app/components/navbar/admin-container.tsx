@@ -9,9 +9,9 @@ export default function AdminContainer({
   isOwner: boolean;
 }) {
   return (
-    <div>
+    <>
       <AdminBar />
       {children}
-    </div>
+    </>
   );
 }

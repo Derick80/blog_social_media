@@ -12,7 +12,7 @@ export default function Layout({
 }) {
   return isOwner ? (
     <>
-      {" "}
+
       <AdminContainer isOwner={isOwner}>
         <main tabIndex={-1}>{children}</main>
       </AdminContainer>

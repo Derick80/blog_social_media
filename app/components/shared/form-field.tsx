@@ -42,7 +42,7 @@ export default function FormField({
         className={className}
         onChange={(event) => {
           onChange(event);
-          setErrorText("");
+          setErrorText('')
         }}
         type={type}
         checked={checked}
