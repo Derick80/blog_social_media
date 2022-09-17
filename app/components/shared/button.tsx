@@ -1,37 +1,34 @@
 import React from "react";
 
-interface Props {
-  defaultValue?: string;
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
-  disabled?: boolean;
   onClick?: () => void;
   onChange?: () => void;
   className?: string;
-  id?: string;
-  role?: string;
-  name?: string;
-  value?: string;
   type: "button" | "submit" | "reset";
+  variant?: keyof typeof buttonVariantClasses
   props?: unknown;
 }
 
+export const baseButton = 'inline-flex justify-center items-center px-4 py-2 border text-sm rounded-md'
+
+export const buttonVariantClasses={
+outlined: "border shadow-sm ",
+solid: "bg-red"
+}
+
 export default function Button({
-  defaultValue,
   onClick,
   className,
   children,
   type = "submit",
-  name,
-  value,
   ...props
 }: Props) {
   return (
     <button
-      className={className}
-      name={name}
-      type={type}
+className={`${baseButton} ${buttonVariantClasses.outlined} ${className}`}
+    type={type}
       onClick={onClick}
-      value={value}
     >
       {children}
     </button>

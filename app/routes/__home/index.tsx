@@ -2,31 +2,21 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getUser } from "~/utils/auth.server";
-import { getPosts, likePost } from "~/utils/post.server";
+import { getPosts } from "~/utils/post.server";
 import Posts from "~/components/posts";
 
-type LikeData = {
-  _count: {
-    likes: number;
-    comments: number;
-  };
-  id: string;
-  postId: string;
-  userId: string;
-} | null;
+;
 type LoaderData = {
   userPosts: Awaited<ReturnType<typeof getPosts>>;
   isOwner: boolean;
   userId: string;
 };
-export const loader: LoaderFunction = async ({ params, request }) => {
+export const loader: LoaderFunction = async ({  request }) => {
   const user = await getUser(request);
   const userId = user?.id as string;
   const isOwner = user?.role === "ADMIN";
   const userPosts = await getPosts();
-  const postId = params.postId;
 
-  const likes = userPosts.map((post) => post.likes.map((one) => one.userId));
 
   if (!userPosts) {
     throw new Response(`No posts found`, {
@@ -34,7 +24,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     });
   }
 
-  console.log("likes", likes);
 
   const data: LoaderData = {
     userPosts,

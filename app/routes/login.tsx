@@ -4,9 +4,8 @@ import type {
   MetaFunction,
 } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useActionData, useSearchParams, useTransition } from '@remix-run/react';
-import React, { useEffect, useRef, useState } from 'react';
-import Layout from '~/components/layout';
+import {  useActionData,   } from '@remix-run/react';
+import React, {   useState } from 'react';
 import FormField from '~/components/shared/form-field';
 import { getUser, login, register } from '~/utils/auth.server';
 import {
@@ -81,10 +80,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
   const actionData = useActionData<ActionData>();
-  const [searchParams] = useSearchParams();
-  const transition = useTransition();
 
-  const firstLoad = useRef(true);
   const [errors, setErrors] = useState(actionData?.fieldErrors || {});
   const [formError, setFormError] = useState(actionData?.fieldErrors || '');
   const [action, setAction] = useState('login');
@@ -93,13 +89,6 @@ export default function Login() {
     email: actionData?.fields?.email || '',
     password: actionData?.fields?.password || '',
   });
-
-
-  // const token = searchParams.get("token");
-  // const redirectTo = searchParams.get("redirectTo");
-
-
-
 
 
   const handleInputChange = (

@@ -1,7 +1,6 @@
 import React from "react";
 import Footer from "./footer";
 import AdminContainer from "./navbar/admin-container";
-import ContentContainer from "./navbar/content-container";
 
 export default function Layout({
   children,

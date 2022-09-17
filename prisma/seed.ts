@@ -34,7 +34,7 @@ async function seed() {
       occupation: "scientist",
       pronouns: "HE",
       profilePicture:
-        "https://blogphotosbucket.s3.us-east-2.amazonaws.com/profileimages/DerickFace.jpg",
+        "https://remix-bucket.s3.us-east-2.amazonaws.com/DerickFace.jpg",
     },
   });
 
@@ -73,7 +73,7 @@ async function seed() {
       title: "My first Typescript App",
       body: "How I went about building my first working typescript app",
       postImg:
-        "https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_two_memory_game.png",
+        "https://remix-bucket.s3.us-east-2.amazonaws.com/post_one_prisma_schema.png",
       published: false,
       userId: user.id,
       categories: {
@@ -89,7 +89,7 @@ async function seed() {
       title: "Using past work to inform current workflow",
       body: "From the depths of graduate school",
       postImg:
-        "https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_three_yeast_plates.jpeg",
+"https://remix-bucket.s3.us-east-2.amazonaws.com/post_three_yeast_plates.jpeg",
       published: true,
       userId: user.id,
       categories: {
