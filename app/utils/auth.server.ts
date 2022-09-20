@@ -61,6 +61,7 @@ export async function getUserId(request: Request) {
   return userId
 }
 
+// placing requireUserId in a route makes the route only accessible by a logged in user
 export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
