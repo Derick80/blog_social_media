@@ -1,6 +1,4 @@
-import { SerializeFrom } from '@remix-run/node'
 import { Link } from '@remix-run/react'
-import React from 'react'
 import { SerializedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import Sectionheader from './shared/section-header'
