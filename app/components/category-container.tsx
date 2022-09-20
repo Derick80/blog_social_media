@@ -12,14 +12,14 @@ export default function CategoryContainer ({
   category,
 }: CategoryContainerProps) {
   return (
-    <div>
+    <div className='flex flex-wrap mx-2'>
 
-      <div key={ category.id }>
-        <div>
+      <label className='m-2 max-w-fit h-fit text-center border-2 rounded-md p-2 md:tracking-wide hover:cursor-pointer' key={ category.id }>
+
           <Link to={ `/categories/${category.name}` }>{ category.name }</Link>
-        </div>
 
-      </div>
+
+      </label>
 
     </div>
   );

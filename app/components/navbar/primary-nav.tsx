@@ -10,7 +10,7 @@ type PrimaryNavProps = {
 export default function NavigationBar ({ isLoggedIn }: PrimaryNavProps) {
   return (
     <nav
-      className='flex flex-row justify-center flex-1 items-center container font-semibold mt-2 md:mt-10 lg:mt-10'
+      className='flex flex-row justify-center flex-1 items-center container font-semibold mt-2 md:mt-10 lg:mt-10 text-2xl md:text-4xl'
     >
       <ul className="flex items-center gap-3">
         <li>
@@ -19,8 +19,8 @@ export default function NavigationBar ({ isLoggedIn }: PrimaryNavProps) {
               to="/"
               className={ ({ isActive }) =>
                 ` ${isActive
-                  ? "uppercase underline text-base md:text-xl"
-                  : "uppercase text-base md:text-xl"
+                  ? "uppercase underline"
+                  : "uppercase"
                 }`
               }
             >
@@ -34,8 +34,8 @@ export default function NavigationBar ({ isLoggedIn }: PrimaryNavProps) {
               to="/about"
               className={ ({ isActive }) =>
                 ` ${isActive
-                  ? "uppercase underline text-sm md:text-xl"
-                  : "uppercase text-sm md:text-xl"
+                  ? "uppercase underline"
+                  : "uppercase"
                 }`
               }
             >
@@ -50,8 +50,8 @@ export default function NavigationBar ({ isLoggedIn }: PrimaryNavProps) {
                 to="/posts/new"
                 className={ ({ isActive }) =>
                   ` ${isActive
-                    ? "uppercase underline text-base md:text-xl"
-                    : "uppercase text-base md:text-xl"
+                    ? "uppercase underline"
+                    : "uppercase"
                   }`
                 }
               >
@@ -65,8 +65,8 @@ export default function NavigationBar ({ isLoggedIn }: PrimaryNavProps) {
                 to="/drafts"
                 className={ ({ isActive }) =>
                   ` ${isActive
-                    ? "uppercase underline text-base md:text-xl"
-                    : "uppercase text-base md:text-xl"
+                    ? "uppercase underline"
+                    : "uppercase"
                   }`
                 }
               >
