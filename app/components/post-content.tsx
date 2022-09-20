@@ -10,13 +10,13 @@ type PostProps = {
 
 export default function PostContent ({ post }: PostProps) {
     return (
-        <article>post-content
+        <article>
 
             <Link
 
                 to={ `/posts/${post.id}` }
             >
-                <Sectionheader>{ post.title }</Sectionheader>
+                <h1 className="my-6 border-b-2 text-center text-3xl">{ post.title }</h1>
                 <hr />
 
                 { post?.categories?.map((category) => (
@@ -24,10 +24,12 @@ export default function PostContent ({ post }: PostProps) {
                         key={ category.id }
                         category={ category } />
                 )) }
-                <div>
+                <div className='flex'>
                     <img
                         style={ {
                             backgroundSize: "cover",
+                            width: "50%",
+                            aspectRatio: "auto",
                             ...(post.postImg
                                 ? { backgroundImage: `url(${post.postImg})` }
                                 : {}),

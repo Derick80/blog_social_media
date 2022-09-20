@@ -12,25 +12,27 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const baseButton = 'inline-flex justify-center items-center px-4 py-2 border text-sm rounded-md'
 
-export const buttonVariantClasses={
-outlined: "border shadow-sm ",
-solid: "bg-red"
+export const buttonVariantClasses = {
+  primary: 'bg-primary',
+  outlined: "border shadow-sm ",
+  solid: "bg-red-500"
 }
 
-export default function Button({
+export default function Button ({
   onClick,
   className,
+  variant = "solid",
   children,
   type = "submit",
 
 }: Props) {
   return (
     <button
-className={`${baseButton} ${buttonVariantClasses.outlined} ${className}`}
-    type={type}
-      onClick={onClick}
+      className={ `${baseButton} ${buttonVariantClasses[variant]} ${className}` }
+      type={ type }
+      onClick={ onClick }
     >
-      {children}
+      { children }
     </button>
   );
 }

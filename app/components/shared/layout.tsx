@@ -7,12 +7,12 @@ export type LayoutProps = {
   children: React.ReactNode
 }
 
-export default function Layout({ isLoggedIn, children }: LayoutProps) {
+export default function Layout ({ isLoggedIn, children }: LayoutProps) {
   return (
     <>
-      <main tabIndex={-1}>
-        <NavigationBar isLoggedIn={isLoggedIn} />
-        {children}
+      <main tabIndex={ -1 } className='mx-auto'>
+        <NavigationBar isLoggedIn={ isLoggedIn } />
+        <div className='container mx-auto mt-2 md:mt-4'> { children }</div>
       </main>
       <Footer />
     </>
