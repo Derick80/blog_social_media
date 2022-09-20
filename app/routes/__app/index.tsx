@@ -11,6 +11,7 @@ import NavigationBar from '~/components/navbar/primary-nav';
 type LoaderData = {
   userPosts: Awaited<ReturnType<typeof getPosts>>;
   isOwner: boolean;
+  isLoggedIn: boolean;
 };
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
@@ -29,6 +30,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const data: LoaderData = {
     userPosts,
     isOwner,
+    isLoggedIn,
   };
   return json(data);
 };
@@ -41,7 +43,7 @@ export default function Home () {
 
         <></>
       </NavigationBar>
-      <main className='flex flex-col w-1/2 md:w-3/4 px-4 mx-auto items-center justify-center'>
+      < >
         { data.userPosts.map((post) => (
           <PostContent
             key={ post.id }
@@ -49,7 +51,7 @@ export default function Home () {
 
           />
         )) }
-      </main>
+      </>
     </>
   );
 }

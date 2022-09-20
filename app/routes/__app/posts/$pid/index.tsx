@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async ({
 export default function PostRoute () {
     const data = useLoaderData<typeof loader>();
     return (
-        <main>
+        <>
             { data.post && (
                 <PostContent
                     key={ data.post.id }
@@ -31,6 +31,6 @@ export default function PostRoute () {
                 />
             ) }
 
-        </main>
+        </>
     )
 }

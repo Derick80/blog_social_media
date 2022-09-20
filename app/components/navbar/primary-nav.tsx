@@ -39,6 +39,7 @@ export default function NavigationBar ({ children }: PrimaryNavProps) {
             </NavLink>
           </Tooltip>
         </li>
+
       </ul>
 
 
