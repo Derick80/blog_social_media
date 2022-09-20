@@ -6,7 +6,7 @@ import React from "react";
 import Tooltip from "~/components/shared/tooltip";
 import { getUser } from "~/utils/auth.server";
 import { getUserProfile } from "~/utils/profile.server";
-import Layout from "~/components/layout";
+import Layout from "~/components/shared/layout";
 import Image from "remix-image";
 
 // keep a list of the icon ids we put in the symbol
@@ -30,11 +30,14 @@ export const meta: MetaFunction = ({
 
 type LoaderData = {
   userProfile: Awaited<ReturnType<typeof getUserProfile>>;
+  isLoggedIn: boolean;
   isOwner: boolean;
 };
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
   const userId = user?.id as string;
+  const isLoggedIn = user !== null;
+
   const isOwner = user?.role == "ADMIN";
   const userProfile = await getUserProfile(userId);
 
@@ -45,8 +48,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   const data: LoaderData = {
     userProfile,
-
-    isOwner,
+isLoggedIn,    isOwner,
   };
   return json(data);
 };
@@ -69,7 +71,7 @@ export default function About() {
   } = data.userProfile;
 
   return (
-    <Layout isOwner={data.isOwner}>
+    <Layout isLoggedIn={data.isLoggedIn}>
       {data.userProfile ? (
         <div key={id} className="">
           <div>

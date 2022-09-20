@@ -15,7 +15,8 @@ type LoaderData = {
 };
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
-  const isLoggedIn = user?.role === "USER" || user?.role === "ADMIN";
+  const isLoggedIn = user !== null;
+
   const isOwner = user?.role === "ADMIN";
   const userPosts = await getPosts();
 
@@ -39,11 +40,8 @@ export default function Home () {
   const data = useLoaderData<LoaderData>();
   return (
     <>
-      <NavigationBar>
 
-        <></>
-      </NavigationBar>
-      < >
+
         { data.userPosts.map((post) => (
           <PostContent
             key={ post.id }
@@ -51,7 +49,7 @@ export default function Home () {
 
           />
         )) }
-      </>
+
     </>
   );
 }

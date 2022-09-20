@@ -21,7 +21,6 @@ import { ImageUploader } from "~/components/image-uploader";
 type LoaderData = {
   profile: Profile;
   userId: string;
-
   isOwner: boolean;
 };
 

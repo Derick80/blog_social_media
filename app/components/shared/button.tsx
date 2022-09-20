@@ -7,7 +7,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   type: "button" | "submit" | "reset";
   variant?: keyof typeof buttonVariantClasses
-  props?: unknown;
+
 }
 
 export const baseButton = 'inline-flex justify-center items-center px-4 py-2 border text-sm rounded-md'
@@ -22,7 +22,7 @@ export default function Button({
   className,
   children,
   type = "submit",
-  ...props
+
 }: Props) {
   return (
     <button

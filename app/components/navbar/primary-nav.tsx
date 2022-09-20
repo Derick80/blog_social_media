@@ -1,13 +1,17 @@
 import { NavLink } from '@remix-run/react'
+import Button from '../shared/button'
 import Tooltip from '../shared/tooltip'
 
 
 type PrimaryNavProps = {
-  children?: React.ReactNode
+  isLoggedIn: boolean
+
 }
-export default function NavigationBar ({ children }: PrimaryNavProps) {
+export default function NavigationBar ({ isLoggedIn }: PrimaryNavProps) {
   return (
-    <nav>
+    <nav
+className='flex flex-row justify-center flex-1 items-center container font-semibold mt-2 md:mt-10 lg:mt-10'
+    >
       <ul className="flex items-center gap-3">
         <li>
           <Tooltip message="View posts">
@@ -15,12 +19,12 @@ export default function NavigationBar ({ children }: PrimaryNavProps) {
               to="/"
               className={ ({ isActive }) =>
                 ` ${isActive
-                  ? "underline text-base md:text-xl"
+                  ? "uppercase underline text-base md:text-xl"
                   : "uppercase text-base md:text-xl"
                 }`
               }
             >
-              Blog Feed
+              Feed
             </NavLink>
           </Tooltip>
         </li>
@@ -39,11 +43,51 @@ export default function NavigationBar ({ children }: PrimaryNavProps) {
             </NavLink>
           </Tooltip>
         </li>
-
+{isLoggedIn && (<>
+<li>
+<Tooltip message="Write a new blog post">
+        <NavLink
+          to="/posts/new"
+          className={({ isActive }) =>
+            ` ${
+              isActive
+                ? "uppercase underline text-base md:text-xl"
+                : "uppercase text-base md:text-xl"
+            }`
+          }
+        >
+          Create Post
+        </NavLink>
+      </Tooltip>
+</li>
+   <li>
+   <Tooltip message="View drafts">
+        <NavLink
+          to="/drafts"
+          className={({ isActive }) =>
+            ` ${
+              isActive
+                ? "uppercase underline text-base md:text-xl"
+                : "uppercase text-base md:text-xl"
+            }`
+          }
+        >
+          Drafts
+        </NavLink>
+      </Tooltip>
+   </li>
+    <li>
+    <form className='md:absolute space-x-5 right-5' action="/logout" method="post">
+            <Tooltip message="signout">
+              <Button type="submit">SignOut</Button>
+            </Tooltip>
+          </form>
+    </li>
+</>)}
       </ul>
 
 
-      { children }
+
 
     </nav>
   )
