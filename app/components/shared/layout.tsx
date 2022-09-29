@@ -9,12 +9,16 @@ export type LayoutProps = {
 
 export default function Layout ({ isLoggedIn, children }: LayoutProps) {
   return (
-    <>
-      <main tabIndex={ -1 } className='mx-auto'>
-        <NavigationBar isLoggedIn={ isLoggedIn } />
+    <div className='flex flex-col md:flex-row'>
+    <header className='px-6 lg:px-12 order-2 md:order-first dark:bg-gray-600'>
+    <NavigationBar isLoggedIn={ isLoggedIn } />
+    </header>
+      <main tabIndex={ -1 } className='container mx-auto relative'>
+
         <div className='container mx-auto mt-2 md:mt-4'> { children }</div>
+        <Footer />
       </main>
-      <Footer />
-    </>
+
+    </div>
   )
 }

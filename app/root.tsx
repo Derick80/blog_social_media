@@ -41,7 +41,7 @@ function Document({
         <title>{title}</title>
         <Links />
       </head>
-      <body className="font-Condensed h-screen dark:bg-zinc-800 dark:text-white">
+      <body className="font-Condensed min-h-screen w-full dark:bg-gray-700 dark:text-white">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -82,3 +82,6 @@ export function ErrorBoundary({ error }: { error: Error }) {
     </Document>
   );
 }
+
+
+// h-screen dark:bg-gray-700 dark:text-white

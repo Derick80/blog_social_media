@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className='flex flex-row'>
+    <footer className='flex flex-row md:flex-col md:order-last'>
       <div>
         <a
           href="https://www.linkedin.com/in/dhoskinson"

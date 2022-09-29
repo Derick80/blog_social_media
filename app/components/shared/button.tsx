@@ -14,7 +14,7 @@ export const baseButton = 'inline-flex justify-center items-center px-4 py-2 bor
 
 export const buttonVariantClasses = {
   primary: 'bg-primary',
-  outlined: "border shadow-sm ",
+  outlined: "border shadow-sm",
   solid: "bg-red-500"
 }
 
