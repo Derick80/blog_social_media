@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className='flex flex-row md:flex-col md:order-last'>
+    <footer className="flex flex-row md:order-last md:flex-col">
       <div>
         <a
           href="https://www.linkedin.com/in/dhoskinson"
@@ -9,7 +9,7 @@ export default function Footer() {
           rel="noopener noreferrer"
         >
           <svg
-            className="fill-black dark:fill-white text-base"
+            className="fill-black text-base dark:fill-white"
             xmlns="http://www.w3.org/2000/svg"
             fill="#ffffff"
             width="24"
@@ -29,7 +29,7 @@ export default function Footer() {
           rel="noopener noreferrer"
         >
           <svg
-            className="fill-black dark:fill-white text-base"
+            className="fill-black text-base dark:fill-white"
             xmlns="http://www.w3.org/2000/svg"
             fill="#ffffff"
             width="24"
@@ -41,5 +41,5 @@ export default function Footer() {
         </a>
       </div>
     </footer>
-  );
+  )
 }

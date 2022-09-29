@@ -16,7 +16,7 @@ export const register = async (form: RegisterForm) => {
   if (exists) {
     return json(
       {
-        error: `User already exists with that email`
+        error: `User already exists with that email`,
       },
       { status: 400 }
     )
@@ -29,8 +29,8 @@ export const register = async (form: RegisterForm) => {
         error: `somethign went wrong trying to create a user`,
         fields: {
           email: form.email,
-          password: form.password
-        }
+          password: form.password,
+        },
       },
       { status: 400 }
     )
@@ -46,8 +46,8 @@ const storage = createCookieSessionStorage({
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24 * 30,
-    httpOnly: true
-  }
+    httpOnly: true,
+  },
 })
 
 function getUserSession(request: Request) {
@@ -80,20 +80,20 @@ export const createUserSession = async (userId: string, redirectTo: string) => {
   session.set('userId', userId)
   return redirect(redirectTo, {
     headers: {
-      'Set-Cookie': await storage.commitSession(session)
-    }
+      'Set-Cookie': await storage.commitSession(session),
+    },
   })
 }
 
 export const login = async (form: LoginForm) => {
   const user = await prisma.user.findUnique({
-    where: { email: form.email }
+    where: { email: form.email },
   })
 
   if (!user || !(await bcrypt.compare(form.password, user.password))) {
     return json(
       {
-        error: `Incorrect Login`
+        error: `Incorrect Login`,
       },
       { status: 400 }
     )
@@ -109,13 +109,13 @@ export async function getUser(request: Request) {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id: userId
+        id: userId,
       },
       select: {
         id: true,
         email: true,
-        role: true
-      }
+        role: true,
+      },
     })
     return user
   } catch {
@@ -127,7 +127,7 @@ export async function logout(request: Request) {
   const session = await getUserSession(request)
   return redirect('/login', {
     headers: {
-      'Set-Cookie': await storage.destroySession(session)
-    }
+      'Set-Cookie': await storage.destroySession(session),
+    },
   })
 }

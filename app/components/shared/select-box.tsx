@@ -1,23 +1,23 @@
 interface props {
   options: {
-    name: string;
-    value: any;
-  }[];
-  className?: string;
-  containerClassName?: string;
-  id?: string;
-  name?: string;
-  label?: string;
-  value?: any;
-  onChange?: (...args: any) => any;
-  multiple?: boolean;
+    name: string
+    value: any
+  }[]
+  className?: string
+  containerClassName?: string
+  id?: string
+  name?: string
+  label?: string
+  value?: any
+  onChange?: (...args: any) => any
+  multiple?: boolean
 }
 
 export function SelectBox({
   options = [],
   onChange = () => {},
-  className = "",
-  containerClassName = "",
+  className = '',
+  containerClassName = '',
   name,
   id,
   value,
@@ -43,7 +43,7 @@ export function SelectBox({
           ))}
         </select>
         <svg
-          className="w-4 h-4 fill-current text-gray-400 -ml-7 mt-1 pointer-events-none"
+          className="pointer-events-none -ml-7 mt-1 h-4 w-4 fill-current text-gray-400"
           viewBox="0 0 140 140"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -53,5 +53,5 @@ export function SelectBox({
         </svg>
       </div>
     </div>
-  );
+  )
 }

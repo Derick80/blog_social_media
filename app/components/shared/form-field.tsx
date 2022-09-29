@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 
 export interface FormFieldProps extends React.HTMLAttributes<HTMLInputElement> {
-  htmlFor: string;
-  label: string;
-  type?: string;
-  value: any;
-  name?: string;
-  onChange: (...args: any[]) => void;
-  onClick?: (...args: any) => unknown;
-  checked?: boolean;
-  error?: string;
-  className?: string;
-  labelClass?: string;
-  autocomplete?: string;
+  htmlFor: string
+  label: string
+  type?: string
+  value: any
+  name?: string
+  onChange: (...args: any[]) => void
+  onClick?: (...args: any) => unknown
+  checked?: boolean
+  error?: string
+  className?: string
+  labelClass?: string
+  autocomplete?: string
 }
 
 export default function FormField({
@@ -20,18 +20,18 @@ export default function FormField({
   label,
   type,
   value,
-  className='form-field-primary',
+  className = 'form-field-primary',
   checked,
   onClick = () => {},
   onChange = () => {},
-  error = "",
+  error = '',
   labelClass,
   autocomplete,
 }: FormFieldProps) {
-  const [errorText, setErrorText] = useState(error);
+  const [errorText, setErrorText] = useState(error)
   useEffect(() => {
-    setErrorText(error);
-  }, [error]);
+    setErrorText(error)
+  }, [error])
   return (
     <>
       <label htmlFor={htmlFor} className={labelClass}>
@@ -40,7 +40,7 @@ export default function FormField({
       <input
         className={className}
         onChange={(event) => {
-          onChange(event);
+          onChange(event)
           setErrorText('')
         }}
         type={type}
@@ -50,7 +50,7 @@ export default function FormField({
         value={value}
         autoComplete={autocomplete}
       />
-      <div>{errorText || ""}</div>
+      <div>{errorText || ''}</div>
     </>
-  );
+  )
 }

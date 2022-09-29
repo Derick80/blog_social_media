@@ -1,4 +1,4 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -7,32 +7,32 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-} from "@remix-run/react";
-import styles from "./styles/app.css";
+} from '@remix-run/react'
+import styles from './styles/app.css'
 export const meta: MetaFunction = () => {
-  const description = `See what I've been up to`;
+  const description = `See what I've been up to`
   return {
-    charset: "utf-8",
+    charset: 'utf-8',
     description,
-    title: "New Remix App",
-    viewport: "width=device-width,initial-scale=1",
-    keywords: "remix,react,typescript, blog, prisma, postgresql",
-  };
-};
+    title: 'New Remix App',
+    viewport: 'width=device-width,initial-scale=1',
+    keywords: 'remix,react,typescript, blog, prisma, postgresql',
+  }
+}
 
 export const links: LinksFunction = () => {
   return [
-    { rel: "stylesheet", href: styles },
-    { rel: "email_contact", href: "../public/icons/contact_mail.png" },
-  ];
-};
+    { rel: 'stylesheet', href: styles },
+    { rel: 'email_contact', href: '../public/icons/contact_mail.png' },
+  ]
+}
 
 function Document({
   children,
   title = `My Personal Blog`,
 }: {
-  children: React.ReactNode;
-  title?: string;
+  children: React.ReactNode
+  title?: string
 }) {
   return (
     <html lang="en">
@@ -41,25 +41,25 @@ function Document({
         <title>{title}</title>
         <Links />
       </head>
-      <body className="font-Condensed min-h-screen w-full dark:bg-gray-700 dark:text-white">
+      <body className="min-h-screen w-full font-Condensed dark:bg-gray-700 dark:text-white">
         {children}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
       </body>
     </html>
-  );
+  )
 }
 export default function App() {
   return (
     <Document>
       <Outlet />
     </Document>
-  );
+  )
 }
 
 export function CatchBoundary() {
-  const caught = useCatch();
+  const caught = useCatch()
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
@@ -70,18 +70,17 @@ export function CatchBoundary() {
         </h1>
       </div>
     </Document>
-  );
+  )
 }
 export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <Document title="Uh-oh!">
-      <div className="text-black dark:text-white bg-white dark:bg-slate-500">
+      <div className="bg-white text-black dark:bg-slate-500 dark:text-white">
         <h1>App Error</h1>
         <pre>{error.message}</pre>
       </div>
     </Document>
-  );
+  )
 }
-
 
 // h-screen dark:bg-gray-700 dark:text-white

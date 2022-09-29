@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react'
 
 export default function Sectionheader({ children }: { children: ReactNode }) {
-  return <p>{children}</p>;
+  return <p>{children}</p>
 }

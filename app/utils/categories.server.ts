@@ -1,14 +1,14 @@
-import { prisma } from "./prisma.server";
-import { CategoryForm, UpdateCategoryForm } from "~/utils/types.server";
-import { json } from "@remix-run/node";
+import { prisma } from './prisma.server'
+import { CategoryForm, UpdateCategoryForm } from '~/utils/types.server'
+import { json } from '@remix-run/node'
 
 export async function getCategories() {
-  const allCategories = await prisma.category.findMany({});
-  return { allCategories };
+  const allCategories = await prisma.category.findMany({})
+  return { allCategories }
 }
 
 export const createCategory = async (form: CategoryForm) => {
-  const exists = await prisma.category.count({ where: { name: form.name } });
+  const exists = await prisma.category.count({ where: { name: form.name } })
 
   if (exists) {
     return json(
@@ -16,13 +16,13 @@ export const createCategory = async (form: CategoryForm) => {
         error: `Category already exists`,
       },
       { status: 400 }
-    );
+    )
   }
   const newCategory = await prisma.category.create({
     data: {
       name: form.name,
     },
-  });
+  })
 
   if (!newCategory) {
     return json(
@@ -33,17 +33,17 @@ export const createCategory = async (form: CategoryForm) => {
         },
       },
       { status: 400 }
-    );
+    )
   }
-  return { newCategory };
-};
+  return { newCategory }
+}
 
 export async function updateCategory(form: UpdateCategoryForm) {
   const category = await prisma.category.update({
     where: { id: form.id },
     data: { name: form.name },
-  });
-  return category;
+  })
+  return category
 }
 
 // only use this in the categories page
@@ -53,8 +53,8 @@ export async function deleteCategory(categoryName: string) {
       where: {
         name: categoryName,
       },
-    });
+    })
   } catch (error) {
-    throw new Error("Unable to delete category");
+    throw new Error('Unable to delete category')
   }
 }

@@ -8,33 +8,30 @@ type PostProps = {
 
 export default function PostContent({ post }: PostProps) {
   return (
-    <article className='flex flex-col'>
-      <div className=''>
+    <article className="flex flex-col">
+      <div className="">
         <Link to={`/posts/${post.id}`}>
-          <h1 className='mt-6 border-b-2 text-left text-2xl md:text-4xl uppercase font-semibold'>
+          <h1 className="mt-6 border-b-2 text-left text-2xl font-semibold uppercase md:text-4xl">
             {post.title}
           </h1>
         </Link>
-        <p className='mt-2 text-left text-lg md:text-2xl'>{post.createdAt}</p>
-        <div className='flex flex-row'>
+        <p className="mt-2 text-left text-lg md:text-2xl">{post.createdAt}</p>
+        <div className="flex flex-row">
           {post?.categories?.map((category) => (
-            <CategoryContainer
-              key={category.id}
-              category={category}
-            />
+            <CategoryContainer key={category.id} category={category} />
           ))}
         </div>
       </div>
-      <div className='flex'>
+      <div className="flex">
         <img
           style={{
             backgroundSize: 'cover',
             width: '50%',
             aspectRatio: 'auto',
-            ...(post.postImg ? { backgroundImage: `url(${post.postImg})` } : {})
+            ...(post.postImg ? { backgroundImage: `url(${post.postImg})` } : {}),
           }}
           src={post.postImg}
-          alt='profile'
+          alt="profile"
         />
         <p>{post.body}</p>
       </div>

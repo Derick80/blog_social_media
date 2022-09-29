@@ -7,108 +7,96 @@ type PrimaryNavProps = {
 }
 export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
   return (
-    <nav className='flex flex-row sticky md:flex-col font-semibold text-base md:text-2xl justify-around'>
-      <div className='flex md:flex-col'>
-        <ul className='flex md:space-y-10 space-x-4 md:space-x-4 md:flex-col'>
+    <nav className="sticky flex flex-row justify-around text-base font-semibold md:flex-col md:text-2xl">
+      <div className="flex md:flex-col">
+        <ul className="flex space-x-4 md:flex-col md:space-y-10 md:space-x-4">
           <li>
-            <Tooltip message='View posts'>
-            <span className='material-symbols-outlined'>home</span>
+            <Tooltip message="View posts">
+              <span className="material-symbols-outlined">home</span>
 
               <NavLink
-                to='/'
-                className={({ isActive }) =>
-                  ` ${isActive ? 'uppercase underline' : 'uppercase'}`
-                }
+                to="/"
+                className={({ isActive }) => ` ${isActive ? 'uppercase underline' : 'uppercase'}`}
               >
-                                    <p className='hidden md:block'>feed</p>
-
+                <p className="hidden md:block">feed</p>
               </NavLink>
             </Tooltip>{' '}
           </li>
           {isLoggedIn && (
             <>
               <li>
-                <Tooltip message='Write a new blog post'>
-                <span className='material-symbols-outlined'>add_circle</span>
+                <Tooltip message="Write a new blog post">
+                  <span className="material-symbols-outlined">add_circle</span>
                   <NavLink
-                    to='/posts/new'
+                    to="/posts/new"
                     className={({ isActive }) =>
                       ` ${isActive ? 'uppercase underline' : 'uppercase'}`
                     }
                   >
-                                        <p className='hidden md:block'>create</p>
-
+                    <p className="hidden md:block">create</p>
                   </NavLink>
                 </Tooltip>
               </li>
               <li>
-                <Tooltip message='View drafts'>
-                <span className='material-symbols-outlined'>drafts</span>
+                <Tooltip message="View drafts">
+                  <span className="material-symbols-outlined">drafts</span>
                   <NavLink
-                    to='/drafts'
+                    to="/drafts"
                     className={({ isActive }) =>
                       ` ${isActive ? 'uppercase underline' : 'uppercase'}`
                     }
                   >
-                    <p className='hidden md:block'>Drafts</p>
+                    <p className="hidden md:block">Drafts</p>
                   </NavLink>
                 </Tooltip>
               </li>
             </>
           )}
           <li>
-            <Tooltip message='My Profile'>
-            <span className='material-symbols-outlined'>person</span>
+            <Tooltip message="My Profile">
+              <span className="material-symbols-outlined">person</span>
               <NavLink
-                to='/about'
-                className={({ isActive }) =>
-                  ` ${isActive ? 'uppercase underline' : 'uppercase'}`
-                }
+                to="/about"
+                className={({ isActive }) => ` ${isActive ? 'uppercase underline' : 'uppercase'}`}
               >
-                                    <p className='hidden md:block'>About</p>
-
+                <p className="hidden md:block">About</p>
               </NavLink>
             </Tooltip>
           </li>
         </ul>
-        <div className='flex group justify-center relative h-full'>
-        {' '}
-
-          <span className='material-symbols-outlined'>settings</span>
-          <p className='hidden md:block text-sm md:text-2xl font-semibold uppercase items-center'>
-            {' '}
-            Settings
-          </p>
+        <div className="flex justify-center">
+          <div>
+            <div className="group relative h-full">
+              <span className="material-symbols-outlined">settings</span>
+              <p className="hidden items-center text-sm font-semibold uppercase md:block md:text-2xl">
+                {' '}
+                Settings
+              </p>
+              <ul className="absolute z-50 float-right m-0 mt-1 hidden min-w-max rounded-lg border-none py-2 text-left text-xs shadow-lg hover:visible group-hover:block">
+                {isLoggedIn ? (
+                  <>
+                    <li className="p-3 text-left text-sm hover:text-blue-300">
+                      <NavLink
+                        to="/account"
+                        className="font-base block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm text-gray-800 hover:bg-gray-100"
+                      >
+                        Account
+                      </NavLink>
+                    </li>
+                    <li className="p-3 text-left text-sm hover:text-blue-300">
+                      <form className="" action="/logout" method="post">
+                        <Tooltip message="signout">
+                          <Button type="submit">Sign Out</Button>
+                        </Tooltip>
+                      </form>
+                    </li>
+                  </>
+                ) : null}
+              </ul>
+            </div>
+          </div>
         </div>
-        <ul
-          tabIndex={0}
-          className='hidden group-hover:block absolute bg-slate-500 p-2 border border-gray-200 w-48'
-        >
-          <li className='hover:text-blue-300 text-left text-sm p-3'>
-            <NavLink
-              to='/about'
-              className='normal-case'
-            >
-              Profile
-            </NavLink>
-          </li>
-          {isLoggedIn ? (
-            <li className='hover:text-blue-300 text-left text-sm p-3'>
-              <form
-                className=''
-                action='/logout'
-                method='post'
-              >
-                <Tooltip message='signout'>
-                  <Button type='submit'>Sign Out</Button>
-                </Tooltip>
-              </form>
-            </li>
-          ) : null}
-        </ul>
       </div>
-
-
     </nav>
   )
 }

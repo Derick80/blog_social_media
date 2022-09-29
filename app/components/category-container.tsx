@@ -1,26 +1,22 @@
-import { Link, NavLink } from "@remix-run/react";
-import Icon from "~/components/shared/icon";
+import { Link, NavLink } from '@remix-run/react'
+import Icon from '~/components/shared/icon'
 
 export interface CategoryContainerProps {
   category: {
-    id: string;
-    name: string;
+    id: string
+    name: string
   }
 }
 
-export default function CategoryContainer ({
-  category,
-}: CategoryContainerProps) {
+export default function CategoryContainer({ category }: CategoryContainerProps) {
   return (
-    <div className='flex flex-wrap mx-2'>
-
-      <label className='m-2 max-w-fit h-fit text-center border-2 rounded-md p-2 md:tracking-wide hover:cursor-pointer' key={ category.id }>
-
-          <NavLink to={ `/categories/${category.name}` }>{ category.name }</NavLink>
-
-
+    <div className="mx-2 flex flex-wrap">
+      <label
+        className="m-2 h-fit max-w-fit rounded-md border-2 p-2 text-center hover:cursor-pointer md:tracking-wide"
+        key={category.id}
+      >
+        <NavLink to={`/categories/${category.name}`}>{category.name}</NavLink>
       </label>
-
     </div>
-  );
+  )
 }
