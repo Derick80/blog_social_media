@@ -23,8 +23,9 @@ export const meta: MetaFunction = () => {
 export const links: LinksFunction = () => {
   return [
     { rel: 'stylesheet', href: styles },
-    { rel: 'email_contact', href: '../public/icons/contact_mail.png' },
-    {rel: 'chevron_left', href:'../public/assets/icons/chevron_left.png'}
+    { rel: 'email_contact', href: '../public/icons/contact_mail.png', type: "image/png", },
+    {rel: 'chevron_left', href:'../public/assets/icons/chevron_left.png'},
+    {rel: "preload", href: "../public/assets/icons/contact_mail.svg", as: "image", type: "image/svg+xml"},
   ]
 }
 
