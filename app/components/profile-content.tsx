@@ -2,7 +2,7 @@ import { Profile } from '@prisma/client'
 import { Link } from '@remix-run/react'
 import Button from './shared/button'
 import Tooltip from './shared/tooltip'
-
+// look at history
 export type ProfileProps = {
   userProfile: Profile
   isOwner: boolean
