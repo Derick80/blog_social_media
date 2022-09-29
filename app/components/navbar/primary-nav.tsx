@@ -7,71 +7,83 @@ type PrimaryNavProps = {
 }
 export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
   return (
-    <nav className='flex flex-row sticky md:flex-col mx-auto font-semibold text-base md:text-4xl'>
-
-        <ul className='flex flex-row space-x-2 md:space-x-4 md:flex-col'>
+    <nav className='flex flex-row sticky md:flex-col font-semibold text-base md:text-2xl justify-around'>
+      <div className='flex md:flex-col'>
+        <ul className='flex md:space-y-10 space-x-4 md:space-x-4 md:flex-col'>
           <li>
             <Tooltip message='View posts'>
+            <span className='material-symbols-outlined'>home</span>
+
               <NavLink
                 to='/'
                 className={({ isActive }) =>
                   ` ${isActive ? 'uppercase underline' : 'uppercase'}`
                 }
               >
-                Feed
+                                    <p className='hidden md:block'>feed</p>
+
               </NavLink>
             </Tooltip>{' '}
           </li>
-          { isLoggedIn && (<>
-<li>
-  <Tooltip message="Write a new blog post">
-    <NavLink
-      to="/posts/new"
-      className={ ({ isActive }) =>
-        ` ${isActive
-          ? "uppercase underline"
-          : "uppercase"
-        }`
-      }
-    >
-      Create
-    </NavLink>
-  </Tooltip>
-</li>
-<li>
-  <Tooltip message="View drafts">
-    <NavLink
-      to="/drafts"
-      className={ ({ isActive }) =>
-        ` ${isActive
-          ? "uppercase underline"
-          : "uppercase"
-        }`
-      }
-    >
-      Drafts
-    </NavLink>
-  </Tooltip>
-</li>
+          {isLoggedIn && (
+            <>
+              <li>
+                <Tooltip message='Write a new blog post'>
+                <span className='material-symbols-outlined'>add_circle</span>
+                  <NavLink
+                    to='/posts/new'
+                    className={({ isActive }) =>
+                      ` ${isActive ? 'uppercase underline' : 'uppercase'}`
+                    }
+                  >
+                                        <p className='hidden md:block'>create</p>
 
-</>) }
+                  </NavLink>
+                </Tooltip>
+              </li>
+              <li>
+                <Tooltip message='View drafts'>
+                <span className='material-symbols-outlined'>drafts</span>
+                  <NavLink
+                    to='/drafts'
+                    className={({ isActive }) =>
+                      ` ${isActive ? 'uppercase underline' : 'uppercase'}`
+                    }
+                  >
+                    <p className='hidden md:block'>Drafts</p>
+                  </NavLink>
+                </Tooltip>
+              </li>
+            </>
+          )}
           <li>
             <Tooltip message='My Profile'>
+            <span className='material-symbols-outlined'>person</span>
               <NavLink
                 to='/about'
                 className={({ isActive }) =>
                   ` ${isActive ? 'uppercase underline' : 'uppercase'}`
                 }
               >
-                About
+                                    <p className='hidden md:block'>About</p>
+
               </NavLink>
             </Tooltip>
           </li>
         </ul>
-      <div className='flex justify-end group relative h-full'>
+        <div className='flex group justify-center relative h-full'>
         {' '}
-        <span className='material-symbols-outlined'>settings</span>
-        <ul tabIndex={0} className='hidden group-hover:block absolute bg-slate-500 p-2 border border-gray-200 w-48'>
+
+          <span className='material-symbols-outlined'>settings</span>
+          <p className='hidden md:block text-sm md:text-2xl font-semibold uppercase items-center'>
+            {' '}
+            Settings
+          </p>
+        </div>
+        <ul
+          tabIndex={0}
+          className='hidden group-hover:block absolute bg-slate-500 p-2 border border-gray-200 w-48'
+        >
           <li className='hover:text-blue-300 text-left text-sm p-3'>
             <NavLink
               to='/about'
@@ -80,15 +92,23 @@ export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
               Profile
             </NavLink>
           </li>
-          {isLoggedIn ?  (<li className='hover:text-blue-300 text-left text-sm p-3'>
-  <form className='' action="/logout" method="post">
-    <Tooltip message="signout">
-      <Button type="submit" >Sign Out</Button>
-    </Tooltip>
-  </form>
-</li>):null}
+          {isLoggedIn ? (
+            <li className='hover:text-blue-300 text-left text-sm p-3'>
+              <form
+                className=''
+                action='/logout'
+                method='post'
+              >
+                <Tooltip message='signout'>
+                  <Button type='submit'>Sign Out</Button>
+                </Tooltip>
+              </form>
+            </li>
+          ) : null}
         </ul>
       </div>
+
+
     </nav>
   )
 }
