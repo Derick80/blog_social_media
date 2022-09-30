@@ -35,7 +35,7 @@ function Document({
   title?: string
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="max-h-screen w-full font-Condensed dark:bg-gray-700 dark:text-white">
       <head>
         <Meta />
         <title>{title}</title>
