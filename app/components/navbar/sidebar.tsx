@@ -1,5 +1,6 @@
 import { NavLink } from '@remix-run/react'
 import React from "react";
+import contact_mail from '../../resources/icons/contact_mail.svg'
 export default function Sidebar() {
   return (
     <div className="h-screen w-70 rounded-md bg-gray-600">

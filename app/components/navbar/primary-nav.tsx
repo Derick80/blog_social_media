@@ -7,7 +7,7 @@ type PrimaryNavProps = {
 }
 export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
   return (
-    <header className="fixed h-full flex border-2 space-y-2 px-2 dark:bg-gray-600 md:order-first md:space-y-8 md:py-6 lg:px-4">
+    <header className="h-full flex border-2 space-y-2 px-2 dark:bg-gray-600 md:order-first md:space-x-10 md:justify-around md:space-y-8 md:py-6 lg:px-4">
     <nav className="flex flex-row text-base font-semibold md:flex-col md:text-2xl">
       <div className="flex md:flex-col">
         <ul className="flex space-x-4 md:flex-col md:space-y-10 md:space-x-4">

@@ -6,6 +6,7 @@ import { getPosts } from '~/utils/post.server'
 
 import PostContent from '~/components/post-content'
 import NavigationBar from '~/components/navbar/primary-nav'
+import PostPreview from '~/components/post-preview'
 
 type LoaderData = {
   userPosts: Awaited<ReturnType<typeof getPosts>>
@@ -36,11 +37,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Home() {
   const data = useLoaderData<LoaderData>()
   return (
-    <>
+    <div className='p-4 mx-10'>
       {data.userPosts.map((post) => (
-        <PostContent key={post.id} post={post} />
+        <PostPreview key={post.id} post={post} />
       ))}
-    </>
+    </div>
   )
 }
 

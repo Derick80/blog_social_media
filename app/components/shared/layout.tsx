@@ -9,14 +9,16 @@ export type LayoutProps = {
 
 export default function Layout({ isLoggedIn, children }: LayoutProps) {
   return (
-    <>
+    <div className='flex flex-row h-full'>
+    <NavigationBar isLoggedIn={isLoggedIn} />
 
-        <NavigationBar isLoggedIn={isLoggedIn} />
+<div className="">
 
-      <main tabIndex={-1} className="">
-          {children}
+<main>
+  {children}
 
-      </main>
-    </>
+</main>
+</div>
+</div>
   )
 }
