@@ -44,12 +44,14 @@ type ActionData = {
   formError?: string
   fieldErrors?: {
     title: string | undefined
+    description: string | undefined
     body: string | undefined
     categories?: object | undefined
     postImg: string | undefined
   }
   fields?: {
     title: string
+    description: string
     body: string
     postImg: string
   }
@@ -64,6 +66,7 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   const title = formData.get('title')
   const body = formData.get('body')
+  const description = formData.get('description')
   const postImg = formData.get('postImg')
   const categories = formData.getAll('categories') as []
 
@@ -71,6 +74,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (
     typeof title !== 'string' ||
+    typeof description !== 'string' ||
     typeof body !== 'string' ||
     typeof postImg !== 'string' ||
     typeof categories !== 'object'
@@ -82,11 +86,12 @@ export const action: ActionFunction = async ({ request }) => {
 
   const fieldErrors = {
     title: validateText(title as string),
+    description: validateText(description as string),
     body: validateText(body as string),
     postImg: validateText(postImg as string),
   }
 
-  const fields = { title, body, postImg }
+  const fields = { title, description,body, postImg }
 
   if (Object.values(fieldErrors).some(Boolean)) {
     return badRequest({
@@ -117,6 +122,7 @@ export default function NewPostRoute() {
   console.log(actionData)
   const [formData, setFormData] = useState({
     title: actionData?.fields?.title || '',
+    description: actionData?.fields?.description || '',
     body: actionData?.fields?.body || '',
     postImg: actionData?.fields?.postImg || '',
     categories: actionData?.categories || [],
@@ -175,6 +181,21 @@ export default function NewPostRoute() {
           {actionData?.fieldErrors?.title ? (
             <p role="alert" id="title-error">
               {actionData.fieldErrors.title}
+            </p>
+          ) : null}
+           <FormField
+            htmlFor="description"
+            label="Description"
+            name="description"
+            type="textarea"
+            value={formData.description}
+            onChange={(event) => handleInputChange(event, 'description')}
+            aria-invalid={Boolean(actionData?.fieldErrors?.description) || undefined}
+            aria-errormessage={actionData?.fieldErrors?.description ? 'description-error' : undefined}
+          />
+          {actionData?.fieldErrors?.description ? (
+            <p role="alert" id="description-error">
+              {actionData.fieldErrors.description}
             </p>
           ) : null}
           <p>

@@ -1,7 +1,7 @@
 import { Profile } from '@prisma/client'
 import { Link } from '@remix-run/react'
 import Button from './shared/button'
-import Tooltip from './shared/tooltip'
+
 // look at history
 export type ProfileProps = {
   userProfile: Profile
@@ -34,13 +34,13 @@ export default function ProfileContent({ userProfile, isOwner }: ProfileProps) {
           </svg>
         </div>
         {isOwner ? (
-          <Tooltip message="Edit Profile">
+
             <Link to={`/about/${userProfile.id}`}>
               <Button type="button" variant="primary">
                 Edit
               </Button>
             </Link>
-          </Tooltip>
+
         ) : null}
       </div>
     </div>

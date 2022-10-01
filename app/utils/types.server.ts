@@ -9,6 +9,8 @@ export interface LoginForm {
 export interface RegisterForm {
   email: string
   password: string
+  firstName: string
+  lastName: string
 }
 
 // Authinput will eventually replace login/reg form

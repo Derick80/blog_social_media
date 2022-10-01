@@ -30,6 +30,8 @@ export const register = async (form: RegisterForm) => {
         fields: {
           email: form.email,
           password: form.password,
+          firstName: form.firstName,
+          lastName: form.lastName,
         },
       },
       { status: 400 }

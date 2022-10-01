@@ -1,6 +1,5 @@
 import { json, LoaderFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import Layout from '~/components/shared/layout'
 import PostContent from '~/components/post-content'
 import { getUser, getUserId } from '~/utils/auth.server'
 import { getPost } from '~/utils/post.server'

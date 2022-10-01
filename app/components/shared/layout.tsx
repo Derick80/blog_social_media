@@ -13,6 +13,7 @@ export default function Layout({ isLoggedIn, children }: LayoutProps) {
       <NavigationBar isLoggedIn={isLoggedIn} />
 
       <main>{children}</main>
+      <Footer />
     </div>
   )
 }

@@ -778,6 +778,10 @@ video {
   margin-top: -0.5rem;
 }
 
+.mt-3{
+  margin-top: 0.75rem;
+}
+
 .block{
   display: block;
 }
@@ -909,10 +913,6 @@ video {
   flex-direction: column;
 }
 
-.flex-wrap{
-  flex-wrap: wrap;
-}
-
 .items-center{
   align-items: center;
 }
@@ -943,6 +943,12 @@ video {
 
 .gap-2{
   gap: 0.5rem;
+}
+
+.space-x-4 > :not([hidden]) ~ :not([hidden]){
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .overflow-hidden{
@@ -1125,6 +1131,10 @@ video {
   text-transform: uppercase;
 }
 
+.capitalize{
+  text-transform: capitalize;
+}
+
 .italic{
   font-style: italic;
 }
@@ -1273,10 +1283,6 @@ video {
 }
 
 @media (min-width: 768px){
-  .md\:order-last{
-    order: 9999;
-  }
-
   .md\:col-start-1{
     grid-column-start: 1;
   }
@@ -1293,28 +1299,38 @@ video {
     display: block;
   }
 
+  .md\:flex{
+    display: flex;
+  }
+
   .md\:w-1\/2{
     width: 50%;
+  }
+
+  .md\:w-1\/4{
+    width: 25%;
   }
 
   .md\:grid-cols-2{
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .md\:flex-col{
-    flex-direction: column;
-  }
-
   .md\:gap-8{
     gap: 2rem;
   }
 
-  .md\:p-4{
-    padding: 1rem;
+  .md\:space-x-8 > :not([hidden]) ~ :not([hidden]){
+    --tw-space-x-reverse: 0;
+    margin-right: calc(2rem * var(--tw-space-x-reverse));
+    margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
   .md\:p-6{
     padding: 1.5rem;
+  }
+
+  .md\:p-4{
+    padding: 1rem;
   }
 
   .md\:text-4xl{

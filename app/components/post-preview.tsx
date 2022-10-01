@@ -1,7 +1,7 @@
 import { Link, NavLink } from '@remix-run/react'
 import { format } from 'date-fns'
 import { SerializedPost } from '~/utils/types.server'
-import CoverImage from './shared/cover-image'
+import CategoryContainer from './category-container'
 
 export type PostPreviewProps = {
   post: SerializedPost
@@ -21,7 +21,12 @@ export default function PostPreview({ post }: PostPreviewProps) {
                 <h3 className="block text-2xl font-semibold leading-10 ">
                   <Link to={`/posts/${post.id}`}>{post.title}</Link>
                 </h3>
-                <p>{post.body}</p>
+              <div className='flex flex-row'>
+              {post?.categories?.map((category) => (
+                  <CategoryContainer key={category.id} category={category} />
+               ))}
+              </div>
+                <p>{post.description} <Link to={`/posts/${post.id}`}>...Read more</Link></p>
                 <small>{post.userId}</small>
               </div>
             </div>

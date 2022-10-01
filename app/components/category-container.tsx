@@ -10,7 +10,7 @@ export interface CategoryContainerProps {
 
 export default function CategoryContainer({ category }: CategoryContainerProps) {
   return (
-    <div className="mx-2 flex flex-wrap">
+    <div className="mx-2 flex">
       <label
         className="m-2 h-fit max-w-fit rounded-md border-2 p-2 text-center hover:cursor-pointer md:tracking-wide"
         key={category.id}

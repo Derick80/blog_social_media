@@ -24,6 +24,8 @@ export async function getPosts() {
       user: {
         select: {
           role: true,
+          firstName: true,
+          lastName: true,
         },
       },
     },

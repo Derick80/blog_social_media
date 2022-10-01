@@ -3,9 +3,6 @@ import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '~/utils/auth.server'
 import { getPosts } from '~/utils/post.server'
-
-import PostContent from '~/components/post-content'
-import NavigationBar from '~/components/navbar/primary-nav'
 import PostPreview from '~/components/post-preview'
 
 type LoaderData = {
@@ -37,11 +34,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Home() {
   const data = useLoaderData<LoaderData>()
   return (
-    <>
+    <div className='md:flex'>
       {data.userPosts.map((post) => (
         <PostPreview key={post.id} post={post} />
       ))}
-    </>
+    </div>
   )
 }
 
