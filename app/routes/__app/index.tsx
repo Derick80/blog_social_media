@@ -38,9 +38,9 @@ export default function Home() {
   const data = useLoaderData<LoaderData>()
   return (
     <>
-      {/* {data.userPosts.map((post) => (
+      {data.userPosts.map((post) => (
         <PostPreview key={post.id} post={post} />
-      ))} */}
+      ))}
     </>
   )
 }

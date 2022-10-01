@@ -3,7 +3,7 @@ import { SerializedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 
 type PostProps = {
-  post:  SerializedPost
+  post: SerializedPost
 }
 
 export default function PostContent({ post }: PostProps) {

@@ -1,9 +1,9 @@
-import { NavLink } from "@remix-run/react";
-import Button from "../shared/button";
+import { NavLink } from '@remix-run/react'
+import Button from '../shared/button'
 
 type PrimaryNavProps = {
-  isLoggedIn: boolean;
-};
+  isLoggedIn: boolean
+}
 export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
   return (
     <header>
@@ -13,19 +13,13 @@ export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
           <li className="nav-li">
             <span className="material-symbols-outlined">home</span>
 
-            <NavLink
-              to="/"
-              className={({ isActive }) => ` ${isActive ? " underline" : ""}`}
-            >
+            <NavLink to="/" className={({ isActive }) => ` ${isActive ? ' underline' : ''}`}>
               <p className="hidden md:block">Feed</p>
             </NavLink>
           </li>
           <li className="nav-li">
             <span className="material-symbols-outlined">person</span>
-            <NavLink
-              to="/about"
-              className={({ isActive }) => ` ${isActive ? "underline" : ""}`}
-            >
+            <NavLink to="/about" className={({ isActive }) => ` ${isActive ? 'underline' : ''}`}>
               <p className="hidden md:block">About</p>
             </NavLink>
           </li>
@@ -36,9 +30,7 @@ export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
                 <span className="material-symbols-outlined">add_circle</span>
                 <NavLink
                   to="/posts/new"
-                  className={({ isActive }) =>
-                    ` ${isActive ? " underline" : ""}`
-                  }
+                  className={({ isActive }) => ` ${isActive ? ' underline' : ''}`}
                 >
                   <p className="hidden md:block">Create</p>
                 </NavLink>
@@ -47,9 +39,7 @@ export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
                 <span className="material-symbols-outlined">drafts</span>
                 <NavLink
                   to="/drafts"
-                  className={({ isActive }) =>
-                    ` ${isActive ? " underline" : ""}`
-                  }
+                  className={({ isActive }) => ` ${isActive ? ' underline' : ''}`}
                 >
                   <p className="hidden md:block">Drafts</p>
                 </NavLink>
@@ -63,9 +53,7 @@ export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
                 <span className="material-symbols-outlined">settings</span>
                 <NavLink
                   to="/account"
-                  className={({ isActive }) =>
-                    ` ${isActive ? " underline" : ""}`
-                  }
+                  className={({ isActive }) => ` ${isActive ? ' underline' : ''}`}
                 >
                   <p className="hidden md:block">Settings</p>
                 </NavLink>
@@ -81,5 +69,5 @@ export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
         </ul>
       </nav>
     </header>
-  );
+  )
 }

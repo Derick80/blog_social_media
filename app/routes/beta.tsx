@@ -27,32 +27,29 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function BetaRoute() {
   const data = useLoaderData<LoaderData>()
-  return (<div className=''>
-     <nav className="w-full flex mx-auto text-center justify-around">
-        <ul className='flex' >
-          <li >
-          <Tooltip message="View posts">
+  return (
+    <div className="">
+      <nav className="mx-auto flex w-full justify-around text-center">
+        <ul className="flex">
+          <li>
+            <Tooltip message="View posts">
               <span className="material-symbols-outlined">home</span>
 
               <NavLink
                 to="/"
-                className={({ isActive }) =>
-                  ` ${isActive ? "uppercase underline" : "uppercase"}`
-                }
+                className={({ isActive }) => ` ${isActive ? 'uppercase underline' : 'uppercase'}`}
               >
                 <p className="hidden md:block">feed</p>
               </NavLink>
             </Tooltip>
           </li>
 
-          <li >
-          <Tooltip message="My Profile">
+          <li>
+            <Tooltip message="My Profile">
               <span className="material-symbols-outlined">person</span>
               <NavLink
                 to="/about"
-                className={({ isActive }) =>
-                  ` ${isActive ? "uppercase underline" : "uppercase"}`
-                }
+                className={({ isActive }) => ` ${isActive ? 'uppercase underline' : 'uppercase'}`}
               >
                 <p className="hidden md:block">About</p>
               </NavLink>
@@ -60,16 +57,13 @@ export default function BetaRoute() {
           </li>
         </ul>
       </nav>
-  </div>
-
+    </div>
   )
 }
 
 export function ErrorBoundary() {
   return <div>Uh oh something is really wrong with the __home loader. Try again later!</div>
 }
-
-
 
 // <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
 // <Sidebar />

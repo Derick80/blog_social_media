@@ -21,10 +21,7 @@ export const meta: MetaFunction = () => {
 }
 
 export const links: LinksFunction = () => {
-  return [
-    { rel: 'stylesheet', href: styles },
-
-  ]
+  return [{ rel: 'stylesheet', href: styles }]
 }
 
 function Document({
@@ -35,13 +32,13 @@ function Document({
   title?: string
 }) {
   return (
-    <html lang="en" >
+    <html lang="en">
       <head>
         <Meta />
         <title>{title}</title>
         <Links />
       </head>
-      <body className="h-full items-center max-w-6xl m-auto font-Condensed dark:bg-gray-700 dark:text-white">
+      <body className="m-auto h-full max-w-6xl items-center font-Condensed dark:bg-gray-700 dark:text-white">
         {children}
         <ScrollRestoration />
         <Scripts />
