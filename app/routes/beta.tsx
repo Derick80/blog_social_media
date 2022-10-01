@@ -10,24 +10,20 @@ import { getUser } from '~/utils/auth.server'
 import { getCategories, getCategoryCounts } from '~/utils/categories.server'
 import { getPosts } from '~/utils/post.server'
 type LoaderData = {
-
-
   isLoggedIn: boolean
 }
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
   const isLoggedIn = user !== null
   const { allCategories } = await getCategories()
-const catCount= await getCategoryCounts()
+  const catCount = await getCategoryCounts()
 
-
-
-console.log(catCount);
+  console.log(catCount)
 
   const data = {
     isLoggedIn,
     allCategories,
-    catCount
+    catCount,
   }
   return json(data)
 }
@@ -35,18 +31,23 @@ console.log(catCount);
 export default function BetaRoute() {
   const data = useLoaderData()
   return (
-    <div className="flex md:block flex-wrap items-center">
- {data?.catCount?.map((category) => (
-   <div className="capitalize">
-                    <label
-                    className="flex mr-3 h-fit p-1 text-center text-xs md:text-sm hover:cursor-pointer md:tracking-wide"
-                    key={category.id}
-                  >
-                  <span className='pl-2 pr-2 border-black dark:border-white border-2 border-r-0'>  {category.name}</span>
-                    <div className='pl-2 pr-2 border-black dark:border-white border-2 bg-gray-400 dark:text-black font-semibold'>{category._count.posts}</div>
-                  </label>
-
-              </div>    ))}
+    <div className="flex flex-wrap items-center md:block">
+      {data?.catCount?.map((category) => (
+        <div className="capitalize">
+          <label
+            className="mr-3 flex h-fit p-1 text-center text-xs hover:cursor-pointer md:text-sm md:tracking-wide"
+            key={category.id}
+          >
+            <span className="border-2 border-r-0 border-black pl-2 pr-2 dark:border-white">
+              {' '}
+              {category.name}
+            </span>
+            <div className="border-2 border-black bg-gray-400 pl-2 pr-2 font-semibold dark:border-white dark:text-black">
+              {category._count.posts}
+            </div>
+          </label>
+        </div>
+      ))}
     </div>
   )
 }

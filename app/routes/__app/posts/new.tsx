@@ -91,7 +91,7 @@ export const action: ActionFunction = async ({ request }) => {
     postImg: validateText(postImg as string),
   }
 
-  const fields = { title, description,body, postImg }
+  const fields = { title, description, body, postImg }
 
   if (Object.values(fieldErrors).some(Boolean)) {
     return badRequest({
@@ -183,7 +183,7 @@ export default function NewPostRoute() {
               {actionData.fieldErrors.title}
             </p>
           ) : null}
-           <FormField
+          <FormField
             htmlFor="description"
             label="Description"
             name="description"
@@ -191,7 +191,9 @@ export default function NewPostRoute() {
             value={formData.description}
             onChange={(event) => handleInputChange(event, 'description')}
             aria-invalid={Boolean(actionData?.fieldErrors?.description) || undefined}
-            aria-errormessage={actionData?.fieldErrors?.description ? 'description-error' : undefined}
+            aria-errormessage={
+              actionData?.fieldErrors?.description ? 'description-error' : undefined
+            }
           />
           {actionData?.fieldErrors?.description ? (
             <p role="alert" id="description-error">

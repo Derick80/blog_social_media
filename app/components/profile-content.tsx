@@ -34,13 +34,11 @@ export default function ProfileContent({ userProfile, isOwner }: ProfileProps) {
           </svg>
         </div>
         {isOwner ? (
-
-            <Link to={`/about/${userProfile.id}`}>
-              <Button type="button" variant="primary">
-                Edit
-              </Button>
-            </Link>
-
+          <Link to={`/about/${userProfile.id}`}>
+            <Button type="button" variant="primary">
+              Edit
+            </Button>
+          </Link>
         ) : null}
       </div>
     </div>

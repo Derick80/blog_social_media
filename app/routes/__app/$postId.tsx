@@ -286,7 +286,7 @@ export default function PostRoute() {
             onChange={(event) => handleInputChange(event, 'title')}
             error={errors?.title}
           />
-           <FormField
+          <FormField
             htmlFor="description"
             label="Description"
             name="description"
@@ -294,7 +294,9 @@ export default function PostRoute() {
             value={formData.description}
             onChange={(event) => handleInputChange(event, 'description')}
             aria-invalid={Boolean(actionData?.fieldErrors?.description) || undefined}
-            aria-errormessage={actionData?.fieldErrors?.description ? 'description-error' : undefined}
+            aria-errormessage={
+              actionData?.fieldErrors?.description ? 'description-error' : undefined
+            }
           />
           {actionData?.fieldErrors?.description ? (
             <p role="alert" id="description-error">
@@ -343,40 +345,40 @@ export default function PostRoute() {
           {formData.published ? (
             <>
               <div>
-                  <button type="submit" name="_action" value="unpublish">
-                    UnPublish
-                  </button>
+                <button type="submit" name="_action" value="unpublish">
+                  UnPublish
+                </button>
 
-                  <button type="submit" name="_action" value="delete">
-                    Delete
-                  </button>
+                <button type="submit" name="_action" value="delete">
+                  Delete
+                </button>
 
                 <div>
-                    <button type="submit" name="_action" value="save">
-                      Save Post
-                    </button>
+                  <button type="submit" name="_action" value="save">
+                    Save Post
+                  </button>
                 </div>
               </div>
             </>
           ) : (
             <div>
-                <button type="submit" name="_action" value="save">
-                  Save Post Draft
-                </button>
-                <button type="submit" name="_action" value="updateAndPublish">
-                  Save and Publish Post
-                </button>
-                <button type="submit" name="_action" value="delete">
-                  Delete
-                </button>
+              <button type="submit" name="_action" value="save">
+                Save Post Draft
+              </button>
+              <button type="submit" name="_action" value="updateAndPublish">
+                Save and Publish Post
+              </button>
+              <button type="submit" name="_action" value="delete">
+                Delete
+              </button>
 
               <div>
-                  <button type="submit" name="_action" value="publish" className="">
-                    <span className="material-symbols-outlined">save</span>
-                  </button>
-                  <button type="submit" name="_action" value="removeCategory">
-                    Delete
-                  </button>
+                <button type="submit" name="_action" value="publish" className="">
+                  <span className="material-symbols-outlined">save</span>
+                </button>
+                <button type="submit" name="_action" value="removeCategory">
+                  Delete
+                </button>
               </div>
             </div>
           )}

@@ -40,9 +40,7 @@ export async function getPost({ id }: Pick<Post, 'id'>) {
   const post = await prisma.post.findUnique({
     where: { id: id },
     include: {
-      user: { select: { email: true,
-        firstName: true,
-        lastName: true, } },
+      user: { select: { email: true, firstName: true, lastName: true } },
       categories: true,
       comments: {
         orderBy: {
@@ -99,9 +97,7 @@ export async function getUserDrafts(userId: string) {
     },
     include: {
       user: {
-        select: { email: true ,
-          firstName: true,
-          lastName: true,},
+        select: { email: true, firstName: true, lastName: true },
       },
       categories: true,
       comments: {
@@ -153,7 +149,14 @@ export async function updatePost({
     throw new Error('Unable to save post draft')
   }
 }
-export async function updateAndPublish({ id, title,description, body, postImg, categories }: CreateOrEditPost) {
+export async function updateAndPublish({
+  id,
+  title,
+  description,
+  body,
+  postImg,
+  categories,
+}: CreateOrEditPost) {
   try {
     const updateAndPublish = await prisma.post.update({
       where: { id: id },
@@ -221,9 +224,7 @@ export async function getPostsByCategory(categoryName: string) {
     },
     include: {
       user: {
-        select: { email: true ,
-          firstName: true,
-          lastName: true,},
+        select: { email: true, firstName: true, lastName: true },
       },
       categories: true,
       comments: {

@@ -59,16 +59,16 @@ export async function deleteCategory(categoryName: string) {
   }
 }
 
-export async function getCategoryCounts(){
+export async function getCategoryCounts() {
   const catCounts = await prisma.category.findMany({
-     include:{
-      posts:true,
-      _count:{
-        select:{
-          posts:true
-        }
-      }
-     }
+    include: {
+      posts: true,
+      _count: {
+        select: {
+          posts: true,
+        },
+      },
+    },
   })
   return catCounts
 }

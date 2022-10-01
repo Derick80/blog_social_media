@@ -282,9 +282,9 @@ export default function ProfileRoute() {
           <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
 
           <div className="text-container max-w-full">
-              <button type="submit" className="btn-primary">
-                Save
-              </button>
+            <button type="submit" className="btn-primary">
+              Save
+            </button>
           </div>
         </form>
       </div>
