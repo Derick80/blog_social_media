@@ -6,7 +6,7 @@ type PrimaryNavProps = {
 }
 export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
   return (
-    <header className='bg-black/10 dark:bg-white/10'>
+    <header className='bg-black/10 dark:bg-white/10 p-1 md:p-2'>
       <nav className="flex w-full">
         {/* added w-full to ul to get them to spread out and then I had to remove the class from my tooltip and place it in the lis */}
         <ul className="nav-ul">

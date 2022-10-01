@@ -33,7 +33,7 @@ export default function PostPreview({ post }: PostPreviewProps) {
                 </div>
                 <p className="mt-2 indent-4 md:mt-4 md:text-lg md:leading-7">
                   {post.description}{" "}
-                  <Link to={`/posts/${post.id}`}>...Read more</Link>
+                  <Link className='text-sky-300 font-medium hover:underline' to={`/posts/${post.id}`}>...Read more</Link>
                 </p>
                 <div className='flex flex-row p-2 md:p-4 justify-between'>
 

@@ -15,7 +15,7 @@ export default function CategoryCount({category}:CategoryCountProps) {
 
    <>
    <label
-                    className="flex mr-3 h-fit p-1 text-center text-xs md:text-sm hover:cursor-pointer md:tracking-wide"
+                    className="flex mr-3 h-fit p-1 text-center text-xs md:text-xs hover:cursor-pointer md:tracking-wide"
                     key={category.id}
                   >
                   <NavLink
