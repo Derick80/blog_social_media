@@ -35,13 +35,13 @@ function Document({
   title?: string
 }) {
   return (
-    <html lang="en" className="max-h-screen w-full font-Condensed dark:bg-gray-700 dark:text-white">
+    <html lang="en" >
       <head>
         <Meta />
         <title>{title}</title>
         <Links />
       </head>
-      <body className="">
+      <body className="h-full items-center max-w-6xl m-auto font-Condensed dark:bg-gray-700 dark:text-white">
         {children}
         <ScrollRestoration />
         <Scripts />

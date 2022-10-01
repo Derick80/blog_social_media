@@ -7,6 +7,12 @@
 @tailwind utilities;
 
 @layer components {
+  .nav-ul {
+    @apply flex w-full items-center justify-around
+  }
+  .nav-li {
+    @apply flex flex-col items-center
+  }
   .form-primary {
     @apply text-xl w-full font-semibold;
   }

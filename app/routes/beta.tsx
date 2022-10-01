@@ -27,12 +27,39 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function BetaRoute() {
   const data = useLoaderData<LoaderData>()
-  return (<div className='flex'>
-  <Sidebar />
-  <div className='p-4 text-2xl font-semibold flex-1 h-screen'>
-    <h1>Beta Test Page</h1>
-    <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M8 42V18L24.1 6 40 18v24H28.3V27.75h-8.65V42Zm3-3h5.65V24.75H31.3V39H37V19.5L24.1 9.75 11 19.5Zm13-14.65Z"/></svg>
-  </div>
+  return (<div className=''>
+     <nav className="w-full flex mx-auto text-center justify-around">
+        <ul className='flex' >
+          <li >
+          <Tooltip message="View posts">
+              <span className="material-symbols-outlined">home</span>
+
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  ` ${isActive ? "uppercase underline" : "uppercase"}`
+                }
+              >
+                <p className="hidden md:block">feed</p>
+              </NavLink>
+            </Tooltip>
+          </li>
+
+          <li >
+          <Tooltip message="My Profile">
+              <span className="material-symbols-outlined">person</span>
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  ` ${isActive ? "uppercase underline" : "uppercase"}`
+                }
+              >
+                <p className="hidden md:block">About</p>
+              </NavLink>
+            </Tooltip>
+          </li>
+        </ul>
+      </nav>
   </div>
 
   )

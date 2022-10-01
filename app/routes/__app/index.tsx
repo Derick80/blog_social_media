@@ -37,11 +37,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Home() {
   const data = useLoaderData<LoaderData>()
   return (
-    <div className='p-4 mx-10'>
-      {data.userPosts.map((post) => (
+    <>
+      {/* {data.userPosts.map((post) => (
         <PostPreview key={post.id} post={post} />
-      ))}
-    </div>
+      ))} */}
+    </>
   )
 }
 

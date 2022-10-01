@@ -11,19 +11,28 @@ export type PostPreviewProps ={
 
 export default function PostPreview({post }:PostPreviewProps) {
   return (
-    <div>
-    <div className="mb-5">
-      <CoverImage id={post.id} title={post.title} src={post.postImg} />
-    </div>
-    <h3 className="text-3xl mb-3 leading-snug">
-      <Link to={`/posts/${post.id}`}className="hover:underline">{post.title}
-      </Link>
-    </h3>
-    <div className="text-lg mb-4">
-     { format(new Date(post.createdAt), 'MMMM dd, yyyy')}
-    </div>
-    <p className="text-lg leading-relaxed mb-4">{post.body}</p>
-
+    <article>
+    <div className='container p-2 m-0 md:p-4'>
+      <ul className='grid grid-template-columns-2 md:grid-template-columns-3 gap-16 md:gap-8'>
+<li>
+  <div className='flex flex-col border border-black rounded-sm max-w-prose min-h-full relative overflow-hidden transition-shadow duration-200 ease-in-out'>
+<div className='h-40'>
+  <img src={post.postImg} alt={post.title} className='h-full w-full object-cover' />
+</div>
+<div className='flex flex-col grow p-4'>
+  <h3 className='text-2xl leading-10 font-semibold block '>
+    <Link to={`/posts/${post.id}`}>{post.title}</Link>
+  </h3>
+  <p>{post.body}</p>
+  <small>{post.userId}</small>
+</div>
   </div>
+</li>
+
+      </ul>
+
+    </div>
+
+  </article>
   )
 }
