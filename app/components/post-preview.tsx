@@ -10,7 +10,7 @@ export type PostPreviewProps = {
 export default function PostPreview({ post }: PostPreviewProps) {
   return (
     <article>
-      <div className="container m-0 p-2 md:p-4">
+      <div className="container m-0 p-2 md:p-6">
         <ul className="grid-template-columns-2 md:grid-template-columns-3 grid gap-16 md:gap-8">
           <li>
             <div className="relative flex min-h-full max-w-prose flex-col overflow-hidden rounded-sm border border-black transition-shadow duration-200 ease-in-out">
