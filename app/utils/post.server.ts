@@ -40,7 +40,9 @@ export async function getPost({ id }: Pick<Post, 'id'>) {
   const post = await prisma.post.findUnique({
     where: { id: id },
     include: {
-      user: { select: { email: true } },
+      user: { select: { email: true,
+        firstName: true,
+        lastName: true, } },
       categories: true,
       comments: {
         orderBy: {
@@ -61,6 +63,7 @@ export async function getPost({ id }: Pick<Post, 'id'>) {
 
 export async function createDraft({
   title,
+  description,
   body,
   postImg,
   userId,
@@ -69,8 +72,10 @@ export async function createDraft({
   await prisma.post.create({
     data: {
       title,
+      description,
       body,
       postImg,
+
       user: {
         connect: {
           id: userId,
@@ -94,7 +99,9 @@ export async function getUserDrafts(userId: string) {
     },
     include: {
       user: {
-        select: { email: true },
+        select: { email: true ,
+          firstName: true,
+          lastName: true,},
       },
       categories: true,
       comments: {
@@ -120,6 +127,7 @@ export async function getUserDrafts(userId: string) {
 export async function updatePost({
   id,
   title,
+  description,
   body,
   postImg,
   categories,
@@ -129,6 +137,7 @@ export async function updatePost({
       where: { id: id },
       data: {
         title,
+        description,
         body,
         postImg,
 
@@ -144,12 +153,13 @@ export async function updatePost({
     throw new Error('Unable to save post draft')
   }
 }
-export async function updateAndPublish({ id, title, body, postImg, categories }: CreateOrEditPost) {
+export async function updateAndPublish({ id, title,description, body, postImg, categories }: CreateOrEditPost) {
   try {
     const updateAndPublish = await prisma.post.update({
       where: { id: id },
       data: {
         title,
+        description,
         body,
         postImg,
         published: true,
@@ -211,7 +221,9 @@ export async function getPostsByCategory(categoryName: string) {
     },
     include: {
       user: {
-        select: { email: true },
+        select: { email: true ,
+          firstName: true,
+          lastName: true,},
       },
       categories: true,
       comments: {
@@ -243,6 +255,7 @@ export const updatePostWithCategory = async (form: UpdatePost) => {
     },
     data: {
       title: form.title,
+      description: form.description,
       body: form.body,
       postImg: form.postImg,
       categories: {

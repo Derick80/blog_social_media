@@ -113,7 +113,51 @@ const post2 = await prisma.post.create({
       }
     }
   })
+  await prisma.post.create({
+    data: {
+      title: 'Production of mature mRNA is a multistep process requiring many proteins that is essential for proper cellular function',
+      description: `Defects in mRNA maturation lead to radical changes in development, growth and viability of the cell.  `,
+      body: `Production of mature mRNA is a multistep process requiring many proteins that is essential for proper cellular function.  Defects in mRNA maturation lead to radical changes in development, growth and viability of the cell.  The essential mRNA 3’ end processing subunit, Pcf11, is required for the cleavage and polyadenylation of nascent mRNAs and for proper termination of RNA polymerase II transcription.  Pcf11 also plays a role in alternative polyadenylation.  Previous work has identified and described the function of several domains in the Pcf11 protein, but the crystal structure has not been solved and there remain large stretches of Pcf11 that are uncharacterized.  Pcf11 is part of the CF 1A factor involved in cleavage and polyadenylation.  As part of CF 1A, Pcf11 makes contacts with each of the other CF 1A protein subunits as well as several of the protein subunits that make up the Cleavage and Polyadenylation Factor (CPF), but the importance of these cross-factor interactions is not known.  Pcf11 and other mRNA 3’ end processing subunits have been primarily studied in the context of RNA polymerase II transcription and mRNA processing but there are indications that mRNA processing subunits participate in other aspects of RNA maturation such as tRNA `,
+      postImg: 'https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_three_yeast_plates.jpeg',
+      published: true,
+      userId: user.id,
+     categories: {
+        connectOrCreate: [
+          {
+            where: { name: 'Graduate School' },
+            create: { name: 'Graduate School' }
+          },
+          {
+            where: { name: 'genes' },
+            create: { name: 'genes' }
+          }
+        ]
+      }
+    }
+  })
 
+  await prisma.post.create({
+    data: {
+      title: 'Models for the role of Pcf11',
+      description: `recruitment of Pcf11 to promoter-proximal poly(A) sites is reduced in pcf11 ∆142-225 due to deficits in important protein-protein interactions and may result in suppression of termination at the promoter-proximal site in favor of termination at the distal poly(A) site.`,
+      body: ` In the following section I will describe several models for Pcf11 function.  In the first model, I argue that recruitment of Pcf11 to promoter-proximal poly(A) sites is reduced in pcf11 ∆142-225 due to deficits in important protein-protein interactions and may result in suppression of termination at the promoter-proximal site in favor of termination at the distal poly(A) site.  In the second model, I argue that deletion of amino acids 142-225 increases the speed of RNAP II, resulting in shorter species of readthrough transcripts.  Then I present a model in which enhancement of gene looping at some RNAs could explain the increase of RNAs that I observed in pcf11 ∆142-225.  Another model that will be discussed is one in which RNAP II occupancy at some genes may be increased in pcf11 ∆142-225 which may explain why some genes were upregulated in pcf11 ∆142-225 compared to wild-type.  Then, I discuss a model in which pcf11 ∆142-225 more efficiently processes precursor RNAs.  Finally, I also consider a model in which alteration of the stability of mRNA in pcf11 ∆142-225 might explain the changes in gene expression that I have observed.  `,
+      postImg: 'https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_three_yeast_plates.jpeg',
+      published: true,
+      userId: user.id,
+     categories: {
+        connectOrCreate: [
+          {
+            where: { name: 'Graduate School' },
+            create: { name: 'Graduate School' }
+          },
+          {
+            where: { name: 'genes' },
+            create: { name: 'genes' }
+          }
+        ]
+      }
+    }
+  })
   console.log(`Database has been seeded. 🌱`)
 }
 

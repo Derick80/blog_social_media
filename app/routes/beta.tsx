@@ -1,62 +1,52 @@
 import { LoaderFunction, json } from '@remix-run/node'
 import { useLoaderData, Outlet, NavLink } from '@remix-run/react'
+import CategoryContainer from '~/components/category-container'
 import NavigationBar from '~/components/navbar/primary-nav'
 import Sidebar from '~/components/navbar/sidebar'
 import PostContent from '~/components/post-content'
 import Layout from '~/components/shared/layout'
 import Tooltip from '~/components/shared/tooltip'
 import { getUser } from '~/utils/auth.server'
+import { getCategories, getCategoryCounts } from '~/utils/categories.server'
 import { getPosts } from '~/utils/post.server'
 type LoaderData = {
-  userPosts: Awaited<ReturnType<typeof getPosts>>
+
 
   isLoggedIn: boolean
 }
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
   const isLoggedIn = user !== null
+  const { allCategories } = await getCategories()
+const catCount= await getCategoryCounts()
 
-  const userPosts = await getPosts()
 
-  const data: LoaderData = {
-    userPosts,
+
+console.log(catCount);
+
+  const data = {
     isLoggedIn,
+    allCategories,
+    catCount
   }
   return json(data)
 }
 
 export default function BetaRoute() {
-  const data = useLoaderData<LoaderData>()
+  const data = useLoaderData()
   return (
-    <div className="">
-      <nav className="mx-auto flex w-full justify-around text-center">
-        <ul className="flex">
-          <li>
-            <Tooltip message="View posts">
-              <span className="material-symbols-outlined">home</span>
+    <div className="flex md:block flex-wrap items-center">
+ {data?.catCount?.map((category) => (
+   <div className="capitalize">
+                    <label
+                    className="flex mr-3 h-fit p-1 text-center text-xs md:text-sm hover:cursor-pointer md:tracking-wide"
+                    key={category.id}
+                  >
+                  <span className='pl-2 pr-2 border-black dark:border-white border-2 border-r-0'>  {category.name}</span>
+                    <div className='pl-2 pr-2 border-black dark:border-white border-2 bg-gray-400 dark:text-black font-semibold'>{category._count.posts}</div>
+                  </label>
 
-              <NavLink
-                to="/"
-                className={({ isActive }) => ` ${isActive ? 'uppercase underline' : 'uppercase'}`}
-              >
-                <p className="hidden md:block">feed</p>
-              </NavLink>
-            </Tooltip>
-          </li>
-
-          <li>
-            <Tooltip message="My Profile">
-              <span className="material-symbols-outlined">person</span>
-              <NavLink
-                to="/about"
-                className={({ isActive }) => ` ${isActive ? 'uppercase underline' : 'uppercase'}`}
-              >
-                <p className="hidden md:block">About</p>
-              </NavLink>
-            </Tooltip>
-          </li>
-        </ul>
-      </nav>
+              </div>    ))}
     </div>
   )
 }

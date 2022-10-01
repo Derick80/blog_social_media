@@ -9,7 +9,7 @@ export type LayoutProps = {
 
 export default function Layout({ isLoggedIn, children }: LayoutProps) {
   return (
-    <div className="p-2 md:p-4">
+    <div className="">
       <NavigationBar isLoggedIn={isLoggedIn} />
 
       <main>{children}</main>
