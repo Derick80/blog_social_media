@@ -1,4 +1,4 @@
-import { Category, Like, Post, User } from '@prisma/client'
+import { Category, Like, Post, Profile, User } from '@prisma/client'
 import { SerializeFrom } from '@remix-run/node'
 
 export interface LoginForm {
@@ -65,7 +65,9 @@ export type SPost = Partial<Post> & {
   user?: User
 }
 
-export type QueriedPost = Post & {
+export type QueriedPost = Partial<Post> & {
+  createdAt?: string | null | Date | undefined
+
   isLiked?: boolean | null
   likes: Like[]
   categories?: Category[]
@@ -78,4 +80,12 @@ export type QueriedPost = Post & {
     lastName: string
   }
 }
+
+export type QueriedUser = Partial<User>
+
+export type UserProfileToSerialize = Partial<Profile> & {
+  birthDay?: string | null
+}
+
+export type QueriedUserProfile = SerializeFrom<UserProfileToSerialize>
 export type SerializedPost = SerializeFrom<SPost>

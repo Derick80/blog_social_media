@@ -6,21 +6,16 @@ import { QueriedPost, SerializedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
 
-export type PostPreviewProps = {
+export type HeroPostProps = {
   post: QueriedPost
   isLoggedin: boolean
   currentUser: string
   likeCount: number
 }
 
-export default function PostPreview({
-  post,
-  currentUser,
-  likeCount,
-  isLoggedin,
-}: PostPreviewProps) {
+export default function HeroPost({ post, currentUser, likeCount, isLoggedin }: HeroPostProps) {
   return (
-    <article className="">
+    <article key={post.id} className="hidden h-1/4 overflow-hidden p-1 md:flex md:flex-col md:p-2">
       <div className="">
         <ul className="grid-template-columns-2 md:grid-template-columns-3 gap-16 md:gap-8">
           <li>
@@ -38,7 +33,7 @@ export default function PostPreview({
                   ))}
                 </div>
                 <p className="mt-2 indent-4 md:mt-4 md:text-lg md:leading-7">
-                  {post.description}{' '}
+                  {post.body}{' '}
                   <Link
                     className="font-medium text-sky-300 hover:underline"
                     to={`/posts/${post.id}`}

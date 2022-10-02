@@ -59,7 +59,41 @@ export async function getPost({ id }: Pick<Post, 'id'>) {
   })
   return post
 }
-
+export async function getHeroPost() {
+  const heroPost = await prisma.post.findMany({
+    where: {
+      published: true,
+    },
+    include: {
+      categories: true,
+      comments: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+      },
+      likes: true,
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
+      user: {
+        select: {
+          role: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+    take: 1,
+  })
+  const likeCount = heroPost.map((post) => post._count?.likes)
+  return { heroPost, likeCount }
+}
 export async function createDraft({
   title,
   description,

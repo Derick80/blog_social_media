@@ -40,6 +40,8 @@ type LoaderData = {
 
   isPublished: boolean
   postId: string
+  likeCount: number[]
+  currentUser: string
 }
 
 // const badRequest = (data: ActionData) => {
@@ -51,8 +53,10 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const { allCategories } = await getCategories()
 
   const postId = params.postId as string
+  const currentUser = user?.id as string
 
   const post = userId ? await getPost({ id: postId, userId }) : null
+  const likeCount = post?.likes.length
   if (!post) {
     throw new Response('Post not found', { status: 404 })
   }
@@ -81,14 +85,10 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     categories,
     allCategories,
     catResults,
+    likeCount,
   }
   return json({
     data,
-    user,
-    isPublished,
-    categories,
-    allCategories,
-    catResults,
   })
 }
 

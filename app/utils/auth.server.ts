@@ -117,6 +117,8 @@ export async function getUser(request: Request) {
         id: true,
         email: true,
         role: true,
+        firstName: true,
+        lastName: true,
       },
     })
     return user

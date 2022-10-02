@@ -2,63 +2,71 @@ import { NavLink } from '@remix-run/react'
 import Button from '../shared/button'
 
 type PrimaryNavProps = {
-  isLoggedIn: boolean
+  data: {
+    isLoggedIn: boolean
+    firstName: string
+    userRole: string
+  }
 }
-export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
+export default function NavigationBar({ data }: PrimaryNavProps) {
   return (
-    <header className="bg-black/10 p-1 dark:bg-white/10 md:p-2">
-      <nav className="flex w-full">
+    <header className="col-start-1 col-end-5 w-full bg-black/10 p-1 dark:bg-white/10 md:p-2">
+      <nav className="flex">
         {/* added w-full to ul to get them to spread out and then I had to remove the class from my tooltip and place it in the lis */}
         <ul className="nav-ul">
-          <li className="nav-li">
-            <span className="material-symbols-outlined">home</span>
+          <NavLink to="/" className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}>
+            <li className="nav-li">
+              <span className="material-symbols-outlined">home</span>
+            </li>
+            <p className="hidden md:block">Feed</p>
+          </NavLink>
 
-            <NavLink to="/" className={({ isActive }) => ` ${isActive ? ' underline' : ''}`}>
-              <p className="hidden md:block">Feed</p>
-            </NavLink>
-          </li>
-          <li className="nav-li">
-            <span className="material-symbols-outlined">person</span>
-            <NavLink to="/about" className={({ isActive }) => ` ${isActive ? 'underline' : ''}`}>
+          <NavLink to="/about" className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}>
+            <li className="nav-li">
+              <span className="material-symbols-outlined">info</span>
               <p className="hidden md:block">About</p>
-            </NavLink>
-          </li>
-
-          {isLoggedIn && (
+            </li>
+          </NavLink>
+          {data.userRole === 'ADMIN' ? (
             <>
-              <li className="nav-li">
-                <span className="material-symbols-outlined">add_circle</span>
-                <NavLink
-                  to="/posts/new"
-                  className={({ isActive }) => ` ${isActive ? ' underline' : ''}`}
-                >
+              <NavLink
+                to="/posts/new"
+                className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}
+              >
+                <li className="nav-li">
+                  <span className="material-symbols-outlined">add_circle</span>
                   <p className="hidden md:block">Create</p>
-                </NavLink>
-              </li>
-              <li className="nav-li">
-                <span className="material-symbols-outlined">drafts</span>
-                <NavLink
-                  to="/drafts"
-                  className={({ isActive }) => ` ${isActive ? ' underline' : ''}`}
-                >
+                </li>
+              </NavLink>
+              <NavLink
+                to="/drafts"
+                className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}
+              >
+                <li className="nav-li">
+                  <span className="material-symbols-outlined">drafts</span>
+
                   <p className="hidden md:block">Drafts</p>
-                </NavLink>
-              </li>
+                </li>
+              </NavLink>
             </>
-          )}
+          ) : null}
 
-          {isLoggedIn ? (
+          {data.isLoggedIn ? (
             <>
-              <li className="nav-li">
-                <span className="material-symbols-outlined">settings</span>
-                <NavLink
-                  to="/account"
-                  className={({ isActive }) => ` ${isActive ? ' underline' : ''}`}
-                >
-                  <p className="hidden md:block">Settings</p>
-                </NavLink>
-              </li>
+              <NavLink
+                to="/account"
+                className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}
+              >
+                <li className="nav-li">
+                  <span className="material-symbols-outlined">settings</span>
 
+                  <p className="hidden md:block">Settings</p>
+                </li>
+              </NavLink>
+              <li className="nav-li">
+                <span>Welcome</span>
+                <p>{data.firstName}</p>
+              </li>
               <li className="nav-li">
                 <form className="" action="/logout" method="post">
                   <Button type="submit">
@@ -69,7 +77,16 @@ export default function NavigationBar({ isLoggedIn }: PrimaryNavProps) {
                 </form>
               </li>
             </>
-          ) : null}
+          ) : (
+            <>
+              <NavLink to="/login" className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}>
+                <li className="nav-li">
+                  <span className="material-symbols-outlined">login</span>
+                  <p className="hidden md:block">To Like or Comment Please Sign In</p>
+                </li>
+              </NavLink>
+            </>
+          )}
         </ul>
       </nav>
     </header>
