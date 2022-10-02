@@ -3,7 +3,7 @@ import { getCategoryCounts } from '~/utils/categories.server'
 import CategoryCount from '../category-count'
 import Footer from '../footer'
 import NavigationBar from '../navbar/primary-nav'
-import Sidebar from '../navbar/sidebar'
+import Sidebar from '../navbar/sidebar-stats'
 
 export type LayoutProps = {
   data: {

@@ -59,6 +59,18 @@ export async function getPost({ id }: Pick<Post, 'id'>) {
   })
   return post
 }
+
+
+export async function getMostPopularPost({ id }: Pick<Post, 'id'>) {
+  const post = await prisma.post.findUnique({
+    where: { id: id },
+  select:{
+    title:true,
+    id:true,
+  }
+  })
+  return post
+}
 export async function getHeroPost() {
   const heroPost = await prisma.post.findMany({
     where: {

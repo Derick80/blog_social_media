@@ -53,17 +53,15 @@ export const deleteLike = async (input: Prisma.LikePostIdUserIdCompoundUniqueInp
 }
 
 export async function getLikeCounts() {
-  const likeCounts = await prisma.post.findMany({
-    include: {
-      likes: true,
-      _count: {
-        select: {
-          likes: true,
-        },
-      },
+  const maxLikes = await prisma.like.aggregate({
+   _count:{
+    _all:true,
+   },
+    _max:{
+      postId:true,
     },
   })
-  return likeCounts
+  return maxLikes
 }
 // export const createLike = async (postId: string, userId: string) => {
 //   const created = await prisma.like.create({
