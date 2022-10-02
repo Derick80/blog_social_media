@@ -104,7 +104,7 @@ export default function Home() {
 
   return (
     <div className="col-start-2 col-end-6 m-0 grid gap-4 p-2 md:p-6">
-      <div className="flex min-w-fit flex-col justify-between text-sm md:flex-col md:text-base">
+      <div className="hidden md:flex min-w-fit flex-col justify-between text-sm md:flex-col md:text-base">
         <SidebarContainer
           isLoggedIn={isLoggedIn}
           userRole={userRole}

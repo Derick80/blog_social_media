@@ -13,7 +13,7 @@
     @apply mb-1 flex w-full items-center justify-around;
   }
   .nav-li {
-    @apply flex flex-col-reverse items-center md:flex-col;
+    @apply flex flex-col-reverse items-center;
   }
   .form-primary {
     @apply w-full text-xl font-semibold;
