@@ -2,7 +2,7 @@ import { Profile } from '@prisma/client'
 import { Link } from '@remix-run/react'
 import { QueriedUserProfile } from '~/utils/types.server'
 import Button from './shared/button'
-
+import blacktransparent from '../resources/logos/blacktransparent.png'
 // look at history
 export type ProfileProps = {
   data: {
@@ -15,6 +15,9 @@ export type ProfileProps = {
 export default function ProfileContent({ data }: ProfileProps) {
   return (
     <div key={data.userProfile.id} className="h-full">
+     <div className='flex object-contain w-full h-auto'> <img src={blacktransparent} alt="logo" style={
+        {width: '100', height: '100'}
+     } /></div>
       <div>
         <h1 className="my-3 border-b-2 text-left text-3xl">
           {data.userProfile.firstName} {data.userProfile.lastName}{' '}
