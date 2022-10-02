@@ -40,8 +40,9 @@ export default function PostPreview({ post, currentUser, likeCount }: PostPrevie
                     ...Read more
                   </Link>
                 </p>
-                <div className="flex flex-row justify-between p-2 md:p-4">
-                  {post?._count?.likes}
+                <div className="flex flex-row items-center justify-between p-2 md:p-4">
+                  <small>{`By ${post.user?.firstName} ${post.user?.lastName}`}</small>
+                  <small>{format(new Date(post.createdAt), 'MMMM dd, yyyy')}</small>
                   <LikeContainer
                     postId={post.id}
                     likes={post.likes}
@@ -49,8 +50,6 @@ export default function PostPreview({ post, currentUser, likeCount }: PostPrevie
                     likeCount={likeCount}
                     post={post}
                   />
-                  <small>{`By ${post.user?.firstName} ${post.user?.lastName}`}</small>
-                  <small>{format(new Date(post.createdAt), 'MMMM dd, yyyy')}</small>
                 </div>
               </div>
             </div>
