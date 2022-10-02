@@ -6,21 +6,24 @@ import { getPosts } from '~/utils/post.server'
 import PostPreview from '~/components/post-preview'
 import { getCategoryCounts } from '~/utils/categories.server'
 import CategoryCount from '~/components/category-count'
+import { QueriedPost } from '~/utils/types.server'
 
 type LoaderData = {
-  userPosts: Awaited<ReturnType<typeof getPosts>>
+  userPosts: QueriedPost[]
+  likeCount: number[]
   catCount: Awaited<ReturnType<typeof getCategoryCounts>>
   isOwner: boolean
   isLoggedIn: boolean
+  currentUser: string
 }
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
   const isLoggedIn = user !== null
-
+  const currentUser = user?.id as string
   const isOwner = user?.role === 'ADMIN'
-  const userPosts = await getPosts()
+  const { userPosts } = await getPosts()
   const catCount = await getCategoryCounts()
-
+  const likeCount = userPosts.map((post) => post.likes.length)
   if (!userPosts) {
     throw new Response(`No posts found`, {
       status: 404,
@@ -28,10 +31,12 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   const data: LoaderData = {
+    likeCount,
     userPosts,
     catCount,
     isOwner,
     isLoggedIn,
+    currentUser,
   }
   return json(data)
 }
@@ -47,7 +52,7 @@ export default function Home() {
       </div>
       <div className="gap-4 md:flex md:flex-wrap">
         {data.userPosts.map((post) => (
-          <PostPreview key={post.id} post={post} />
+          <PostPreview key={post.id} post={post} currentUser={data.currentUser} />
         ))}
       </div>
     </div>

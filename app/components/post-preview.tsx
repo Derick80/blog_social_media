@@ -1,14 +1,18 @@
+import { Post } from '@prisma/client'
 import { Link, NavLink } from '@remix-run/react'
 import { format } from 'date-fns'
 import { useReducer } from 'react'
-import { SerializedPost } from '~/utils/types.server'
+import { QueriedPost, SerializedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
+import LikeContainer from './like-container'
 
 export type PostPreviewProps = {
-  post: SerializedPost
+  post: QueriedPost
+  currentUser: string
+  likeCount: number
 }
 
-export default function PostPreview({ post }: PostPreviewProps) {
+export default function PostPreview({ post, currentUser, likeCount }: PostPreviewProps) {
   return (
     <article className="">
       <div className="">
@@ -37,6 +41,14 @@ export default function PostPreview({ post }: PostPreviewProps) {
                   </Link>
                 </p>
                 <div className="flex flex-row justify-between p-2 md:p-4">
+                  {post?._count?.likes}
+                  <LikeContainer
+                    postId={post.id}
+                    likes={post.likes}
+                    currentUser={currentUser}
+                    likeCount={likeCount}
+                    post={post}
+                  />
                   <small>{`By ${post.user?.firstName} ${post.user?.lastName}`}</small>
                   <small>{format(new Date(post.createdAt), 'MMMM dd, yyyy')}</small>
                 </div>

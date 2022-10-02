@@ -12,7 +12,15 @@ async function seed() {
     // no worries if it doesn't exist yet
   })
 
+  await prisma.user.delete({ where: { email: 'boston@gmail.com' } }).catch(() => {
+    // no worries if it doesn't exist yet
+  })
+  await prisma.user.delete({ where: { email: 'chicago@gmail.com' } }).catch(() => {
+    // no worries if it doesn't exist yet
+  })
 const hashedPassword = (await process.env.HASHEDPASSWORD) as string
+const hashedPasswordUserTwo = (await process.env.HASHEDPASSWORDUSERTWO) as string
+const hashedPasswordUserThree = (await process.env.HASHEDPASSWORDUSERTHREE) as string
 
   const user = await prisma.user.create({
     data: {
@@ -20,6 +28,26 @@ const hashedPassword = (await process.env.HASHEDPASSWORD) as string
       password: hashedPassword,
       firstName: 'Derick',
       lastName:'Hoskinson',
+      role: 'ADMIN'
+    }
+  })
+
+  const userTwo = await prisma.user.create({
+    data: {
+      email: 'boston@gmail.com',
+      password: hashedPasswordUserTwo,
+      firstName: 'Boston',
+      lastName: 'Hoskinson',
+      role: 'USER'
+    }
+  })
+
+  const userThree = await prisma.user.create({
+    data: {
+      email: 'chicago@gmail.com',
+      password: hashedPasswordUserThree,
+      firstName: 'Boston',
+      lastName: 'Hoskinson',
       role: 'ADMIN'
     }
   })
@@ -53,6 +81,12 @@ const hashedPassword = (await process.env.HASHEDPASSWORD) as string
       postImg: 'https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_one_prisma_schema.png',
       published: true,
       userId: user.id,
+      likes: {
+        create: [
+          { userId: userTwo.id },
+          { userId: userThree.id }
+        ]
+      },
      categories: {
         connectOrCreate: [
           {
@@ -77,6 +111,12 @@ const post2 = await prisma.post.create({
       postImg: 'https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_two_memory_game.png',
       published: true,
       userId: user.id,
+      likes: {
+        create: [
+          { userId: userTwo.id },
+          { userId: userThree.id }
+        ]
+      },
      categories: {
         connectOrCreate: [
           {

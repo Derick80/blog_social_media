@@ -33,7 +33,8 @@ export async function getPosts() {
       createdAt: 'asc',
     },
   })
-  return userPosts
+  const likeCount = userPosts.map((post) => post._count?.likes)
+  return { userPosts, likeCount }
 }
 
 export async function getPost({ id }: Pick<Post, 'id'>) {
