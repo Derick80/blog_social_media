@@ -11,22 +11,27 @@ export interface CategoryCountProps {
 }
 export default function CategoryCount({ category }: CategoryCountProps) {
   return (
-    <>
-      <label
-        className="mr-3 flex h-fit p-1 text-center text-xs hover:cursor-pointer md:text-xs md:tracking-wide"
-        key={category.id}
-      >
+    <div>
+
         <NavLink
           to={`/categories/${category.name}`}
-          className="border-2 border-r-0 border-black pl-2 pr-2 dark:border-white"
+className='flex items-center px-3 py-1 dark:text-white rounded-md  hover:bg-gray-50 hover:text-gray-900 md:tracking-wide'
+          key={category.id}
         >
-          {' '}
-          {category.name}
+
+          <label className='border-2 border-r-0 rounded-tl-md rounded-bl-md pr-1 pl-1 capitalize'>{category.name}</label>
+
+<div className='flex items-center self-stretch px-1 border rounded-tr-md rounded-br-md text-white  bg-gray-700 dark:bg-slate-500'>
+{category._count.posts}
+</div>
+
+
+
+
+
         </NavLink>
-        <div className="border-2 border-black bg-gray-400 pl-2 pr-2 font-semibold dark:border-white dark:text-black">
-          {category._count.posts}
-        </div>
-      </label>
-    </>
+
+
+    </div>
   )
 }

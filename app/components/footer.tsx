@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="flex justify-center space-x-4 md:space-x-8">
+    <footer className="flex justify-center space-x-4 md:space-x-8 pb-2">
       <div>
         <a
           href="https://www.linkedin.com/in/dhoskinson"

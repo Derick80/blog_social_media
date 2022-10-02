@@ -12,7 +12,7 @@ export default function CategoryContainer({ category }: CategoryContainerProps) 
   return (
     <div className="mx-2 mt-2 flex">
       <label
-        className="h-fit max-w-fit border-2 border-black p-1 text-center text-xs hover:cursor-pointer dark:border-white md:text-sm md:tracking-wide"
+        className="h-fit max-w-full border-2 border-black p-1 text-center text-xs hover:cursor-pointer dark:border-white md:text-sm md:tracking-wide"
         key={category.id}
       >
         <NavLink to={`/categories/${category.name}`}>{category.name}</NavLink>

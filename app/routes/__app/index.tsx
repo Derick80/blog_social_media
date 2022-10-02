@@ -45,7 +45,8 @@ export default function Home() {
   const data = useLoaderData<LoaderData>()
   return (
     <div className="m-0 gap-4 p-2 md:flex md:p-6">
-      <div className="flex flex-row flex-wrap md:flex-col">
+      <div className="flex flex-row flex-wrap md:flex-col min-w-fit text-sm md:text-base">
+
         {data?.catCount.map((category) => (
           <CategoryCount key={category.id} category={category} />
         ))}
