@@ -20,11 +20,16 @@ export const meta: MetaFunction = () => {
   }
 }
 
-export const links: LinksFunction = () => {
-  return [{ rel: 'stylesheet', href: styles },
-{rel: 'preload', href:'./resources/logos/blacktransparent.png', as: 'image', type: 'image/png'},
-{rel: 'preload', href:'./resources/logos/White on Transparent.png', as: 'image', type: 'image/png'},]
-}
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: styles },
+
+  // {
+  //   rel: 'preload',
+  //   href: '/resources/logos/white_transparent.png',
+  //   as: 'image',
+  //   type: "image/svg+xml",
+  // },
+]
 
 function Document({
   children,

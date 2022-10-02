@@ -1,4 +1,4 @@
-import type { Post, User } from '@prisma/client'
+import { Post, Prisma, User } from '@prisma/client'
 import { prisma } from './prisma.server'
 import type { CreateOrEditPost, UpdatePost } from './types.server'
 
@@ -60,14 +60,13 @@ export async function getPost({ id }: Pick<Post, 'id'>) {
   return post
 }
 
-
 export async function getMostPopularPost({ id }: Pick<Post, 'id'>) {
   const post = await prisma.post.findUnique({
     where: { id: id },
-  select:{
-    title:true,
-    id:true,
-  }
+    select: {
+      title: true,
+      id: true,
+    },
   })
   return post
 }
@@ -134,6 +133,27 @@ export async function createDraft({
       },
     },
   })
+}
+
+export const createNewPost = async (input: Prisma.PostCreateInput) => {
+  const { id, ...data } = input
+  const newPost = await prisma.post.create({
+    data,
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          role: true,
+          createdAt: true,
+          password: false,
+        },
+      },
+    },
+  })
+  return newPost
 }
 
 export async function getUserDrafts(userId: string) {

@@ -15,9 +15,10 @@ export type ProfileProps = {
 export default function ProfileContent({ data }: ProfileProps) {
   return (
     <div key={data.userProfile.id} className="h-full">
-     <div className='flex object-contain w-full h-auto'> <img src={blacktransparent} alt="logo" style={
-        {width: '100', height: '100'}
-     } /></div>
+      <div className="flex h-auto w-full object-contain">
+        {' '}
+        <img src={blacktransparent} alt="logo" width={100} height={100} />
+      </div>
       <div>
         <h1 className="my-3 border-b-2 text-left text-3xl">
           {data.userProfile.firstName} {data.userProfile.lastName}{' '}

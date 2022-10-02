@@ -79,6 +79,8 @@ export type QueriedPost = Partial<Post> & {
     firstName: string
     lastName: string
   }
+  commentCount?: number | null
+  comments?: Post[]
 }
 
 export type QueriedUser = Partial<User>

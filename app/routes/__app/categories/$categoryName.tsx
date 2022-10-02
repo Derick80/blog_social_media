@@ -28,7 +28,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const user = await getUser(request)
   const isOwner = user?.role === 'ADMIN'
 
-  console.log('catId', categoryName)
   const postsByCategory = await getPostsByCategory(categoryName)
   if (!postsByCategory) {
     throw new Response("Couldn't find any posts with that category", {

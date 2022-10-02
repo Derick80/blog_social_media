@@ -50,9 +50,6 @@ export const action: ActionFunction = async ({ request }) => {
     )
   const selected = categories.map((category) => category) as []
 
-  await console.log('await', categories)
-  await console.log('await', selected)
-
   return redirect('/categories')
 }
 

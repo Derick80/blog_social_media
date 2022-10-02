@@ -79,6 +79,7 @@ const hashedPasswordUserThree = (await process.env.HASHEDPASSWORDUSERTHREE) as s
 	Structurally, the CID of Pcf11 contains eight alpha helices arranged in a right-handed superhelical orientation and a hydrophobic groove that interact with the CTD of RNAP II through an induced fit rather than a conformational change (Noble et al. 2005).  Interestingly, the CID of Pcf11 does not directly contact the serine 2 residues on the CTD of RNAP II although additional binding studies revealed that the CID interaction with the CTD is enhanced upon serine 2 phosphorylation (Licatalosi et al. 2002).  Together these results suggest that Pcf11 may bind more strongly to the CTD when it is phosphorylated at serine 2, but in general Pcf11 binds the CTD even when phospho-serine 2 levels are not high.  In fact, this may explain the observation from genome wide analysis that placed Pcf11 at both the 5’ and 3’ ends of genes.  Additional interactions with either RNAP II or co-factors may also help recruit Pcf11 to genes.
 	In vitro experiments have demonstrated that Pcf11 aids in the disassembly of elongation complexes by binding the CTD of RNAP II and the nascent RNA transcript (Zhang et al. 2005). Once Pcf11 has been recruited to the CTD of RNAP II, it can help recruit 3’ end processing subunits and transcription termination factors, including Rna14, Rna15, Cft1, Cft2, and Rat1 to the pre-mRNA (Ahn et al. 2009; Amrani et al., 1997; Peterlin & Price, 2006; Qiu et al. 2009).  Once these factors have localized to the 3’ end of the pre-mRNA, the cleavage and polyadenylation reaction is catalyzed, and RNAP II transcription is terminated.`,
       postImg: 'https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_one_prisma_schema.png',
+      createdBy: user.firstName,
       published: true,
       userId: user.id,
       likes: {
@@ -111,6 +112,8 @@ const post2 = await prisma.post.create({
       postImg: 'https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_two_memory_game.png',
       published: true,
       userId: user.id,
+      createdBy: user.firstName,
+
       likes: {
         create: [
           { userId: userTwo.id },
@@ -137,6 +140,8 @@ const post2 = await prisma.post.create({
       description: `On long mRNA genes (greater than 1kb in yeast), the recruitment of termination factors is linked to the phosphorylation of Ser2 of the CTD of RNAP II`,
       body: `On long mRNA genes (greater than 1kb in yeast), the recruitment of termination factors is linked to the phosphorylation of Ser2 of the CTD of RNAP II, recruitment of a number of 3’ end processing subunits and recruitment of Rat1, a 5’ to 3’ single strand RNA endonuclease, and its associated proteins, Rtt103 and Rai1 (Amrani et al., 1997; Gross & Moore, 2001; Kim et al., 2004; Livak & Schmittgen, 2001; West et al. 2004). Currently, there are three models of poly(A)-dependent transcription termination: the torpedo model, the allosteric model, and the hybrid model.  The torpedo model for transcription termination places Rat1 (human XRN1), a 5’ to 3’ exoribonuclease, as the primary termination factor.  It is thought that after cleavage of the nascent mRNA, Rat1 acts to ‘bump’ off RNAP II from the nucleic acid framework as it degrades the uncapped, downstream RNA product of cleavage.  Evidence against the torpedo model comes from several observations. First, degradation of the cleaved, nascent RNA by a similar cytoplasmic nuclease, Xrn1 that is artificially targeted to the nucleus was not enough to result in termination (Luo et al. 2006). Rat1 is sufficient for the release of stalled polymerase complexes in vitro, but the release activity of a catalytically dead Rat1 mutant can be partially rescued by the inclusion of Rtt103, which helps recruit Rat1 to the CTD (Nedea et al. 2003; Pearson & Moore, 2013).  Additionally, some mutants of Ssu72 are defective for cleavage but do not affect transcription termination (Dichtl et al. 2002; He 2003; Sadowski et al. 2003).`,
       postImg: 'https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_three_yeast_plates.jpeg',
+      createdBy: user.firstName,
+
       published: false,
       userId: user.id,
      categories: {
@@ -161,6 +166,8 @@ const post2 = await prisma.post.create({
       postImg: 'https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_three_yeast_plates.jpeg',
       published: true,
       userId: user.id,
+      createdBy: user.firstName,
+
      categories: {
         connectOrCreate: [
           {
@@ -184,6 +191,8 @@ const post2 = await prisma.post.create({
       postImg: 'https://blogphotosbucket.s3.us-east-2.amazonaws.com/postimages/post_three_yeast_plates.jpeg',
       published: true,
       userId: user.id,
+      createdBy: user.firstName,
+
      categories: {
         connectOrCreate: [
           {
@@ -193,6 +202,82 @@ const post2 = await prisma.post.create({
           {
             where: { name: 'genes' },
             create: { name: 'genes' }
+          }
+        ]
+      }
+    }
+  })
+
+  await prisma.post.create({
+    data: {
+      title: 'mRNA maturation',
+      description:`If intron-containing mRNAs escape to the cytoplasm, they are degraded via nonsense mediated decay (NMD) or NMD-independent degradation pathways (Aguilera, 2005; Bentley, 2014).`,
+      body: `Many genes, if not most, in higher organisms contain non-coding, intervening DNA sequences called introns, between the protein-coding exon portions of the gene.  The second major step in mRNA maturation is the removal of introns and the splicing of exons.  Introns are removed from the pre-mRNA by the spliceosome components in a two step reaction that ends in the joining of two exons together (Bentley 2014).  Most metazoan genes have numerous introns while very few genes in yeast have introns.  The selection of which exons are included in the final mRNA has lead to a diversification of gene products such that one gene can code for numerous different mRNA isoforms, each of which may have unique functions.  Chromatin modifications and differential phosphorylation of the CTD of RNAP II play an active role in the recruitment of splicing factors, and the splicing reaction itself may occur prior to or following the cleavage and polyadenylation step of mRNA maturation (Bentley 2014; Rigo & Martinson 2009; Oesterreich et al. 2011; David & Manley 2011).`,
+      postImg: 'https://remix-bucket.s3.us-east-2.amazonaws.com/post_one_prisma_schema.png',
+      published: true,
+      userId: userTwo.id,
+      createdBy: userTwo.firstName,
+
+     categories: {
+        connectOrCreate: [
+          {
+            where: { name: 'Genetics' },
+            create: { name: 'Genetics' }
+          },
+          {
+            where: { name: 'Yeast' },
+            create: { name: 'Yeast' }
+          }
+        ]
+      }
+    }
+  })
+
+
+  await prisma.post.create({
+    data: {
+      title: 'mRNA maturation',
+      description: `Introns are removed from the pre-mRNA by the spliceosome components in a two step reaction that ends in the joining of two exons together `,
+      body: `Many genes, if not most, in higher organisms contain non-coding, intervening DNA sequences called introns, between the protein-coding exon portions of the gene.  The second major step in mRNA maturation is the removal of introns and the splicing of exons.  Introns are removed from the pre-mRNA by the spliceosome components in a two step reaction that ends in the joining of two exons together (Bentley 2014).  Most metazoan genes have numerous introns while very few genes in yeast have introns.  The selection of which exons are included in the final mRNA has lead to a diversification of gene products such that one gene can code for numerous different mRNA isoforms, each of which may have unique functions.  Chromatin modifications and differential phosphorylation of the CTD of RNAP II play an active role in the recruitment of splicing factors, and the splicing reaction itself may occur prior to or following the cleavage and polyadenylation step of mRNA maturation (Bentley 2014; Rigo & Martinson 2009; Oesterreich et al. 2011; David & Manley 2011).  mRNAs that contain introns that are not properly spliced are recognized by the mRNA surveillance complex, TRAMP (Trf4/Air2/Mtr4p Polyadenylation), and degraded by the nuclear exosome.  If intron-containing mRNAs escape to the cytoplasm, they are degraded via nonsense mediated decay (NMD) or NMD-independent degradation pathways (Aguilera, 2005; Bentley, 2014).
+      `,
+      postImg: 'https://remix-bucket.s3.us-east-2.amazonaws.com/lab.jpeg',
+      published: true,
+      userId: userTwo.id,
+      createdBy: userTwo.firstName,
+
+     categories: {
+        connectOrCreate: [
+          {
+            where: { name: 'Genetics' },
+            create: { name: 'Genetics' }
+          },
+          {
+            where: { name: 'Yeast' },
+            create: { name: 'Yeast' }
+          }
+        ]
+      }
+    }
+  })
+  await prisma.post.create({
+    data: {
+      title: 'PS1 Same amino acid change',
+      description: `In most cases, when one missense variant is known to be pathogenic, a different nucleotide change that results in the same amino acid [e.g. c.34G>C (p.Val12Leu) and c.34G>T (p.Val12Leu)] can also be assumed to be pathogenic`,
+      body:'particularly if the mechanism of pathogenicity is through altered protein function. However, it is important to assess the possibility that the variant may act directly through the specific DNA change (e.g. through splicing disruption as assessed through at least computational analysis) instead of through the amino acid change, in which case the assumption of pathogenicity may no longer be valid.',
+      postImg: 'https://remix-bucket.s3.us-east-2.amazonaws.com/Screen%20Shot%202022-10-02%20at%201.12.08%20PM.png',
+      published: true,
+      userId: user.id,
+      createdBy: user.firstName,
+
+     categories: {
+        connectOrCreate: [
+          {
+            where: { name: 'Variant Annotation' },
+            create: { name: 'Variant Annotation' }
+          },
+          {
+            where: { name: 'Clinical Genetics' },
+            create: { name: 'Clinical Genetics' }
           }
         ]
       }
@@ -209,3 +294,4 @@ seed()
   .finally(async () => {
     await prisma.$disconnect()
   })
+
