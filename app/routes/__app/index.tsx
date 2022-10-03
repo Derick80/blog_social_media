@@ -36,7 +36,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const userId = user?.id as string
 
   const isLoggedIn = user?.role === 'ADMIN' || user?.role === 'USER' ? true : false
-  const currentUser = user?.id as string
+  const currentUser = user?.id as string || 'GUEST'
   const isOwner = user?.role === 'ADMIN'
   const firstName = user?.firstName as string
   const userRole = user?.role as string
@@ -50,7 +50,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const mostPopularPost = await getMostPopularPost({ id: mostPopularPostId })
 
   const { heroPost } = await getHeroPost()
-  if (!userPosts || !heroPost || !user) {
+  if (!userPosts || !heroPost ) {
     throw new Response(`Missing one of 4 requests`, {
       status: 404,
     })
