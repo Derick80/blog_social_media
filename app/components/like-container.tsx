@@ -5,7 +5,7 @@ import { QueriedPost } from '~/utils/types.server'
 export type LikeContainerProps = {
   post: QueriedPost
   currentUser: string
-  postId: string
+  postId: string | ''
   likeCount: number
   likes: Array<{
     postId: string

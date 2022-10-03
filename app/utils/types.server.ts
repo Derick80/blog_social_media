@@ -66,7 +66,8 @@ export type SPost = Partial<Post> & {
 }
 
 export type QueriedPost = Partial<Post> & {
-  createdAt?: string | null | Date | undefined
+  createdAt: string  | Date
+  id: string
 
   isLiked?: boolean | null
   likes: Like[]

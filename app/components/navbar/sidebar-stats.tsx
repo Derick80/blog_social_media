@@ -19,7 +19,7 @@ export default function SideBarStats({ totalPosts, mostPopularPost }: SideBarSta
           <p> {totalPosts}</p>
         </div>
 
-        <button className="tracking-wide hover:cursor-pointer">
+        <button className="hover:cursor-pointer">
           <NavLink to={`/posts/${mostPopularPost.id}`}>
             <label className="text-base">Hottest Post</label>
           </NavLink>

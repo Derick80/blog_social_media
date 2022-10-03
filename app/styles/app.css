@@ -561,6 +561,40 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.container{
+  width: 100%;
+}
+
+@media (min-width: 640px){
+  .container{
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px){
+  .container{
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px){
+  .container{
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px){
+  .container{
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px){
+  .container{
+    max-width: 1536px;
+  }
+}
+
 .nav-ul{
   margin-bottom: 0.25rem;
   display: flex;
@@ -708,6 +742,10 @@ video {
 
 .row-start-3{
   grid-row-start: 3;
+}
+
+.row-start-1{
+  grid-row-start: 1;
 }
 
 .m-auto{
@@ -872,6 +910,10 @@ video {
   width: 0.75rem;
 }
 
+.w-80{
+  width: 20rem;
+}
+
 .min-w-\[0\.75rem\]{
   min-width: 0.75rem;
 }
@@ -892,6 +934,30 @@ video {
 
 .max-w-7xl{
   max-width: 80rem;
+}
+
+.max-w-screen-2xl{
+  max-width: 1536px;
+}
+
+.max-w-screen-xl{
+  max-width: 1280px;
+}
+
+.max-w-fit{
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}
+
+.max-w-screen-lg{
+  max-width: 1024px;
+}
+
+.max-w-max{
+  max-width: -webkit-max-content;
+  max-width: -moz-max-content;
+  max-width: max-content;
 }
 
 .grow{
@@ -999,6 +1065,10 @@ video {
 
 .overflow-hidden{
   overflow: hidden;
+}
+
+.overflow-x-auto{
+  overflow-x: auto;
 }
 
 .overflow-y-scroll{
@@ -1539,6 +1609,10 @@ video {
 
   .md\:flex-col{
     flex-direction: column;
+  }
+
+  .md\:flex-wrap{
+    flex-wrap: wrap;
   }
 
   .md\:gap-8{

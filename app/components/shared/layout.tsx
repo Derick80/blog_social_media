@@ -16,19 +16,23 @@ export type LayoutProps = {
   children: React.ReactNode
 }
 
+
+// removed this from the div grid-rows-[(1fr, 200px, 1fr, 1fr)] grid-cols-[(1fr, 2fr, 2fr, 1fr)] grid gap-4
 export default function Layout({ data, children }: LayoutProps) {
   return (
-    <div className="grid-rows-[(1fr, 200px, 1fr, 1fr)] grid-cols-[(56px, _2fr, _2fr, _1fr)] grid gap-4">
+      < >
       <NavigationBar data={data} />
 
-      <div className="col-start-2 col-end-3 row-start-2 flex flex-wrap justify-center text-sm md:text-base">
+      <div className="flex flex-wrap justify-center text-sm md:text-base">
         {data?.catCount?.map((category) => (
           <CategoryCount key={category.id} category={category} />
         ))}
       </div>
 
-      <div className="col-start-2 col-end-3 row-start-3">{children}</div>
+      <div className="col-start-1 col-end-6 row-start-1 m-0 grid gap-4 p-2 md:p-6">{children}</div>
       <Footer />
-    </div>
+    </>
+
+
   )
 }

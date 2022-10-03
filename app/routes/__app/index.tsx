@@ -93,14 +93,10 @@ export default function Home() {
     userRole,
     userId,
   } = data
-  console.log('data', data)
 
   return (
-    <div className="col-start-2 col-end-6 m-0 grid gap-4 p-2 md:p-6">
-      <div className="hidden min-w-fit flex-col justify-between text-sm md:flex md:flex-col md:text-base">
-        <svg strokeWidth="3" className="text-slate-400">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-        </svg>
+    <>
+
         <SidebarContainer
           isLoggedIn={isLoggedIn}
           userRole={userRole}
@@ -109,14 +105,14 @@ export default function Home() {
           totalPosts={totalPosts}
           mostPopularPost={mostPopularPost}
         />
-      </div>
-      <div className="col-start-2 col-end-4 justify-center gap-4 md:flex">
+
+      <div className="w-full row-start-1 col-start-2 col-end-4 justify-center gap-4 md:flex md:flex-wrap">
         {userPosts.map((post) => (
           <PostPreview key={post.id} post={post} currentUser={userId} isLoggedin={isLoggedIn} />
         ))}
       </div>
       <div className="flex min-w-fit flex-row flex-wrap text-sm md:flex-col md:text-base"></div>
-    </div>
+    </>
   )
 }
 
