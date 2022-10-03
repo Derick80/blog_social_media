@@ -96,17 +96,23 @@ export default function Home() {
 
   return (
     <>
-      <SidebarContainer
+      {/* <SidebarContainer
         isLoggedIn={isLoggedIn}
         userRole={userRole}
         firstName={firstName}
         userId={userId}
         totalPosts={totalPosts}
         mostPopularPost={mostPopularPost}
-      />
+      /> */}
 
-      <div className="col-start-2 col-end-4 row-start-1 w-full justify-center gap-4 md:flex md:flex-wrap">
-        {userPosts.map((post) => (
+      {/* <div className="col-start-1 col-span-full md:col-start-2 md:col-end-4 row-start-2 w-full justify-center gap-4 md:flex md:flex-wrap"> */}
+
+
+
+      {/* </div> */}
+
+      <div className='flex flex-row flex-wrap gap-5 justify-center'>
+      {userPosts.map((post) => (
           <PostPreview key={post.id} post={post} currentUser={userId} isLoggedin={isLoggedIn} />
         ))}
       </div>

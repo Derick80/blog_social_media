@@ -21,8 +21,7 @@ export default function SidebarContainer({
   mostPopularPost,
 }: SidebarContainerProps) {
   return (
-    <div className="flex flex-col">
-      <SideBarStats totalPosts={totalPosts} mostPopularPost={mostPopularPost} />
+<div>      <SideBarStats totalPosts={totalPosts} mostPopularPost={mostPopularPost} />
       <SidebarNav
         isLoggedIn={isLoggedIn}
         userRole={userRole}
