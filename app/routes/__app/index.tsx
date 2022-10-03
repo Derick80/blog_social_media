@@ -36,7 +36,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const userId = user?.id as string
 
   const isLoggedIn = user?.role === 'ADMIN' || user?.role === 'USER' ? true : false
-  const currentUser = user?.id as string || 'GUEST'
+  const currentUser = (user?.id as string) || 'GUEST'
   const isOwner = user?.role === 'ADMIN'
   const firstName = user?.firstName as string
   const userRole = user?.role as string
@@ -50,7 +50,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const mostPopularPost = await getMostPopularPost({ id: mostPopularPostId })
 
   const { heroPost } = await getHeroPost()
-  if (!userPosts || !heroPost ) {
+  if (!userPosts || !heroPost) {
     throw new Response(`Missing one of 4 requests`, {
       status: 404,
     })
@@ -96,17 +96,16 @@ export default function Home() {
 
   return (
     <>
+      <SidebarContainer
+        isLoggedIn={isLoggedIn}
+        userRole={userRole}
+        firstName={firstName}
+        userId={userId}
+        totalPosts={totalPosts}
+        mostPopularPost={mostPopularPost}
+      />
 
-        <SidebarContainer
-          isLoggedIn={isLoggedIn}
-          userRole={userRole}
-          firstName={firstName}
-          userId={userId}
-          totalPosts={totalPosts}
-          mostPopularPost={mostPopularPost}
-        />
-
-      <div className="w-full row-start-1 col-start-2 col-end-4 justify-center gap-4 md:flex md:flex-wrap">
+      <div className="col-start-2 col-end-4 row-start-1 w-full justify-center gap-4 md:flex md:flex-wrap">
         {userPosts.map((post) => (
           <PostPreview key={post.id} post={post} currentUser={userId} isLoggedin={isLoggedIn} />
         ))}

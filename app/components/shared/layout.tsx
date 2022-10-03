@@ -16,11 +16,10 @@ export type LayoutProps = {
   children: React.ReactNode
 }
 
-
 // removed this from the div grid-rows-[(1fr, 200px, 1fr, 1fr)] grid-cols-[(1fr, 2fr, 2fr, 1fr)] grid gap-4
 export default function Layout({ data, children }: LayoutProps) {
   return (
-      < >
+    <>
       <NavigationBar data={data} />
 
       <div className="flex flex-wrap justify-center text-sm md:text-base">
@@ -32,7 +31,5 @@ export default function Layout({ data, children }: LayoutProps) {
       <div className="col-start-1 col-end-6 row-start-1 m-0 grid gap-4 p-2 md:p-6">{children}</div>
       <Footer />
     </>
-
-
   )
 }

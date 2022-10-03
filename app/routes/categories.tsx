@@ -63,7 +63,6 @@ export default function Categories() {
     categories: actionData?.fields?.categories || data.cats,
   })
 
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
     event.preventDefault()
     setFormData((form) => ({ ...form, [field]: event.target.value }))

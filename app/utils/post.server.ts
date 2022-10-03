@@ -9,19 +9,18 @@ const FEED_POST_SELECT = {
   body: true,
   postImg: true,
   createdAt: true,
-  user:{
-    select:{
+  user: {
+    select: {
       id: true,
       firstName: true,
-  }
-},
+    },
+  },
   categories: {
     select: {
       id: true,
       name: true,
     },
-},
-
+  },
 }
 const FULL_POST_SELECT = {
   id: true,
@@ -30,8 +29,8 @@ const FULL_POST_SELECT = {
   body: true,
   postImg: true,
   createdAt: true,
-  user:{
-    select:{
+  user: {
+    select: {
       id: true,
       firstName: true,
       lastName: true,
@@ -57,10 +56,6 @@ const COMMENT_SELECT = {
     },
   },
 }
-
-
-
-
 
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
