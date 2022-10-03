@@ -283,6 +283,32 @@ const post2 = await prisma.post.create({
       }
     }
   })
+
+
+  const comment1 = await prisma.comment.create({
+    data: {
+      message: "I am a root comment",
+      userId: userTwo.id,
+      postId: post1.id,
+    },
+  })
+
+  const comment2 = await prisma.comment.create({
+    data: {
+      parentId: comment1.id,
+      message: "I am a nested comment",
+      userId: userThree.id,
+      postId: post1.id,
+    },
+  })
+
+  const comment3 = await prisma.comment.create({
+    data: {
+      message: "I am another root comment",
+      userId: userTwo.id,
+      postId: post1.id,
+    },
+  })
   console.log(`Database has been seeded. 🌱`)
 }
 

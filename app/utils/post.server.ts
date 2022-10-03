@@ -2,6 +2,66 @@ import { Post, Prisma, User } from '@prisma/client'
 import { prisma } from './prisma.server'
 import type { CreateOrEditPost, UpdatePost } from './types.server'
 
+const FEED_POST_SELECT = {
+  id: true,
+  title: true,
+  description: true,
+  body: true,
+  postImg: true,
+  createdAt: true,
+  user:{
+    select:{
+      id: true,
+      firstName: true,
+  }
+},
+  categories: {
+    select: {
+      id: true,
+      name: true,
+    },
+},
+
+}
+const FULL_POST_SELECT = {
+  id: true,
+  title: true,
+  description: true,
+  body: true,
+  postImg: true,
+  createdAt: true,
+  user:{
+    select:{
+      id: true,
+      firstName: true,
+      lastName: true,
+    },
+  },
+  categories: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+}
+
+const COMMENT_SELECT = {
+  id: true,
+  message: true,
+  parentId: true,
+  createdAt: true,
+  user: {
+    select: {
+      id: true,
+      firstName: true,
+    },
+  },
+}
+
+
+
+
+
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
     where: {

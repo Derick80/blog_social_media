@@ -24,55 +24,68 @@ model User {
   profile   Profile?
   role      Role      @default(USER)
   likes     Like[]
+  comments  Comment[]
+
+  likeComments LikeComment[]
 }
 
 model Post {
-  id        String  @id @unique @default(uuid())
-  title     String
-  description String
-  body      String
-  postImg   String
-  published Boolean @default(false)
-  createdBy String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  parentId String?
-  parent   Post?   @relation("comments", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  comments Post[] @relation("comments")
+  id           String        @id @unique @default(uuid())
+  title        String
+  description  String
+  body         String
+  postImg      String
+  published    Boolean       @default(false)
+  createdBy    String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  likeComments LikeComment[]
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 
   categories Category[]
   likes      Like[]
+  Comment    Comment[]
 
   @@index([id, userId])
   @@index([userId])
 }
 
-// model Comment {
-//   id        String    @id @unique @default(uuid())
-//   message   String
-//   createdAt DateTime  @default(now())
-//   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-//   userId    String
-//   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-//   postId    String
-//   parent    Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-//   children  Comment[] @relation("ParentChild")
-//   parentId  String?
-//   commentLikes     CommentLike[]
-// }
+model Comment {
+  id           String        @id @default(uuid())
+  message      String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  post         Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId       String
+  parent       Comment?      @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
+  children     Comment[]     @relation("ParentChild")
+  parentId     String?
+  likeComments LikeComment[]
+}
+
+model LikeComment {
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String
+  commentId String
+  Post      Post?   @relation(fields: [postId], references: [id])
+  postId    String?
+
+  @@id([userId, commentId])
+}
 
 model Like {
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
 
-  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  postId    String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId String
 
-   createdAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@id([postId, userId])
@@ -116,6 +129,7 @@ enum Role {
   USER
   ADMIN
 }
+
 enum TokenType {
   REFRESH_TOKEN
   VERIFY_EMAIL
