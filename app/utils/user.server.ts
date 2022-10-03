@@ -9,6 +9,8 @@ export const createUser = async (user: RegisterForm) => {
       email: user.email,
 
       password: passwordHash,
+      firstName: user.firstName,
+      lastName: user.lastName,
     },
   })
   return { id: newUser.id, email: user.email }

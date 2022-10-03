@@ -1,3 +1,6 @@
+/* eslint-disable prefer-spread */
+import { Post } from '@prisma/client'
+
 export const handleFileUpload = async (file: File) => {
   const inputFormData = new FormData()
   inputFormData.append('postImg', file)
@@ -22,4 +25,17 @@ export const toCapitalizeAll = (string: string): string => {
   const newString = newWords.join(' ')
 
   return newString
+}
+
+export const getTotalPosts = (posts: Post[]) => {
+  return posts.length
+}
+
+export async function getHighestField(objArray: any[], fieldName: string) {
+  return Number(
+    Math.max.apply(
+      Math,
+      objArray?.map((o) => o[fieldName] || 0)
+    ) || 0
+  )
 }

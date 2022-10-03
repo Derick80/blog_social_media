@@ -10,7 +10,6 @@ import { getUser, getUserId } from '~/utils/auth.server'
 import { pronouns } from '~/utils/constants'
 import { getProfile, updateProfile } from '~/utils/profile.server'
 import { validateDate, validateEmail, validateName, validateText } from '~/utils/validators.server'
-import Tooltip from '~/components/shared/tooltip'
 import { ImageUploader } from '~/components/image-uploader'
 
 type LoaderData = {
@@ -283,11 +282,9 @@ export default function ProfileRoute() {
           <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
 
           <div className="text-container max-w-full">
-            <Tooltip message="Update your profile">
-              <button type="submit" className="btn-primary">
-                Save
-              </button>
-            </Tooltip>
+            <button type="submit" className="btn-primary">
+              Save
+            </button>
           </div>
         </form>
       </div>

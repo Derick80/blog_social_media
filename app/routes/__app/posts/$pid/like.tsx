@@ -4,21 +4,31 @@ import { json } from '@remix-run/node'
 import { getUser, requireUserId } from '~/utils/auth.server'
 import { createLike, deleteLike } from '~/utils/like.server'
 
-export const loader: LoaderFunction = () => {
-  throw notFound({ message: "This page doesn't exists." })
+export const loader: LoaderFunction = ({ request }) => {
+  throw new Response("This page doesn't exists.", { status: 404 })
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await getUser(request)
   const postId = params.pid
   const userId = user?.id as string
-
   if (!userId || !postId) {
-    return json({ error: 'invalid form data publish' }, { status: 400 })
+    return json({ error: 'invalid form data bad userId or PostId like' }, { status: 400 })
   }
   try {
     if (request.method === 'POST') {
-      await createLike(userId, postId)
+      await createLike({
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        post: {
+          connect: {
+            id: postId,
+          },
+        },
+      })
     }
 
     if (request.method === 'DELETE') {
@@ -27,6 +37,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     return json({ success: true })
   } catch (error) {
-    return json({ error: 'invalid form data publish' }, { status: 400 })
+    return json({ error: 'invalid form data like' }, { status: 400 })
   }
 }

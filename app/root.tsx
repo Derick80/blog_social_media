@@ -20,12 +20,16 @@ export const meta: MetaFunction = () => {
   }
 }
 
-export const links: LinksFunction = () => {
-  return [
-    { rel: 'stylesheet', href: styles },
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: styles },
 
-  ]
-}
+  // {
+  //   rel: 'preload',
+  //   href: '/resources/logos/white_transparent.png',
+  //   as: 'image',
+  //   type: "image/svg+xml",
+  // },
+]
 
 function Document({
   children,
@@ -41,7 +45,7 @@ function Document({
         <title>{title}</title>
         <Links />
       </head>
-      <body className="">
+      <body className="m-auto h-full items-center font-Condensed dark:bg-gray-700 dark:text-white">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -64,7 +68,7 @@ export function CatchBoundary() {
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
       <div>
-        <h1>CatchBoundry</h1>
+        <h1>CatchBoundry root</h1>
         <h1>
           {caught.status} {caught.statusText}
         </h1>

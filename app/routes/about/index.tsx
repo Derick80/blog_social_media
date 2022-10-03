@@ -3,11 +3,11 @@ import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { format } from 'date-fns'
 import React from 'react'
-import Tooltip from '~/components/shared/tooltip'
 import { getUser } from '~/utils/auth.server'
-import { getUserProfile } from '~/utils/profile.server'
+import { getOwnerProfile, getUserProfile } from '~/utils/profile.server'
 import Layout from '~/components/shared/layout'
 import ProfileContent from '~/components/profile-content'
+import { QueriedUserProfile } from '~/utils/types.server'
 
 // keep a list of the icon ids we put in the symbol
 
@@ -25,38 +25,42 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData | undefined }) =
 }
 
 type LoaderData = {
-  userProfile: Awaited<ReturnType<typeof getUserProfile>>
+  userProfile: QueriedUserProfile
+  firstName: string
   isLoggedIn: boolean
   isOwner: boolean
+  userRole: string
 }
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
   const userId = user?.id as string
-  const isLoggedIn = user !== null
+  const isLoggedIn = user?.role === 'ADMIN' || user?.role === 'USER' ? true : false
+  const firstName = user?.firstName as string
+  const userRole = user?.role as string
 
   const isOwner = user?.role == 'ADMIN'
-  const userProfile = await getUserProfile(userId)
+  const userProfile = await getOwnerProfile('iderick@gmail.com')
 
   if (!userProfile) {
     throw new Response(`Derick's profile not found`, {
       status: 404,
     })
   }
+
   const data: LoaderData = {
+    firstName,
     userProfile,
     isLoggedIn,
     isOwner,
+    userRole,
   }
   return json(data)
 }
 
 export default function About() {
   const data = useLoaderData<LoaderData>()
+
   const userProfile = data.userProfile
 
-  return (
-    <Layout isLoggedIn={data.isLoggedIn}>
-      {userProfile ? <ProfileContent userProfile={userProfile} isOwner={data.isOwner} /> : null}
-    </Layout>
-  )
+  return <Layout data={data}>{userProfile ? <ProfileContent data={data} /> : null}</Layout>
 }

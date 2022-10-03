@@ -44,12 +44,14 @@ type ActionData = {
   formError?: string
   fieldErrors?: {
     title: string | undefined
+    description: string | undefined
     body: string | undefined
     categories?: object | undefined
     postImg: string | undefined
   }
   fields?: {
     title: string
+    description: string
     body: string
     postImg: string
   }
@@ -64,6 +66,7 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   const title = formData.get('title')
   const body = formData.get('body')
+  const description = formData.get('description')
   const postImg = formData.get('postImg')
   const categories = formData.getAll('categories') as []
 
@@ -71,6 +74,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (
     typeof title !== 'string' ||
+    typeof description !== 'string' ||
     typeof body !== 'string' ||
     typeof postImg !== 'string' ||
     typeof categories !== 'object'
@@ -82,11 +86,12 @@ export const action: ActionFunction = async ({ request }) => {
 
   const fieldErrors = {
     title: validateText(title as string),
+    description: validateText(description as string),
     body: validateText(body as string),
     postImg: validateText(postImg as string),
   }
 
-  const fields = { title, body, postImg }
+  const fields = { title, description, body, postImg }
 
   if (Object.values(fieldErrors).some(Boolean)) {
     return badRequest({
@@ -117,6 +122,7 @@ export default function NewPostRoute() {
   console.log(actionData)
   const [formData, setFormData] = useState({
     title: actionData?.fields?.title || '',
+    description: actionData?.fields?.description || '',
     body: actionData?.fields?.body || '',
     postImg: actionData?.fields?.postImg || '',
     categories: actionData?.categories || [],
@@ -154,70 +160,91 @@ export default function NewPostRoute() {
     })
   }
   return (
-    <>
-      <div>
-        <Sectionheader>Write a new post</Sectionheader>
-        <div>{formError}</div>
-        <form
-          method="post"
-          onSubmit={(e) => (!confirm('Are you sure?') ? e.preventDefault() : true)}
-        >
-          <FormField
-            htmlFor="title"
-            label="Title"
-            name="title"
-            type="textarea"
-            value={formData.title}
-            onChange={(event) => handleInputChange(event, 'title')}
-            aria-invalid={Boolean(actionData?.fieldErrors?.title) || undefined}
-            aria-errormessage={actionData?.fieldErrors?.title ? 'title-error' : undefined}
-          />
-          {actionData?.fieldErrors?.title ? (
-            <p role="alert" id="title-error">
-              {actionData.fieldErrors.title}
-            </p>
-          ) : null}
-          <p>
-            <label>
-              Content
-              <textarea
-                name="body"
-                value={formData.body}
-                onChange={(event) => handleInputChange(event, 'body')}
-              />
-            </label>
+    <div className="flex justify-center">
+      <div>{formError}</div>
+      <div>Write a new post</div>
+      <form
+        method="post"
+        className="flex w-1/2 flex-col space-y-4"
+        onSubmit={(e) => (!confirm('Are you sure?') ? e.preventDefault() : true)}
+      >
+        <FormField
+          htmlFor="title"
+          label="Title"
+          name="title"
+          type="textarea"
+          value={formData.title}
+          onChange={(event) => handleInputChange(event, 'title')}
+          aria-invalid={Boolean(actionData?.fieldErrors?.title) || undefined}
+          aria-errormessage={actionData?.fieldErrors?.title ? 'title-error' : undefined}
+        />
+        {actionData?.fieldErrors?.title ? (
+          <p role="alert" id="title-error">
+            {actionData.fieldErrors.title}
           </p>
-          <div>
-            <label>Tag your post </label>
-            <select
-              name="categories"
-              multiple={true}
-              onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                handleInputChange(event, 'categories')
-              }
-            >
-              {allCategories.map((option) => (
-                <option key={option.id} value={option.name}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <FormField
-            htmlFor="postImg"
-            label=""
-            name="postImg"
-            type="hidden"
-            value={formData.postImg}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              handleInputChange(event, 'postImg')
+        ) : null}
+        <FormField
+          htmlFor="description"
+          label="Description"
+          name="description"
+          type="textarea"
+          value={formData.description}
+          onChange={(event) => handleInputChange(event, 'description')}
+          aria-invalid={Boolean(actionData?.fieldErrors?.description) || undefined}
+          aria-errormessage={actionData?.fieldErrors?.description ? 'description-error' : undefined}
+        />
+        {actionData?.fieldErrors?.description ? (
+          <p role="alert" id="description-error">
+            {actionData.fieldErrors.description}
+          </p>
+        ) : null}
+        <FormField
+          htmlFor="body"
+          label="Write Your Post"
+          name="body"
+          type="textarea"
+          value={formData.body}
+          onChange={(event) => handleInputChange(event, 'body')}
+          aria-invalid={Boolean(actionData?.fieldErrors?.body) || undefined}
+          aria-errormessage={actionData?.fieldErrors?.body ? 'body-error' : undefined}
+        />
+        <div>
+          <label>Tag your post </label>
+          <select
+            name="categories"
+            multiple={true}
+            className="form-field-primary min-h-full"
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+              handleInputChange(event, 'categories')
             }
-          />
+          >
+            {allCategories.map((option) => (
+              <option key={option.id} value={option.name}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <FormField
+          htmlFor="postImg"
+          label="Upload an Image"
+          labelClass="pt-4"
+          name="postImg"
+          type="hidden"
+          className=""
+          value={formData.postImg}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleInputChange(event, 'postImg')
+          }
+        />
 
+        <div className="flex flex-col items-center pb-4">
           <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
-          <button type="submit">Save as a Draft</button>
-        </form>
-      </div>
-    </>
+          <button type="submit" className="btn-primary mt-4 w-1/2 justify-center">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
   )
 }

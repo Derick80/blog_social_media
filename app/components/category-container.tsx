@@ -10,9 +10,9 @@ export interface CategoryContainerProps {
 
 export default function CategoryContainer({ category }: CategoryContainerProps) {
   return (
-    <div className="mx-2 flex flex-wrap">
+    <div className="mx-2 mt-2 flex md:mt-4">
       <label
-        className="m-2 h-fit max-w-fit rounded-md border-2 p-2 text-center hover:cursor-pointer md:tracking-wide"
+        className="h-fit max-w-full border-2 border-black p-1 text-center text-xs hover:cursor-pointer dark:border-white md:text-sm md:tracking-wide"
         key={category.id}
       >
         <NavLink to={`/categories/${category.name}`}>{category.name}</NavLink>

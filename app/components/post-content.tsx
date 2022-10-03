@@ -1,39 +1,52 @@
 import { Link } from '@remix-run/react'
-import { SerializedPost } from '~/utils/types.server'
+import { format } from 'date-fns'
+import { QueriedPost, SerializedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
+import LikeContainer from './like-container'
 
 type PostProps = {
-  post:  SerializedPost
+  post: QueriedPost
+  currentUser: string
+  likeCount: number
 }
 
-export default function PostContent({ post }: PostProps) {
+export default function PostContent({ post, currentUser, likeCount }: PostProps) {
   return (
-    <article key={post.id} className="flex flex-col">
+    <article
+      key={post.id}
+      className="flex h-screen flex-col overflow-y-scroll p-1 md:flex-col md:p-2"
+    >
       <div className="">
-        <Link to={`/posts/${post.id}`}>
-          <h1 className="mt-6 border-b-2 text-left text-2xl font-semibold uppercase md:text-4xl">
-            {post.title}
-          </h1>
-        </Link>
-        <p className="mt-2 text-left text-lg md:text-2xl">{post.createdAt}</p>
-        <div className="flex flex-row">
+        <h1 className="mt-6 border-b-2 text-left text-2xl font-semibold uppercase md:text-4xl">
+          {post.title}
+        </h1>
+
+        <div className="flex flex-row items-center justify-between p-2 md:p-4">
+          <small>{`By ${post.user?.firstName} ${post.user?.lastName}`}</small>
+          <small>{format(new Date(post.createdAt), 'MMMM dd, yyyy')}</small>
+          <LikeContainer
+            postId={post.id}
+            likes={post.likes}
+            currentUser={currentUser}
+            likeCount={likeCount}
+            post={post}
+          />
+        </div>
+        <div className="mb-4 flex flex-row border-t-2 border-black dark:border-white md:mb-8">
           {post?.categories?.map((category) => (
             <CategoryContainer key={category.id} category={category} />
           ))}
         </div>
       </div>
-      <div className="flex">
-        <img
-          style={{
-            backgroundSize: 'cover',
-            width: '50%',
-            aspectRatio: 'auto',
-            ...(post.postImg ? { backgroundImage: `url(${post.postImg})` } : {}),
-          }}
-          src={post.postImg}
-          alt="profile"
-        />
-        <p>{post.body}</p>
+      <div className="flex flex-col gap-5">
+        <div className="h-40 md:h-60">
+          <img
+            src={post.postImg}
+            alt={post.title}
+            className="object-fit h-full w-full md:object-cover"
+          />
+        </div>
+        <p className="mt-2 indent-4 md:mt-4 md:text-lg md:leading-7">{post.body}</p>
       </div>
     </article>
   )

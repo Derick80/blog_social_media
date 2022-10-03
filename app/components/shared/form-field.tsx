@@ -6,6 +6,7 @@ export interface FormFieldProps extends React.HTMLAttributes<HTMLInputElement> {
   type?: string
   value: any
   name?: string
+  placeHolder?: string
   onChange: (...args: any[]) => void
   onClick?: (...args: any) => unknown
   checked?: boolean
@@ -20,6 +21,7 @@ export default function FormField({
   label,
   type,
   value,
+  placeHolder,
   className = 'form-field-primary',
   checked,
   onClick = () => {},
@@ -48,6 +50,7 @@ export default function FormField({
         id={htmlFor}
         name={htmlFor}
         value={value}
+        placeholder={placeHolder}
         autoComplete={autocomplete}
       />
       <div>{errorText || ''}</div>

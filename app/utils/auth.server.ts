@@ -30,6 +30,8 @@ export const register = async (form: RegisterForm) => {
         fields: {
           email: form.email,
           password: form.password,
+          firstName: form.firstName,
+          lastName: form.lastName,
         },
       },
       { status: 400 }
@@ -115,6 +117,8 @@ export async function getUser(request: Request) {
         id: true,
         email: true,
         role: true,
+        firstName: true,
+        lastName: true,
       },
     })
     return user

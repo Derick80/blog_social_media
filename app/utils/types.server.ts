@@ -1,4 +1,4 @@
-import { Category, Post } from '@prisma/client'
+import { Category, Like, Post, Profile, User } from '@prisma/client'
 import { SerializeFrom } from '@remix-run/node'
 
 export interface LoginForm {
@@ -9,6 +9,8 @@ export interface LoginForm {
 export interface RegisterForm {
   email: string
   password: string
+  firstName: string
+  lastName: string
 }
 
 // Authinput will eventually replace login/reg form
@@ -21,6 +23,7 @@ export interface AuthInput {
 export interface CreateOrEditPost {
   id?: string
   title: string
+  description: string
   body: string
   postImg: string
   categories: Array<{
@@ -33,6 +36,7 @@ export interface CreateOrEditPost {
 export interface UpdatePost {
   id: string
   title: string
+  description: string
   body: string
   postImg: string
   categories: Array<{
@@ -57,6 +61,33 @@ export type SPost = Partial<Post> & {
   commentCount?: number | null
   comments?: Post[]
   categories?: Category[]
+  likes?: Like[]
+  user?: User
 }
 
+export type QueriedPost = Partial<Post> & {
+  createdAt?: string | null | Date | undefined
+
+  isLiked?: boolean | null
+  likes: Like[]
+  categories?: Category[]
+  _count: {
+    likes?: number
+  }
+  user: {
+    role: string
+    firstName: string
+    lastName: string
+  }
+  commentCount?: number | null
+  comments?: Post[]
+}
+
+export type QueriedUser = Partial<User>
+
+export type UserProfileToSerialize = Partial<Profile> & {
+  birthDay?: string | null
+}
+
+export type QueriedUserProfile = SerializeFrom<UserProfileToSerialize>
 export type SerializedPost = SerializeFrom<SPost>

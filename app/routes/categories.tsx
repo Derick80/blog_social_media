@@ -50,9 +50,6 @@ export const action: ActionFunction = async ({ request }) => {
     )
   const selected = categories.map((category) => category) as []
 
-  await console.log('await', categories)
-  await console.log('await', selected)
-
   return redirect('/categories')
 }
 
@@ -102,7 +99,7 @@ export default function Categories() {
             error={errors?.name}
           />
           <div>
-            <select
+            {/* <select
               className="appearance-none text-black dark:bg-gray-400 dark:text-white"
               name="categories"
               multiple={true}
@@ -113,13 +110,13 @@ export default function Categories() {
                   {option.name}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
 
           {/*<button type="submit">Save new category to DB</button>*/}
         </form>
       </div>
-      <CategoryContainer categories={data.categories} isPost={false} />
+      <CategoryContainer category={data.categories} />
 
       <div>
         <form method="post">

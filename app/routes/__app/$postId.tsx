@@ -4,7 +4,6 @@ import { Link, useActionData, useCatch, useLoaderData, useParams } from '@remix-
 import React, { useState } from 'react'
 import { ImageUploader } from '~/components/image-uploader'
 import FormField from '~/components/shared/form-field'
-import Tooltip from '~/components/shared/tooltip'
 import { getUser, getUserId } from '~/utils/auth.server'
 import {
   deletePost,
@@ -24,6 +23,7 @@ import { getCategories } from '~/utils/categories.server'
 type LoaderData = {
   post: {
     id: string
+    description: string
     title: string
     body: string
     postImg: string
@@ -40,6 +40,8 @@ type LoaderData = {
 
   isPublished: boolean
   postId: string
+  likeCount: number[]
+  currentUser: string
 }
 
 // const badRequest = (data: ActionData) => {
@@ -51,8 +53,10 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const { allCategories } = await getCategories()
 
   const postId = params.postId as string
+  const currentUser = user?.id as string
 
   const post = userId ? await getPost({ id: postId, userId }) : null
+  const likeCount = post?.likes.length
   if (!post) {
     throw new Response('Post not found', { status: 404 })
   }
@@ -81,14 +85,10 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     categories,
     allCategories,
     catResults,
+    likeCount,
   }
   return json({
     data,
-    user,
-    isPublished,
-    categories,
-    allCategories,
-    catResults,
   })
 }
 
@@ -100,6 +100,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const currentUser = formData.get('currentUser')
   const published = formData.get('published')
   const title = formData.get('title')
+  const description = formData.get('description')
   const body = formData.get('body')
   const postImg = formData.get('postImg')
   const categories = formData.getAll('categories') as []
@@ -111,6 +112,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (
     typeof id !== 'string' ||
     typeof title !== 'string' ||
+    typeof description !== 'string' ||
     typeof body !== 'string' ||
     typeof userId !== 'string' ||
     typeof postImg !== 'string' ||
@@ -121,7 +123,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const errors = {
     title: validateText(title as string),
-
+    description: validateText(description as string),
     body: validateText(body as string),
     postImg: validateText(postImg as string),
   }
@@ -133,6 +135,7 @@ export const action: ActionFunction = async ({ request, params }) => {
             errors,
             fields: {
               title,
+              description,
               body,
             },
             form: action,
@@ -144,6 +147,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         id,
         userId,
         title,
+        description,
         body,
         postImg,
         categories: converted,
@@ -153,6 +157,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       if (
         typeof id !== 'string' ||
         typeof title !== 'string' ||
+        typeof description !== 'string' ||
         typeof body !== 'string' ||
         typeof userId !== 'string' ||
         typeof postImg !== 'string'
@@ -164,6 +169,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         id,
         userId,
         title,
+        description,
         body,
         postImg,
         categories: converted,
@@ -217,6 +223,7 @@ export default function PostRoute() {
   const [formData, setFormData] = useState({
     id: data.post.id,
     title: data.post.title,
+    description: data.post.description,
     body: data.post.body,
     published: data.post.published,
     postImg: data.post.postImg,
@@ -279,6 +286,23 @@ export default function PostRoute() {
             onChange={(event) => handleInputChange(event, 'title')}
             error={errors?.title}
           />
+          <FormField
+            htmlFor="description"
+            label="Description"
+            name="description"
+            type="textarea"
+            value={formData.description}
+            onChange={(event) => handleInputChange(event, 'description')}
+            aria-invalid={Boolean(actionData?.fieldErrors?.description) || undefined}
+            aria-errormessage={
+              actionData?.fieldErrors?.description ? 'description-error' : undefined
+            }
+          />
+          {actionData?.fieldErrors?.description ? (
+            <p role="alert" id="description-error">
+              {actionData.fieldErrors.description}
+            </p>
+          ) : null}
           <p>
             <label>
               Content
@@ -321,53 +345,40 @@ export default function PostRoute() {
           {formData.published ? (
             <>
               <div>
-                <Tooltip message="Unpublish this post">
-                  <button type="submit" name="_action" value="unpublish">
-                    UnPublish
-                  </button>
-                </Tooltip>
-                <Tooltip message="Delete this post">
-                  <button type="submit" name="_action" value="delete">
-                    Delete
-                  </button>
-                </Tooltip>
+                <button type="submit" name="_action" value="unpublish">
+                  UnPublish
+                </button>
+
+                <button type="submit" name="_action" value="delete">
+                  Delete
+                </button>
+
                 <div>
-                  <Tooltip message="Save and Publish">
-                    <button type="submit" name="_action" value="save">
-                      Save Post
-                    </button>
-                  </Tooltip>
+                  <button type="submit" name="_action" value="save">
+                    Save Post
+                  </button>
                 </div>
               </div>
             </>
           ) : (
             <div>
-              <Tooltip message="Save as a draft">
-                <button type="submit" name="_action" value="save">
-                  Save Post Draft
+              <button type="submit" name="_action" value="save">
+                Save Post Draft
+              </button>
+              <button type="submit" name="_action" value="updateAndPublish">
+                Save and Publish Post
+              </button>
+              <button type="submit" name="_action" value="delete">
+                Delete
+              </button>
+
+              <div>
+                <button type="submit" name="_action" value="publish" className="">
+                  <span className="material-symbols-outlined">save</span>
                 </button>
-              </Tooltip>
-              <Tooltip message="Save and Publish">
-                <button type="submit" name="_action" value="updateAndPublish">
-                  Save and Publish Post
-                </button>
-              </Tooltip>
-              <Tooltip message="Delete this post">
-                <button type="submit" name="_action" value="delete">
+                <button type="submit" name="_action" value="removeCategory">
                   Delete
                 </button>
-              </Tooltip>
-              <div>
-                <Tooltip message="Publish">
-                  <button type="submit" name="_action" value="publish" className="">
-                    <span className="material-symbols-outlined">save</span>
-                  </button>
-                </Tooltip>
-                <Tooltip message="Delete this category">
-                  <button type="submit" name="_action" value="removeCategory">
-                    Delete
-                  </button>
-                </Tooltip>
               </div>
             </div>
           )}

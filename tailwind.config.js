@@ -3,6 +3,9 @@ module.exports = {
   content: ["./app/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      flex: {
+        '10': '1 0 auto'
+      },
       fontFamily: {
         Condensed: ["Roboto Condensed", "sans-serif"],
         Eczar: ["Eczar", "serif"],

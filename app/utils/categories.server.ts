@@ -58,3 +58,17 @@ export async function deleteCategory(categoryName: string) {
     throw new Error('Unable to delete category')
   }
 }
+
+export async function getCategoryCounts() {
+  const catCounts = await prisma.category.findMany({
+    include: {
+      posts: true,
+      _count: {
+        select: {
+          posts: true,
+        },
+      },
+    },
+  })
+  return catCounts
+}

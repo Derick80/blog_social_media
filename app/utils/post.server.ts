@@ -1,6 +1,66 @@
-import type { Post, User } from '@prisma/client'
+import { Post, Prisma, User } from '@prisma/client'
 import { prisma } from './prisma.server'
 import type { CreateOrEditPost, UpdatePost } from './types.server'
+
+const FEED_POST_SELECT = {
+  id: true,
+  title: true,
+  description: true,
+  body: true,
+  postImg: true,
+  createdAt: true,
+  user:{
+    select:{
+      id: true,
+      firstName: true,
+  }
+},
+  categories: {
+    select: {
+      id: true,
+      name: true,
+    },
+},
+
+}
+const FULL_POST_SELECT = {
+  id: true,
+  title: true,
+  description: true,
+  body: true,
+  postImg: true,
+  createdAt: true,
+  user:{
+    select:{
+      id: true,
+      firstName: true,
+      lastName: true,
+    },
+  },
+  categories: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+}
+
+const COMMENT_SELECT = {
+  id: true,
+  message: true,
+  parentId: true,
+  createdAt: true,
+  user: {
+    select: {
+      id: true,
+      firstName: true,
+    },
+  },
+}
+
+
+
+
 
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
@@ -24,6 +84,8 @@ export async function getPosts() {
       user: {
         select: {
           role: true,
+          firstName: true,
+          lastName: true,
         },
       },
     },
@@ -31,14 +93,15 @@ export async function getPosts() {
       createdAt: 'asc',
     },
   })
-  return userPosts
+  const likeCount = userPosts.map((post) => post._count?.likes)
+  return { userPosts, likeCount }
 }
 
 export async function getPost({ id }: Pick<Post, 'id'>) {
   const post = await prisma.post.findUnique({
     where: { id: id },
     include: {
-      user: { select: { email: true } },
+      user: { select: { email: true, firstName: true, lastName: true } },
       categories: true,
       comments: {
         orderBy: {
@@ -57,8 +120,54 @@ export async function getPost({ id }: Pick<Post, 'id'>) {
   return post
 }
 
+export async function getMostPopularPost({ id }: Pick<Post, 'id'>) {
+  const post = await prisma.post.findUnique({
+    where: { id: id },
+    select: {
+      title: true,
+      id: true,
+    },
+  })
+  return post
+}
+export async function getHeroPost() {
+  const heroPost = await prisma.post.findMany({
+    where: {
+      published: true,
+    },
+    include: {
+      categories: true,
+      comments: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+      },
+      likes: true,
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
+      user: {
+        select: {
+          role: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+    take: 1,
+  })
+  const likeCount = heroPost.map((post) => post._count?.likes)
+  return { heroPost, likeCount }
+}
 export async function createDraft({
   title,
+  description,
   body,
   postImg,
   userId,
@@ -67,8 +176,10 @@ export async function createDraft({
   await prisma.post.create({
     data: {
       title,
+      description,
       body,
       postImg,
+
       user: {
         connect: {
           id: userId,
@@ -84,6 +195,27 @@ export async function createDraft({
   })
 }
 
+export const createNewPost = async (input: Prisma.PostCreateInput) => {
+  const { id, ...data } = input
+  const newPost = await prisma.post.create({
+    data,
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          role: true,
+          createdAt: true,
+          password: false,
+        },
+      },
+    },
+  })
+  return newPost
+}
+
 export async function getUserDrafts(userId: string) {
   const userDrafts = await prisma.post.findMany({
     where: {
@@ -92,7 +224,7 @@ export async function getUserDrafts(userId: string) {
     },
     include: {
       user: {
-        select: { email: true },
+        select: { email: true, firstName: true, lastName: true },
       },
       categories: true,
       comments: {
@@ -118,6 +250,7 @@ export async function getUserDrafts(userId: string) {
 export async function updatePost({
   id,
   title,
+  description,
   body,
   postImg,
   categories,
@@ -127,6 +260,7 @@ export async function updatePost({
       where: { id: id },
       data: {
         title,
+        description,
         body,
         postImg,
 
@@ -142,12 +276,20 @@ export async function updatePost({
     throw new Error('Unable to save post draft')
   }
 }
-export async function updateAndPublish({ id, title, body, postImg, categories }: CreateOrEditPost) {
+export async function updateAndPublish({
+  id,
+  title,
+  description,
+  body,
+  postImg,
+  categories,
+}: CreateOrEditPost) {
   try {
     const updateAndPublish = await prisma.post.update({
       where: { id: id },
       data: {
         title,
+        description,
         body,
         postImg,
         published: true,
@@ -209,7 +351,7 @@ export async function getPostsByCategory(categoryName: string) {
     },
     include: {
       user: {
-        select: { email: true },
+        select: { email: true, firstName: true, lastName: true },
       },
       categories: true,
       comments: {
@@ -241,6 +383,7 @@ export const updatePostWithCategory = async (form: UpdatePost) => {
     },
     data: {
       title: form.title,
+      description: form.description,
       body: form.body,
       postImg: form.postImg,
       categories: {

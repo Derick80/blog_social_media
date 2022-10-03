@@ -18,7 +18,7 @@ I built my personal blog using ideas and code inspired by or directly written by
 - [Image uploads and other Methods](https://youtu.be/Mx9Xsq9JNXo)
   - [GitHub for above](https://github.com/sabinadams/kudos-remix-mongodb-prisma/tree/main/app)
 - [Image uploads and other Methods text](https://www.prisma.io/blog/fullstack-remix-prisma-mongodb-3-By5pmN5Nzo1v)
-
+- [Likes](https://github.com/kyh/yours-sincerely)
 ## S3-Image Upload
 
 I used a combination of the newer remix docs and the video/github code
