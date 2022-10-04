@@ -748,11 +748,6 @@ video {
   margin: 0px;
 }
 
-.mx-2{
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
 .my-3{
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
@@ -761,6 +756,11 @@ video {
 .mx-auto{
   margin-left: auto;
   margin-right: auto;
+}
+
+.mx-2{
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .my-2{
@@ -828,12 +828,6 @@ video {
   display: none;
 }
 
-.h-fit{
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
-}
-
 .h-40{
   height: 10rem;
 }
@@ -864,6 +858,12 @@ video {
 
 .h-3{
   height: 0.75rem;
+}
+
+.h-fit{
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .h-4{
@@ -904,16 +904,16 @@ video {
   min-width: fit-content;
 }
 
-.max-w-full{
-  max-width: 100%;
-}
-
 .max-w-prose{
   max-width: 65ch;
 }
 
 .max-w-7xl{
   max-width: 80rem;
+}
+
+.max-w-full{
+  max-width: 100%;
 }
 
 .grow{
@@ -1162,16 +1162,16 @@ video {
      object-fit: cover;
 }
 
-.p-1{
-  padding: 0.25rem;
-}
-
 .p-2{
   padding: 0.5rem;
 }
 
 .p-4{
   padding: 1rem;
+}
+
+.p-1{
+  padding: 0.25rem;
 }
 
 .px-3{
@@ -1247,11 +1247,6 @@ video {
   font-family: Roboto Condensed, sans-serif;
 }
 
-.text-xs{
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
 .text-base{
   font-size: 1rem;
   line-height: 1.5rem;
@@ -1270,6 +1265,11 @@ video {
 .text-4xl{
   font-size: 2.25rem;
   line-height: 2.5rem;
+}
+
+.text-xs{
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .text-3xl{
@@ -1663,11 +1663,6 @@ video {
     padding-bottom: 1rem;
   }
 
-  .md\:text-sm{
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-
   .md\:text-3xl{
     font-size: 1.875rem;
     line-height: 2.25rem;
@@ -1686,6 +1681,11 @@ video {
   .md\:text-4xl{
     font-size: 2.25rem;
     line-height: 2.5rem;
+  }
+
+  .md\:text-sm{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 
   .md\:text-5xl{
