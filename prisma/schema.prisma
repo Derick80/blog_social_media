@@ -46,7 +46,7 @@ model Post {
 
   categories Category[]
   likes      Like[]
-  Comment    Comment[]
+  comments    Comment[]
 
   @@index([id, userId])
   @@index([userId])

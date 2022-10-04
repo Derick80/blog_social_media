@@ -62,5 +62,5 @@ export default function About() {
 
   const userProfile = data.userProfile
 
-  return <Layout data={data}>{userProfile ? <ProfileContent data={data} /> : null}</Layout>
+  return <>{userProfile ? <ProfileContent data={data} /> : null}</>
 }

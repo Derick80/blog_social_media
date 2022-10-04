@@ -62,8 +62,6 @@ export default function Categories() {
     name: actionData?.fields?.name || '',
     categories: actionData?.fields?.categories || data.cats,
   })
-  console.log('categories for formData', actionData?.fields?.categories)
-  console.log(Array.isArray(formData?.categories))
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
     event.preventDefault()

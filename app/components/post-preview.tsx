@@ -8,7 +8,7 @@ import LikeContainer from './like-container'
 
 export type PostPreviewProps = {
   post: QueriedPost
-  isLoggedin: boolean
+  isLoggedIn: boolean
   currentUser: string
   likeCount: number
 }
@@ -17,13 +17,12 @@ export default function PostPreview({
   post,
   currentUser,
   likeCount,
-  isLoggedin,
+  isLoggedIn,
 }: PostPreviewProps) {
+  console.log('isloggedin at post preview containerner', isLoggedIn)
   return (
     <article className="">
-      <div className="">
-        <ul className="grid-template-columns-2 md:grid-template-columns-3 gap-16 md:gap-8">
-          <li>
+
             <div className="relative flex min-h-full max-w-prose flex-col overflow-hidden rounded-md border border-black transition-shadow duration-200 ease-in-out">
               <div className="h-40 md:h-60">
                 <img src={post.postImg} alt={post.title} className="h-full w-full object-cover" />
@@ -52,7 +51,7 @@ export default function PostPreview({
                   <LikeContainer
                     postId={post.id}
                     likes={post.likes}
-                    isLoggedin={isLoggedin}
+                    isLoggedIn={isLoggedIn}
                     currentUser={currentUser}
                     likeCount={likeCount}
                     post={post}
@@ -60,9 +59,8 @@ export default function PostPreview({
                 </div>
               </div>
             </div>
-          </li>
-        </ul>
-      </div>
+
+
     </article>
   )
 }

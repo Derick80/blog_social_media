@@ -45,7 +45,7 @@ function Document({
         <title>{title}</title>
         <Links />
       </head>
-      <body className="m-auto h-full items-center font-Condensed dark:bg-gray-700 dark:text-white">
+      <body className="font-Condensed dark:bg-gray-700 dark:text-white">
         {children}
         <ScrollRestoration />
         <Scripts />
