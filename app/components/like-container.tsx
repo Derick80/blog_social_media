@@ -11,7 +11,7 @@ export type LikeContainerProps = {
     postId: string
     userId: string
   }>
-  isLoggedin: boolean
+  isLoggedIn: boolean
 }
 
 export default function LikeContainer({
@@ -19,10 +19,13 @@ export default function LikeContainer({
   post,
   currentUser,
   postId,
-  isLoggedin,
+  isLoggedIn,
 }: LikeContainerProps) {
+
+
   const fetcher = useFetcher()
   const userLikedPost = likes.find(({ userId }) => userId === currentUser) ? true : false
+
 
   const [likeCount, setLikeCount] = useState(post?._count?.likes || 0)
   const [isLiked, setIsLiked] = useState(userLikedPost || false)
@@ -42,10 +45,13 @@ export default function LikeContainer({
 
     fetcher.submit({ userId: currentUser, postId }, { method, action: `/posts/${postId}/like` })
   }
+  console.log('userlikedpost', userLikedPost);
+  console.log("currentUser at like container", currentUser);
 
+  console.log('isloggedin at like container', isLoggedIn)
   return (
     <>
-      {isLoggedin ? (
+      {currentUser ? (
         <button
           ref={iconButtonRef}
           type="button"

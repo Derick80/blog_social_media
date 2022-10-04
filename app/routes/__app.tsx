@@ -6,7 +6,7 @@ import { getUser } from '~/utils/auth.server'
 import { getCategoryCounts } from '~/utils/categories.server'
 import { getTotalPosts } from '~/utils/functions.server'
 import { getLikeCounts } from '~/utils/like.server'
-import { getPosts,getMostPopularPost } from '~/utils/post.server'
+import { getPosts, getMostPopularPost } from '~/utils/post.server'
 import { QueriedUser } from '~/utils/types.server'
 
 export const meta: MetaFunction = () => ({
@@ -49,8 +49,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     firstName,
     userRole,
     catCount,
-      totalPosts,
-      mostPopularPost,
+    totalPosts,
+    mostPopularPost,
   }
   return json(data)
 }

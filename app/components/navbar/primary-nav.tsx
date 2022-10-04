@@ -10,7 +10,7 @@ type PrimaryNavProps = {
 }
 export default function NavigationBar({ data }: PrimaryNavProps) {
   return (
-    <header className="w-full bg-black/10 p-1 dark:bg-white/10 md:p-2">
+    <header className="w-full md:p-2">
       <nav className="flex flex-col items-center md:flex-row">
         <NavLink to="/" className="mb-2 flex items-center md:mb-0">
           <svg

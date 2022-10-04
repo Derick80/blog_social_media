@@ -21,7 +21,9 @@ export default function SidebarContainer({
   mostPopularPost,
 }: SidebarContainerProps) {
   return (
-<div>      <SideBarStats totalPosts={totalPosts} mostPopularPost={mostPopularPost} />
+    <div>
+      {' '}
+      <SideBarStats totalPosts={totalPosts} mostPopularPost={mostPopularPost} />
       <SidebarNav
         isLoggedIn={isLoggedIn}
         userRole={userRole}

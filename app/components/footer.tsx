@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="sticky bottom-0 col-start-1 col-span-full row-start-7 row-end-7 flex w-full justify-center space-x-4 pb-2 md:space-x-8">
+    <footer className="sticky bottom-0 col-span-6 row-auto flex w-full justify-center space-x-4 pb-2 md:space-x-8 bg-black/10 dark:bg-white/20">
       <div>
         <a
           href="https://www.linkedin.com/in/dhoskinson"

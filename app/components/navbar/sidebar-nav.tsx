@@ -41,7 +41,7 @@ export default function SidebarNav({ isLoggedIn, firstName, userRole, userId }: 
               <NavLink to="/login" className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}>
                 <li className="nav-li">
                   <span className="material-symbols-outlined">login</span>
-                  <p className="hidden md:block">To Like or Comment Please Sign In</p>
+                  <p className="hidden md:block">Sign In</p>
                 </li>
               </NavLink>
             </>

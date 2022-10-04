@@ -1,21 +1,20 @@
 import { NavLink, useFetcher } from '@remix-run/react'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { QueriedPost } from '~/utils/types.server'
+import Button from '../shared/button'
 
 type SideBarStatsProps = {
   totalPosts: number
   mostPopularPost: QueriedPost
 }
 export default function SideBarStats({ totalPosts, mostPopularPost }: SideBarStatsProps) {
-  const hottest = useFetcher();
+  const hottest = useFetcher()
 
   useEffect(() => {
-    if (hottest.type === "init") {
-      hottest.load("/?index");
+    if (hottest.type === 'init') {
+      hottest.load('/?index')
     }
-  }, [hottest]);
-
-
+  }, [hottest])
 
   return (
     <div>
@@ -29,12 +28,11 @@ export default function SideBarStats({ totalPosts, mostPopularPost }: SideBarSta
           <p> {totalPosts}</p>
         </div>
 
-        <button className="hover:cursor-pointer">
+        <Button type="submit" variant="outlined">
           <NavLink to={`/posts/${mostPopularPost.id}`}>
-            <label className="text-base">Hottest Post</label>
-
+            <label>Hottest Post</label>
           </NavLink>
-        </button>
+        </Button>
         <div className="flex md:order-2"></div>
       </div>
     </div>

@@ -14,7 +14,8 @@ I built my personal blog using ideas and code inspired by or directly written by
 - [TypeScript](https://www.typescriptlang.org)
 
 ## Tutorials I used
-
+ className="justify-center rounded-lg bg-cover bg-center bg-no-repeat md:rounded-xl"
+      style={{ backgroundImage: `url(${post.postImg})` }}
 - [Image uploads and other Methods](https://youtu.be/Mx9Xsq9JNXo)
   - [GitHub for above](https://github.com/sabinadams/kudos-remix-mongodb-prisma/tree/main/app)
 - [Image uploads and other Methods text](https://www.prisma.io/blog/fullstack-remix-prisma-mongodb-3-By5pmN5Nzo1v)

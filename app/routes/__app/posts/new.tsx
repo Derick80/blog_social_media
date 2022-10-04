@@ -160,7 +160,7 @@ export default function NewPostRoute() {
     })
   }
   return (
-    <div className="flex justify-center">
+    <div className="flex w-full justify-center">
       <div>{formError}</div>
       <div>Write a new post</div>
       <form

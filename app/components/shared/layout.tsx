@@ -18,9 +18,7 @@ export type LayoutProps = {
       title: string
       id: string
     }
-
   }
-
 
   children: React.ReactNode
 }
@@ -28,14 +26,11 @@ export type LayoutProps = {
 // removed this from the div grid-rows-[(1fr, 200px, 1fr, 1fr)] grid-cols-[(1fr, 2fr, 2fr, 1fr)] grid gap-4
 export default function Layout({ data, children }: LayoutProps) {
   return (
-    <div className="col-start-1 col-span-full md:col-start-1 md:col-end-6 row-start-1 m-0 grid gap-4 p-2 md:p-6">
-      <div className='col-start-1 col-span-6 row-start-1 row-end-1'>
-
-
-    <NavigationBar data={data} />
-
+    <div className="col-start-1 row-start-1 m-0 md:grid gap-4 p-2 md:col-start-1 md:col-end-6 md:p-6 justify-center">
+      <div className="col-span-6 col-start-1 row-start-1 row-end-1">
+        <NavigationBar data={data} />
       </div>
-<div className='col-start-1 col-span-full md:row-start-2 md:col-end-1 row-start-7'>
+      {/* <div className='col-start-1 col-span-full md:row-start-2 md:col-end-1 row-start-7'>
 <SidebarContainer
         isLoggedIn={data.isLoggedIn}
         userRole={data.userRole}
@@ -45,19 +40,11 @@ export default function Layout({ data, children }: LayoutProps) {
         mostPopularPost={data.mostPopularPost}
       />
 
-</div>
+</div> */}
 
-
-
-      <div className='col-start-1 col-span-full md:col-start-2 md:col-end-6 row-start-2'>
-
-      <div className="flex flex-wrap justify-center text-sm md:text-base pb-2 md:pb-4">
-        {data?.catCount?.map((category) => (
-          <CategoryCount key={category.id} category={category} />
-        ))}
+      <div className="col-span-full col-start-1 row-start-2 items-center md:col-start-2 md:col-end-6 md:justify-center">
+        {children}
       </div>
-
-        {children}</div>
       <Footer />
     </div>
   )
