@@ -37,7 +37,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const { userPosts } = await getPosts()
   const catCount = await getCategoryCounts()
 
-
   const { heroPost } = await getHeroPost()
   console.log('isloggedin __app index route', isLoggedIn)
   console.log(userRole)
@@ -50,7 +49,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   const data: LoaderData = {
-
     heroPost,
     userId,
     userRole,

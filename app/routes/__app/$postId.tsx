@@ -5,13 +5,7 @@ import React, { useState } from 'react'
 import { ImageUploader } from '~/components/image-uploader'
 import FormField from '~/components/shared/form-field'
 import { getUser, getUserId } from '~/utils/auth.server'
-import {
-  deletePost,
-  getPost,
-  likePost,
-
-  updatePost,
-} from '~/utils/post.server'
+import { deletePost, getPost, likePost, updatePost } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
 import { getCategories } from '~/utils/categories.server'
 
@@ -47,9 +41,12 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const isLoggedIn = user === null ? false : true
   const { allCategories } = await getCategories()
 
-  const postId = params.postId as string
+  const postId = params.postId
   const currentUser = user?.id as string
 
+  if (!postId) {
+    return json({ postId: null }, { status: 404 })
+  }
   const post = userId ? await getPost({ id: postId }) : null
   const likeCount = post?.likes.length
   if (!post) {
@@ -168,7 +165,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 }
 export default function PostRoute() {
-  const { data, categories,  } = useLoaderData()
+  const { data, categories } = useLoaderData()
   const actionData = useActionData()
   const [errors] = useState(actionData?.errors || {})
 
@@ -212,7 +209,7 @@ export default function PostRoute() {
   return (
     <>
       <div>
-postidpage
+        postidpage
         <form method="post" className="form-primary">
           <FormField
             htmlFor="id"
@@ -301,22 +298,17 @@ postidpage
             </select>
           </div>
           <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
+          <div>
+            <button type="submit" name="_action" value="save">
+              Save Post
+            </button>
 
-            <div>
-              <button type="submit" name="_action" value="save">
-                Save Post
-              </button>
+            <button type="submit" name="_action" value="delete">
+              Delete
+            </button>
 
-              <button type="submit" name="_action" value="delete">
-                Delete
-              </button>
-
-              <div>
-
-
-              </div>
-            </div>
-
+            <div></div>
+          </div>
         </form>
       </div>
     </>

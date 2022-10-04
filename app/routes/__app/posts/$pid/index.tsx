@@ -1,9 +1,10 @@
 import { json, LoaderFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import invariant from 'tiny-invariant'
 import PostContent from '~/components/post-content'
-import { getUser, getUserId } from '~/utils/auth.server'
+import { getUser } from '~/utils/auth.server'
 import { getPost } from '~/utils/post.server'
-import { QueriedPost, SerializedPost } from '~/utils/types.server'
+import { QueriedPost } from '~/utils/types.server'
 type LoaderData = {
   post: QueriedPost
   likeCount: number
@@ -13,16 +14,20 @@ type LoaderData = {
 }
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await getUser(request)
-  const currentUser = user?.id as string
+  const currentUser = user?.id
 
   const isOwner = user?.role == 'ADMIN'
   const isLoggedIn = user === null ? false : true
-
+  invariant(params.pid, 'Post id is required')
   const post = await getPost({ id: params.pid as string })
   const likeCount = post?.likes.length as number
-if(!post){
-  throw new Response('Post not found', { status: 404 })
-}
+  if (!post) {
+    throw new Response('Post not found', { status: 404 })
+  }
+
+  if (!currentUser) {
+    throw new Response('Not authorized', { status: 401 })
+  }
   const data: LoaderData = {
     post,
     likeCount,

@@ -8,7 +8,7 @@ import {
   ScrollRestoration,
   useCatch,
 } from '@remix-run/react'
-import spriteSrc from  '~/sprites.svg'
+import spriteSrc from '~/sprites.svg'
 import styles from './styles/app.css'
 export const meta: MetaFunction = () => {
   const description = `See what I've been up to`
@@ -23,10 +23,7 @@ export const meta: MetaFunction = () => {
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
-  { rel: 'preload',
-href: spriteSrc,
-as: 'image',
-}
+  { rel: 'preload', href: spriteSrc, as: 'image' },
 
   // {
   //   rel: 'preload',

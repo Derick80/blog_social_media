@@ -56,10 +56,7 @@ export default function NavigationBar({ data }: PrimaryNavProps) {
                 </li>
                 <p className="hidden md:block">Create</p>
               </NavLink>
-              <NavLink
-                to="drafts"
-                className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}
-              >
+              <NavLink to="drafts" className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}>
                 <li className="nav-li">
                   <span className="material-symbols-outlined">drafts</span>
                 </li>

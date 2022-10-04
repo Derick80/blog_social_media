@@ -15,9 +15,7 @@ type PostProps = {
 export default function PostContent({ post, currentUser, likeCount, isLoggedIn }: PostProps) {
   const likeCounts = post.likes.length as number
   return (
-    <article
-      key={post.id}
-    >
+    <article key={post.id}>
       <div className="relative flex min-h-full max-w-prose flex-col overflow-hidden rounded-md border border-black transition-shadow duration-200 ease-in-out">
         <h1 className="mt-6 border-b-2 text-left text-2xl font-semibold uppercase md:text-4xl">
           {post.title}
@@ -49,19 +47,14 @@ export default function PostContent({ post, currentUser, likeCount, isLoggedIn }
             className="object-fit h-full w-full md:object-cover"
           />
         </div>
-        <div className="flex flex-col gap-5">
-          {post.description}
-          </div>
+        <div className="flex flex-col gap-5">{post.description}</div>
         <p className="mt-2 indent-4 md:mt-4 md:text-lg md:leading-7">{post.body}</p>
       </div>
       {currentUser === post?.userId ? (
         <div className="flex flex-row gap-5">
           <Link to={`/${post.id}`} className="flex">
-          <Button type="button" >
-              Edit
-            </Button>
+            <Button type="button">Edit</Button>
           </Link>
-
         </div>
       ) : null}
     </article>

@@ -8,7 +8,7 @@ import { SelectBox } from '~/components/shared/select-box'
 import { getUser, getUserId } from '~/utils/auth.server'
 import { pronouns } from '~/utils/constants'
 import { getProfile, updateProfile } from '~/utils/profile.server'
-import {  validateEmail, validateName, validateText } from '~/utils/validators.server'
+import { validateEmail, validateName, validateText } from '~/utils/validators.server'
 import { ImageUploader } from '~/components/image-uploader'
 
 type LoaderData = {
@@ -50,7 +50,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const firstName = formData.get('firstName')
   const lastName = formData.get('lastName')
   const bio = formData.get('bio')
-const title = formData.get('title')
+  const title = formData.get('title')
   const currentLocation = formData.get('currentLocation')
   const pronouns = formData.get('pronouns')
   const occupation = formData.get('occupation')
@@ -134,7 +134,6 @@ export default function ProfileRoute() {
     postImg: data.profile.profilePicture,
     email: data.profile.email || '',
     title: data.profile.title || '',
-
   })
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>,

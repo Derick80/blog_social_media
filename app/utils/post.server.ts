@@ -2,13 +2,11 @@ import { Post, Prisma, User } from '@prisma/client'
 import { prisma } from './prisma.server'
 import type { CreateOrEditPost, UpdatePost } from './types.server'
 
-
-
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
-where:{
-  published: true
-},
+    where: {
+      published: true,
+    },
     include: {
       categories: true,
 
@@ -52,10 +50,8 @@ export async function getPost({ id }: Pick<Post, 'id'>) {
   return post
 }
 
-
 export async function getHeroPost() {
   const heroPost = await prisma.post.findMany({
-
     include: {
       categories: true,
 
@@ -112,7 +108,6 @@ export async function createDraft({
   })
 }
 
-
 export async function getUserDrafts(userId: string) {
   const userDrafts = await prisma.post.findMany({
     where: {
@@ -120,10 +115,7 @@ export async function getUserDrafts(userId: string) {
       published: false,
     },
     include: {
-
       categories: true,
-
-
     },
     orderBy: {
       createdAt: 'asc',

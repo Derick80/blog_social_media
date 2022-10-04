@@ -55,8 +55,6 @@ export interface UpdateCategoryForm {
   name: string
 }
 
-
-
 export type QueriedPost = Partial<Post> & {
   createdAt: string | Date
   id: string
@@ -72,7 +70,6 @@ export type QueriedPost = Partial<Post> & {
     firstName: string
     lastName: string
   }
-
 }
 
 export type QueriedUser = Partial<User>

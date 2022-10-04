@@ -86,10 +86,7 @@ export default function Categories() {
             onChange={(event: any) => handleInputChange(event, 'name')}
             error={errors?.name}
           />
-          <div>
-
-          </div>
-
+          <div></div>
         </form>
       </div>
       <CategoryContainer category={data.categories} />

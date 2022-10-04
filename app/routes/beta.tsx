@@ -11,7 +11,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const data = {
     isLoggedIn,
-
   }
   return json(data)
 }
@@ -20,10 +19,7 @@ export default function BetaRoute() {
   const data = useLoaderData()
   return (
     <div className="flex flex-wrap items-center justify-center">
-    <Sprite name="outline:home" className="w-5 h-5 "
-
-    />
-
+      <Sprite name="outline:home" className="h-5 w-5 " />
     </div>
   )
 }
