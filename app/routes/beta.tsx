@@ -17,11 +17,14 @@ export const loader: LoaderFunction = async ({ request }) => {
   const isLoggedIn = user !== null
   const { allCategories } = await getCategories()
   const catCount = await getCategoryCounts()
+  console.log(catCount);
+
 
   const data = {
     isLoggedIn,
     allCategories,
     catCount,
+
   }
   return json(data)
 }
