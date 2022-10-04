@@ -14,6 +14,9 @@ I built my personal blog using ideas and code inspired by or directly written by
 - [TypeScript](https://www.typescriptlang.org)
 
 ## Tutorials I used
+
+Sprite Generation
+https://github.com/nakleiderer/remix-sprites-example
  className="justify-center rounded-lg bg-cover bg-center bg-no-repeat md:rounded-xl"
       style={{ backgroundImage: `url(${post.postImg})` }}
 - [Image uploads and other Methods](https://youtu.be/Mx9Xsq9JNXo)

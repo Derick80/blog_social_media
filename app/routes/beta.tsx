@@ -1,5 +1,6 @@
 import { LoaderFunction, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import Sprite from '~/Sprite'
 import { getUser } from '~/utils/auth.server'
 type LoaderData = {
   isLoggedIn: boolean
@@ -18,7 +19,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function BetaRoute() {
   const data = useLoaderData()
   return (
-    <div className="flex flex-wrap items-center md:block">
+    <div className="flex flex-wrap items-center justify-center">
+    <Sprite name="outline:home" className="w-5 h-5 "
+
+    />
 
     </div>
   )
