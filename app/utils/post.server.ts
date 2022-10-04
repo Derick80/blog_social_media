@@ -167,6 +167,7 @@ export async function createDraft({
   postImg,
   userId,
   categories,
+  createdBy,
 }: Omit<CreateOrEditPost, 'id' & 'userId'> & { userId: User['id'] }) {
   await prisma.post.create({
     data: {
@@ -174,7 +175,7 @@ export async function createDraft({
       description,
       body,
       postImg,
-
+      createdBy,
       user: {
         connect: {
           id: userId,
@@ -219,7 +220,7 @@ export async function getUserDrafts(userId: string) {
     },
     include: {
       user: {
-        select: { email: true, firstName: true, lastName: true },
+        select: { role: true, email: true, firstName: true, lastName: true },
       },
       categories: true,
       comments: {

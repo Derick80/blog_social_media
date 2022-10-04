@@ -1,16 +1,18 @@
 import { Link } from '@remix-run/react'
 import { format } from 'date-fns'
-import { QueriedPost, SerializedPost } from '~/utils/types.server'
+import { QueriedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
 
 type PostProps = {
   post: QueriedPost
   currentUser: string
+  isLoggedIn: boolean
   likeCount: number
 }
 
-export default function PostContent({ post, currentUser, likeCount }: PostProps) {
+export default function PostContent({ post, currentUser, likeCount, isLoggedIn }: PostProps) {
+  const likeCounts = post.likes.length as number
   return (
     <article
       key={post.id}
@@ -28,8 +30,9 @@ export default function PostContent({ post, currentUser, likeCount }: PostProps)
             postId={post.id}
             likes={post.likes}
             currentUser={currentUser}
-            likeCount={likeCount}
+            likeCount={likeCounts}
             post={post}
+            isLoggedIn={isLoggedIn}
           />
         </div>
         <div className="mb-4 flex flex-row border-t-2 border-black dark:border-white md:mb-8">
@@ -48,6 +51,20 @@ export default function PostContent({ post, currentUser, likeCount }: PostProps)
         </div>
         <p className="mt-2 indent-4 md:mt-4 md:text-lg md:leading-7">{post.body}</p>
       </div>
+      {currentUser === post?.userId ? (
+        <div className="flex flex-row gap-5">
+          <Link to={`/${post.id}`} className="flex">
+            <button type="button" className="btn-primary">
+              Edit
+            </button>
+          </Link>
+          <Link to={`/delete/${post.id}`} className="flex">
+            <button type="button" className="btn-primary">
+              Delete
+            </button>
+          </Link>
+        </div>
+      ) : null}
     </article>
   )
 }

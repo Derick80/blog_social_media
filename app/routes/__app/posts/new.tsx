@@ -62,12 +62,14 @@ const badRequest = (data: ActionData) => {
   json(data, { status: 400 })
 }
 export const action: ActionFunction = async ({ request }) => {
+  const user = await getUser(request)
   const userId = await requireUserId(request)
   const formData = await request.formData()
   const title = formData.get('title')
   const body = formData.get('body')
   const description = formData.get('description')
   const postImg = formData.get('postImg')
+  const createdBy = user?.firstName as string
   const categories = formData.getAll('categories') as []
 
   // || typeof body !== "string" || typeof postImg !== "string"
@@ -107,6 +109,7 @@ export const action: ActionFunction = async ({ request }) => {
   await createDraft({
     ...fields,
     userId,
+    createdBy,
     categories: converted,
   })
 

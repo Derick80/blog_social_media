@@ -57,7 +57,7 @@ export default function NavigationBar({ data }: PrimaryNavProps) {
                 <p className="hidden md:block">Create</p>
               </NavLink>
               <NavLink
-                to="/drafts"
+                to="/posts/drafts"
                 className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}
               >
                 <li className="nav-li">
@@ -70,15 +70,6 @@ export default function NavigationBar({ data }: PrimaryNavProps) {
 
           {data.isLoggedIn ? (
             <>
-              <NavLink
-                to="/account"
-                className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}
-              >
-                <li className="nav-li">
-                  <span className="material-symbols-outlined">settings</span>
-                </li>
-                <p className="hidden md:block">Settings</p>
-              </NavLink>
               <li className="nav-li text-xs md:text-base">
                 <p>{data.firstName}</p>
 

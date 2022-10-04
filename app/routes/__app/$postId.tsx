@@ -42,6 +42,7 @@ type LoaderData = {
   postId: string
   likeCount: number[]
   currentUser: string
+  isLoggedIn: boolean
 }
 
 // const badRequest = (data: ActionData) => {
@@ -50,12 +51,13 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ params, request }) => {
   const userId = (await getUserId(request)) as string
   const user = await getUser(request)
+  const isLoggedIn = user === null ? false : true
   const { allCategories } = await getCategories()
 
   const postId = params.postId as string
   const currentUser = user?.id as string
 
-  const post = userId ? await getPost({ id: postId, userId }) : null
+  const post = userId ? await getPost({ id: postId }) : null
   const likeCount = post?.likes.length
   if (!post) {
     throw new Response('Post not found', { status: 404 })
@@ -80,12 +82,14 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
   const data = {
     post,
+    isLoggedIn,
     isPublished,
     postId,
     categories,
     allCategories,
     catResults,
     likeCount,
+    currentUser,
   }
   return json({
     data,
@@ -95,6 +99,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const postId = params.postId as string
   const userId = (await getUserId(request)) as string
+  const user = await getUser(request)
   const formData = await request.formData()
   const id = formData.get('id')
   const currentUser = formData.get('currentUser')
@@ -103,6 +108,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const description = formData.get('description')
   const body = formData.get('body')
   const postImg = formData.get('postImg')
+  const createdBy = formData.get('createdBy') as string
   const categories = formData.getAll('categories') as []
 
   const action = formData.get('_action')
@@ -150,9 +156,10 @@ export const action: ActionFunction = async ({ request, params }) => {
         description,
         body,
         postImg,
+        createdBy,
         categories: converted,
       })
-      return redirect(`/${id}`)
+      return redirect(`/`)
     case 'updateAndPublish':
       if (
         typeof id !== 'string' ||
@@ -172,6 +179,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         description,
         body,
         postImg,
+        createdBy,
         categories: converted,
       })
       return redirect(`/`)
@@ -227,7 +235,8 @@ export default function PostRoute() {
     body: data.post.body,
     published: data.post.published,
     postImg: data.post.postImg,
-    categories: actionData?.fields?.categories || [],
+    createdBy: data.post.createdBy,
+    categories: data.catResults || categories,
   })
 
   const handleInputChange = (
@@ -278,6 +287,15 @@ export default function PostRoute() {
             error={errors?.id}
           />{' '}
           <FormField
+            htmlFor="createdBy"
+            label=""
+            name="createdBy"
+            type="hidden"
+            value={formData.createdBy}
+            onChange={(event) => handleInputChange(event, 'createdBy')}
+            error={errors?.createdBy}
+          />{' '}
+          <FormField
             htmlFor="title"
             label="Title"
             name="title"
@@ -306,10 +324,14 @@ export default function PostRoute() {
           <p>
             <label>
               Content
-              <textarea
+              <FormField
+                htmlFor="body"
+                label="Write Your Post"
                 name="body"
                 value={formData.body}
                 onChange={(event: any) => handleInputChange(event, 'body')}
+                aria-invalid={Boolean(actionData?.fieldErrors?.body) || undefined}
+                aria-errormessage={actionData?.fieldErrors?.body ? 'body-error' : undefined}
               />
             </label>
           </p>
@@ -327,9 +349,10 @@ export default function PostRoute() {
             <select
               name="categories"
               multiple={true}
+              className="form-field-primary min-h-full"
               onChange={(event) => handleInputChange(event, 'categories')}
             >
-              {catResults.map((option) => (
+              {data.catResults.map((option) => (
                 <option
                   key={option.id}
                   value={option.name}
@@ -341,7 +364,6 @@ export default function PostRoute() {
             </select>
           </div>
           <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
-          <CategoryContainer categories={categories} isPost={true} />
           {formData.published ? (
             <>
               <div>

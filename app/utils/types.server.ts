@@ -26,6 +26,7 @@ export interface CreateOrEditPost {
   description: string
   body: string
   postImg: string
+  createdBy: string
   categories: Array<{
     name: string
   }>
