@@ -55,16 +55,7 @@ export interface UpdateCategoryForm {
   name: string
 }
 
-export type SPost = Partial<Post> & {
-  createdBy?: string | null
-  likeCount?: number | null
-  isLiked?: boolean | null
-  commentCount?: number | null
-  comments?: Post[]
-  categories?: Category[]
-  likes?: Like[]
-  user?: User
-}
+
 
 export type QueriedPost = Partial<Post> & {
   createdAt: string | Date
@@ -81,15 +72,13 @@ export type QueriedPost = Partial<Post> & {
     firstName: string
     lastName: string
   }
-  commentCount?: number | null
-  comments?: Post[]
+
 }
 
 export type QueriedUser = Partial<User>
 
-export type UserProfileToSerialize = Partial<Profile> & {
-  birthDay?: string | null
-}
+export type UserProfileToSerialize = Partial<Profile>
 
-export type QueriedUserProfile = SerializeFrom<UserProfileToSerialize>
-export type SerializedPost = SerializeFrom<SPost>
+export type GetProfileType = Omit<Profile, 'createdAt' | 'updatedAt'>
+
+export type QueriedUserProfile = SerializeFrom<GetProfileType>

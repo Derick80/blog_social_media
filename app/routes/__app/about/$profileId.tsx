@@ -2,14 +2,13 @@ import type { Profile, Pronouns } from '@prisma/client'
 import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { useActionData, useLoaderData } from '@remix-run/react'
-import { format } from 'date-fns'
 import React, { useState } from 'react'
 import FormField from '~/components/shared/form-field'
 import { SelectBox } from '~/components/shared/select-box'
 import { getUser, getUserId } from '~/utils/auth.server'
 import { pronouns } from '~/utils/constants'
 import { getProfile, updateProfile } from '~/utils/profile.server'
-import { validateDate, validateEmail, validateName, validateText } from '~/utils/validators.server'
+import {  validateEmail, validateName, validateText } from '~/utils/validators.server'
 import { ImageUploader } from '~/components/image-uploader'
 
 type LoaderData = {
@@ -51,26 +50,13 @@ export const action: ActionFunction = async ({ request, params }) => {
   const firstName = formData.get('firstName')
   const lastName = formData.get('lastName')
   const bio = formData.get('bio')
-  // @ts-ignore
-  const birthDay = new Date(formData.get('birthDay'))
+const title = formData.get('title')
   const currentLocation = formData.get('currentLocation')
   const pronouns = formData.get('pronouns')
   const occupation = formData.get('occupation')
   const postImg = formData.get('postImg')
   const email = formData.get('email')
-  console.log(
-    'birthday',
-    birthDay,
-    id,
-    firstName,
-    lastName,
-    bio,
-    currentLocation,
-    pronouns,
-    occupation,
-    postImg,
-    email
-  )
+
   if (
     typeof id !== 'string' ||
     typeof firstName !== 'string' ||
@@ -81,6 +67,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     typeof pronouns !== 'string' ||
     typeof userId !== 'string' ||
     typeof email !== 'string' ||
+    typeof title !== 'string' ||
     typeof postImg !== 'string'
   ) {
     return json({ error: 'invalid form data' }, { status: 400 })
@@ -93,7 +80,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     occupation: validateText(occupation as string),
     pronouns: validateName(pronouns),
     email: validateEmail(email as string),
-    birthDay: validateDate(birthDay as Date),
+    title: validateText(title as string),
   }
 
   if (Object.values(errors).some(Boolean))
@@ -108,7 +95,7 @@ export const action: ActionFunction = async ({ request, params }) => {
           occupation,
           pronouns,
           email,
-          birthDay,
+          title,
         },
         form: action,
       },
@@ -121,12 +108,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     firstName: firstName,
     lastName: lastName,
     bio: bio,
-    birthDay,
     currentLocation: currentLocation,
     occupation: occupation,
     pronouns: pronouns as Pronouns,
     profilePicture: postImg,
     email: email,
+    title: title,
   })
   return redirect('/about')
 }
@@ -146,6 +133,8 @@ export default function ProfileRoute() {
     occupation: data.profile.occupation,
     postImg: data.profile.profilePicture,
     email: data.profile.email || '',
+    title: data.profile.title || '',
+
   })
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>,
@@ -209,6 +198,16 @@ export default function ProfileRoute() {
             error={errors?.lastName}
           />
           <FormField
+            htmlFor="title"
+            label="Title"
+            name="title"
+            type="textarea"
+            className="form-field-primary"
+            value={formData.title}
+            onChange={(event: any) => handleInputChange(event, 'title')}
+            error={errors?.title}
+          />
+          <FormField
             htmlFor="bio"
             label="Bio"
             name="bio"
@@ -218,18 +217,7 @@ export default function ProfileRoute() {
             onChange={(event: any) => handleInputChange(event, 'bio')}
             error={errors?.bio}
           />
-          <FormField
-            htmlFor="birthDay"
-            label="Birthday"
-            name="birthDay"
-            type="date"
-            className="form-field-primary"
-            value={format(new Date(formData.birthDay), 'yyyy-MM-dd')}
-            onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLFormElement>) =>
-              handleInputChange(event, 'birthDay')
-            }
-            error={errors?.birthDay}
-          />
+
           <FormField
             htmlFor="currentLocation"
             label="Curent Location"

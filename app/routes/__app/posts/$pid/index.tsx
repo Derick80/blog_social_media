@@ -20,7 +20,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const post = await getPost({ id: params.pid as string })
   const likeCount = post?.likes.length as number
-
+if(!post){
+  throw new Response('Post not found', { status: 404 })
+}
   const data: LoaderData = {
     post,
     likeCount,
@@ -34,7 +36,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export default function PostRoute() {
   const data = useLoaderData<typeof loader>()
   return (
-    <div className="m-0 gap-4 p-2 md:flex md:p-6">
+    <>
+      pid
       {data.post && (
         <PostContent
           key={data.post.id}
@@ -44,6 +47,6 @@ export default function PostRoute() {
           isLoggedIn={data.isLoggedIn}
         />
       )}
-    </div>
+    </>
   )
 }

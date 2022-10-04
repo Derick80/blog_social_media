@@ -57,7 +57,7 @@ export default function NavigationBar({ data }: PrimaryNavProps) {
                 <p className="hidden md:block">Create</p>
               </NavLink>
               <NavLink
-                to="/posts/drafts"
+                to="drafts"
                 className={({ isActive }) => ` ${isActive ? 'border-b-2' : ''}`}
               >
                 <li className="nav-li">

@@ -2,23 +2,16 @@ import type { LoaderFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '~/utils/auth.server'
-import { getHeroPost, getMostPopularPost, getPost, getPosts } from '~/utils/post.server'
+import { getHeroPost, getPosts } from '~/utils/post.server'
 import PostPreview from '~/components/post-preview'
 import { getCategoryCounts } from '~/utils/categories.server'
 import CategoryCount from '~/components/category-count'
 import { QueriedPost, QueriedUser } from '~/utils/types.server'
-import Sidebar from '~/components/navbar/sidebar-stats'
-import { getHighestField, getTotalPosts } from '~/utils/functions.server'
-import { getLikeCounts } from '~/utils/like.server'
-import SidebarContainer from '~/components/navbar/sidebar-container'
+
 import HeroPost from '~/components/hero-post-preview'
 
 type LoaderData = {
   userPosts: QueriedPost[]
-  mostPopularPost: {
-    title: string
-    id: string
-  }
   catCount: Awaited<ReturnType<typeof getCategoryCounts>>
   isOwner: boolean
   isLoggedIn: boolean
@@ -27,11 +20,10 @@ type LoaderData = {
   firstName: string
   userRole: string
   userId: string
-  totalPosts: number
+
   heroPost: Awaited<typeof getHeroPost> | QueriedPost[]
 }
 
-type StatsLoader = Partial<LoaderData>
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
   const userId = user?.id as string
@@ -45,10 +37,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const { userPosts } = await getPosts()
   const catCount = await getCategoryCounts()
 
-  const totalPosts = getTotalPosts(userPosts)
-  const maxLikes = await getLikeCounts()
-  const mostPopularPostId = maxLikes._max?.postId as string
-  const mostPopularPost = await getMostPopularPost({ id: mostPopularPostId })
 
   const { heroPost } = await getHeroPost()
   console.log('isloggedin __app index route', isLoggedIn)
@@ -60,20 +48,13 @@ export const loader: LoaderFunction = async ({ request }) => {
       status: 404,
     })
   }
-  if (!mostPopularPost) {
-    throw new Response(`Missing one of 4 requests`, {
-      status: 404,
-    })
-  }
 
   const data: LoaderData = {
-    totalPosts,
-    mostPopularPost,
+
     heroPost,
     userId,
     userRole,
     userPosts,
-    user,
     catCount,
     isOwner,
     isLoggedIn,
@@ -86,7 +67,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Home() {
   const data = useLoaderData<LoaderData>()
   const {
-    mostPopularPost,
     heroPost,
     userPosts,
     catCount,
@@ -94,7 +74,6 @@ export default function Home() {
     isLoggedIn,
     currentUser,
     firstName,
-    totalPosts,
     userRole,
     userId,
   } = data

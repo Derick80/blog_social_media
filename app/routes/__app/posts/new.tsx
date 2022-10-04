@@ -9,7 +9,6 @@ import { getUser, requireUserId } from '~/utils/auth.server'
 import { createDraft } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
 import { getCategories } from '~/utils/categories.server'
-import Sectionheader from '~/components/shared/section-header'
 export function ErrorBoundary() {
   return (
     <div>Sorry, something went wrong loading the create new Post page. Please try again later!</div>
@@ -113,7 +112,7 @@ export const action: ActionFunction = async ({ request }) => {
     categories: converted,
   })
 
-  return redirect('drafts')
+  return redirect('/')
 }
 
 export default function NewPostRoute() {

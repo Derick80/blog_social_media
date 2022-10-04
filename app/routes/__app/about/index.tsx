@@ -1,11 +1,8 @@
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import { format } from 'date-fns'
-import React from 'react'
 import { getUser } from '~/utils/auth.server'
-import { getOwnerProfile, getUserProfile } from '~/utils/profile.server'
-import Layout from '~/components/shared/layout'
+import { getOwnerProfile } from '~/utils/profile.server'
 import ProfileContent from '~/components/profile-content'
 import { QueriedUserProfile } from '~/utils/types.server'
 
@@ -25,7 +22,7 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData | undefined }) =
 }
 
 type LoaderData = {
-  userProfile: QueriedUserProfile
+  userProfile: Omit<QueriedUserProfile, 'createdAt' & 'updatedAt'>
   firstName: string
   isLoggedIn: boolean
   isOwner: boolean
@@ -33,8 +30,7 @@ type LoaderData = {
 }
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
-  const userId = user?.id as string
-  const isLoggedIn = user?.role === 'ADMIN' || user?.role === 'USER' ? true : false
+  const isLoggedIn = user === null ? false : true
   const firstName = user?.firstName as string
   const userRole = user?.role as string
 

@@ -9,15 +9,10 @@ import {
   deletePost,
   getPost,
   likePost,
-  publishPost,
-  removeCategoryFromPost,
-  unpublishPost,
-  updateAndPublish,
+
   updatePost,
 } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
-import CategoryContainer from '~/components/category-container'
-import Sectionheader from '~/components/shared/section-header'
 import { getCategories } from '~/utils/categories.server'
 
 type LoaderData = {
@@ -27,7 +22,6 @@ type LoaderData = {
     title: string
     body: string
     postImg: string
-    published: boolean
     user: {
       email: string
     }
@@ -38,7 +32,6 @@ type LoaderData = {
 
   allCategories: Array<{ id: string; name: string }>
 
-  isPublished: boolean
   postId: string
   likeCount: number[]
   currentUser: string
@@ -62,7 +55,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   if (!post) {
     throw new Response('Post not found', { status: 404 })
   }
-  const isPublished = post.published
   const email = post.user.email
   if (email != user?.email) {
     throw new Response('You are not authorized to edit this post', {
@@ -80,10 +72,9 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     }
   })
 
-  const data = {
+  const data: LoaderData = {
     post,
     isLoggedIn,
-    isPublished,
     postId,
     categories,
     allCategories,
@@ -103,7 +94,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData()
   const id = formData.get('id')
   const currentUser = formData.get('currentUser')
-  const published = formData.get('published')
   const title = formData.get('title')
   const description = formData.get('description')
   const body = formData.get('body')
@@ -160,58 +150,13 @@ export const action: ActionFunction = async ({ request, params }) => {
         categories: converted,
       })
       return redirect(`/`)
-    case 'updateAndPublish':
-      if (
-        typeof id !== 'string' ||
-        typeof title !== 'string' ||
-        typeof description !== 'string' ||
-        typeof body !== 'string' ||
-        typeof userId !== 'string' ||
-        typeof postImg !== 'string'
-      ) {
-        return json({ error: 'invalid form data update and publhs' }, { status: 400 })
-      }
 
-      await updateAndPublish({
-        id,
-        userId,
-        title,
-        description,
-        body,
-        postImg,
-        createdBy,
-        categories: converted,
-      })
-      return redirect(`/`)
-    case 'publish':
-      if (typeof id !== 'string') {
-        return json({ error: 'invalid form data publish' }, { status: 400 })
-      }
-      await publishPost(id)
-      return redirect('/')
-    case 'unpublish':
-      if (typeof id !== 'string') {
-        return json({ error: 'invalid form data unpublish' }, { status: 400 })
-      }
-      await unpublishPost(id)
-      return redirect('/drafts')
     case 'delete':
       if (typeof id !== 'string') {
         return json({ error: 'invalid form data delete' }, { status: 400 })
       }
       await deletePost(id)
-      return redirect('drafts')
-    // case 'removeCategory':
-    //   if (typeof id !== 'string') {
-    //     return json({
-    //       error: 'invalid form data removeCategory'
-    //     })
-    //   }
-    //   await removeCategoryFromPost(postId,
-
-    //     )
-
-    // return redirect(`/edit/${id}`)
+      return redirect('/')
     case 'likePost':
       if (typeof postId !== 'string' || typeof currentUser !== 'string') {
         return json({ error: 'invalid form data likePost' }, { status: 400 })
@@ -223,8 +168,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 }
 export default function PostRoute() {
-  const { data, isPublished, categories, allCategories, catResults } = useLoaderData()
-  console.log(isPublished)
+  const { data, categories,  } = useLoaderData()
   const actionData = useActionData()
   const [errors] = useState(actionData?.errors || {})
 
@@ -233,7 +177,6 @@ export default function PostRoute() {
     title: data.post.title,
     description: data.post.description,
     body: data.post.body,
-    published: data.post.published,
     postImg: data.post.postImg,
     createdBy: data.post.createdBy,
     categories: data.catResults || categories,
@@ -269,13 +212,7 @@ export default function PostRoute() {
   return (
     <>
       <div>
-        <Sectionheader>Make changes to your post</Sectionheader>
-
-        {isPublished ? (
-          <> You are editing a published post</>
-        ) : (
-          <> You are editing an unpublished Draft</>
-        )}
+postidpage
         <form method="post" className="form-primary">
           <FormField
             htmlFor="id"
@@ -364,46 +301,22 @@ export default function PostRoute() {
             </select>
           </div>
           <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
-          {formData.published ? (
-            <>
-              <div>
-                <button type="submit" name="_action" value="unpublish">
-                  UnPublish
-                </button>
 
-                <button type="submit" name="_action" value="delete">
-                  Delete
-                </button>
-
-                <div>
-                  <button type="submit" name="_action" value="save">
-                    Save Post
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : (
             <div>
               <button type="submit" name="_action" value="save">
-                Save Post Draft
+                Save Post
               </button>
-              <button type="submit" name="_action" value="updateAndPublish">
-                Save and Publish Post
-              </button>
+
               <button type="submit" name="_action" value="delete">
                 Delete
               </button>
 
               <div>
-                <button type="submit" name="_action" value="publish" className="">
-                  <span className="material-symbols-outlined">save</span>
-                </button>
-                <button type="submit" name="_action" value="removeCategory">
-                  Delete
-                </button>
+
+
               </div>
             </div>
-          )}
+
         </form>
       </div>
     </>

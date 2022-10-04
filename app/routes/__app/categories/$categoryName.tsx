@@ -3,7 +3,6 @@ import { getPostsByCategory } from '~/utils/post.server'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '~/utils/auth.server'
 
-import Sectionheader from '~/components/shared/section-header'
 import PostContent from '~/components/post-content'
 
 // use this to look at json
@@ -42,7 +41,7 @@ export default function CategoryView() {
   const { postsByCategory, isOwner, categoryName }: LoaderData = useLoaderData()
   return (
     <div className="flex flex-col">
-      <Sectionheader>Posts with the {categoryName} Tag</Sectionheader>
+      <div>Posts with the {categoryName} Tag</div>
 
       {postsByCategory.map((post) => (
         <PostContent key={post.id} post={post} />

@@ -67,16 +67,6 @@ export default function Categories() {
     event.preventDefault()
     setFormData((form) => ({ ...form, [field]: event.target.value }))
   }
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>, field: string) => {
-    setFormData((form) => ({ ...form, [field]: event.target.value }))
-    console.log(event.target.value)
-  }
-
-  const handleChange2 = (event: ChangeEvent<HTMLSelectElement>, field: string) => {
-    setFormData((form) => ({ ...form, [field]: event.target.value }))
-    console.log('name', event.target.name)
-    console.log('value', event.target.value)
-  }
 
   return (
     <>
@@ -97,21 +87,9 @@ export default function Categories() {
             error={errors?.name}
           />
           <div>
-            {/* <select
-              className="appearance-none text-black dark:bg-gray-400 dark:text-white"
-              name="categories"
-              multiple={true}
-              onChange={(event: any) => handleInputChange(event, 'categories')}
-            >
-              {data.categories.map((option) => (
-                <option key={option.id} value={option.name}>
-                  {option.name}
-                </option>
-              ))}
-            </select> */}
+
           </div>
 
-          {/*<button type="submit">Save new category to DB</button>*/}
         </form>
       </div>
       <CategoryContainer category={data.categories} />
@@ -124,12 +102,3 @@ export default function Categories() {
     </>
   )
 }
-//
-// <div>
-//     <select className="text-black dark:text-white
-// dark:bg-gray-400"                name="categories"
-// multiple={true}
-// onChange={(event:any)=>handleChange2(event,"categories")}
-//  > {data.categories.map((option) => ( <option
-// key={option.id} value={option.id}> {option.name}
-// </option> ))}  </select> </div>

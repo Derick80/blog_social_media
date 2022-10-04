@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { QueriedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
+import Button from './shared/button'
 
 type PostProps = {
   post: QueriedPost
@@ -16,9 +17,8 @@ export default function PostContent({ post, currentUser, likeCount, isLoggedIn }
   return (
     <article
       key={post.id}
-      className="flex h-screen flex-col overflow-y-scroll p-1 md:flex-col md:p-2"
     >
-      <div className="">
+      <div className="relative flex min-h-full max-w-prose flex-col overflow-hidden rounded-md border border-black transition-shadow duration-200 ease-in-out">
         <h1 className="mt-6 border-b-2 text-left text-2xl font-semibold uppercase md:text-4xl">
           {post.title}
         </h1>
@@ -49,20 +49,19 @@ export default function PostContent({ post, currentUser, likeCount, isLoggedIn }
             className="object-fit h-full w-full md:object-cover"
           />
         </div>
+        <div className="flex flex-col gap-5">
+          {post.description}
+          </div>
         <p className="mt-2 indent-4 md:mt-4 md:text-lg md:leading-7">{post.body}</p>
       </div>
       {currentUser === post?.userId ? (
         <div className="flex flex-row gap-5">
           <Link to={`/${post.id}`} className="flex">
-            <button type="button" className="btn-primary">
+          <Button type="button" >
               Edit
-            </button>
+            </Button>
           </Link>
-          <Link to={`/delete/${post.id}`} className="flex">
-            <button type="button" className="btn-primary">
-              Delete
-            </button>
-          </Link>
+
         </div>
       ) : null}
     </article>

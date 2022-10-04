@@ -24,9 +24,7 @@ model User {
   profile   Profile?
   role      Role      @default(USER)
   likes     Like[]
-  comments  Comment[]
 
-  likeComments LikeComment[]
 }
 
 model Post {
@@ -35,48 +33,22 @@ model Post {
   description  String
   body         String
   postImg      String
-  published    Boolean       @default(false)
   createdBy    String
+  published    Boolean       @default(false)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  likeComments LikeComment[]
-
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 
   categories Category[]
   likes      Like[]
-  comments    Comment[]
+
 
   @@index([id, userId])
   @@index([userId])
 }
 
-model Comment {
-  id           String        @id @default(uuid())
-  message      String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  post         Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId       String
-  parent       Comment?      @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
-  children     Comment[]     @relation("ParentChild")
-  parentId     String?
-  likeComments LikeComment[]
-}
 
-model LikeComment {
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  userId    String
-  commentId String
-  Post      Post?   @relation(fields: [postId], references: [id])
-  postId    String?
-
-  @@id([userId, commentId])
-}
 
 model Like {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -105,9 +77,8 @@ model Profile {
   id              String   @id @unique @default(uuid())
   firstName       String
   lastName        String
-  title           String
   bio             String
-  birthDay        DateTime
+  title           String
   currentLocation String
   pronouns        Pronouns @default(THEY)
   occupation      String
