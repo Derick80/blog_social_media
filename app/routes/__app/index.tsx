@@ -16,7 +16,7 @@ type LoaderData = {
   isLoggedIn: boolean
   currentUser: string
   firstName: string
-    heroPost: Awaited<typeof getHeroPost> | QueriedPost[]
+  heroPost: Awaited<typeof getHeroPost> | QueriedPost[]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -40,7 +40,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const data: LoaderData = {
     heroPost,
-        userPosts,
+    userPosts,
     catCount,
     isLoggedIn,
     currentUser,
@@ -51,7 +51,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Home() {
   const data = useLoaderData<LoaderData>()
-
 
   return (
     <div className="grid grid-cols-1 grid-rows-1 justify-center gap-4 p-2 md:grid-cols-6 md:grid-rows-none md:gap-8 md:p-4">

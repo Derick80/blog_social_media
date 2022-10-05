@@ -36,10 +36,14 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   }
 
   const data: LoaderData = {
-    postsByCategory, isOwner, categoryName, isLoggedIn, currentUser
+    postsByCategory,
+    isOwner,
+    categoryName,
+    isLoggedIn,
+    currentUser,
   }
 
-  return json({ data})
+  return json({ data })
 }
 
 export default function CategoryView() {
@@ -49,13 +53,13 @@ export default function CategoryView() {
       <div>Posts with the {data.categoryName} Tag</div>
 
       {data.postsByCategory.map((post) => (
-       <PostPreview
-       key={post.id}
-       post={post}
-       isLoggedIn={data.isLoggedIn}
-       currentUser={data.currentUser}
-       likeCount={post.likes.length}
-     />
+        <PostPreview
+          key={post.id}
+          post={post}
+          isLoggedIn={data.isLoggedIn}
+          currentUser={data.currentUser}
+          likeCount={post.likes.length}
+        />
       ))}
     </div>
   )

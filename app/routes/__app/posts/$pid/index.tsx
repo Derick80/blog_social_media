@@ -38,23 +38,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export default function PostRoute() {
   const data = useLoaderData<typeof loader>()
   return (
-   <>
-          <div className='container'>
-
-
-
-    {data.post && (
-        <PostContent
-          key={data.post.id}
-          post={data.post}
-          currentUser={data.currentUser}
-          likeCount={data.likeCount}
-          isLoggedIn={data.isLoggedIn}
-        />
-      )}
-    </div>
-
-
-   </>
+    <>
+      <div className="">
+        {data.post && (
+          <PostContent
+            key={data.post.id}
+            post={data.post}
+            currentUser={data.currentUser}
+            likeCount={data.likeCount}
+            isLoggedIn={data.isLoggedIn}
+          />
+        )}
+      </div>
+    </>
   )
 }

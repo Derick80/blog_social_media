@@ -158,9 +158,9 @@ export default function NewPostRoute() {
     })
   }
   return (
-    <div className='flex flex-col items-center'>
-    <div>{formError}</div>
-      <h1 className='text-3xl font-semibold tracking-wide mt-6'>Write a new Post</h1>
+    <div className="flex flex-col items-center">
+      <div>{formError}</div>
+      <h1 className="mt-6 text-3xl font-semibold tracking-wide">Write a new Post</h1>
       <form
         method="post"
         className="form-primary"
@@ -201,7 +201,7 @@ export default function NewPostRoute() {
           label="Write Your Post"
           name="body"
           type="textarea"
-          className='resize'
+          className="resize"
           value={formData.body}
           onChange={(event) => handleInputChange(event, 'body')}
           aria-invalid={Boolean(actionData?.fieldErrors?.body) || undefined}
@@ -235,11 +235,9 @@ export default function NewPostRoute() {
             handleInputChange(event, 'postImg')
           }
         />
-<ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
-<div className='flex items-center justify-center py-2 md:py-4'>
-          <Button type="submit" >
-            Save
-          </Button>
+        <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
+        <div className="flex items-center justify-center py-2 md:py-4">
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </div>
