@@ -39,7 +39,3 @@ export default function Home() {
     </Layout>
   )
 }
-
-export function ErrorBoundary() {
-  return <div>Uh oh something is really wrong with the __home loader. Try again later!</div>
-}

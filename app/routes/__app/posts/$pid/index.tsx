@@ -14,7 +14,7 @@ type LoaderData = {
 }
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await getUser(request)
-  const currentUser = user?.id
+  const currentUser = user?.id as string
 
   const isOwner = user?.role == 'ADMIN'
   const isLoggedIn = user === null ? false : true
@@ -25,9 +25,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response('Post not found', { status: 404 })
   }
 
-  if (!currentUser) {
-    throw new Response('Not authorized', { status: 401 })
-  }
   const data: LoaderData = {
     post,
     likeCount,

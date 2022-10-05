@@ -314,20 +314,3 @@ export default function PostRoute() {
     </>
   )
 }
-
-export function CatchBoundary() {
-  const caught = useCatch()
-
-  if (caught.status === 401) {
-    return (
-      <div>
-        <p>You must be logged in to edit a post.</p>
-        <Link to="/login">Login</Link>
-      </div>
-    )
-  }
-}
-export function ErrorBoundary() {
-  const { postId } = useParams()
-  return <div>{`There was an error loading the post you requested ${postId}. Sorry.`}</div>
-}

@@ -9,11 +9,6 @@ import { getUser, requireUserId } from '~/utils/auth.server'
 import { createDraft } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
 import { getCategories } from '~/utils/categories.server'
-export function ErrorBoundary() {
-  return (
-    <div>Sorry, something went wrong loading the create new Post page. Please try again later!</div>
-  )
-}
 
 type LoaderData = {
   allCategories: Array<{ id: string; name: string }>

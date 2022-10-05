@@ -12,7 +12,7 @@ export default function NavigationBar({ data }: PrimaryNavProps) {
   return (
     <header className="w-full md:p-2">
       <nav className="flex flex-col items-center md:flex-row">
-        <NavLink to="/" className="mb-2 flex items-center md:mb-0">
+        <NavLink to="/" className="mb-2 flex items-center md:mb-0" aria-label="Brand Icon Link">
           <svg
             width="309.3484"
             height="28.8518"
@@ -21,6 +21,7 @@ export default function NavigationBar({ data }: PrimaryNavProps) {
             version="1.1"
             preserveAspectRatio="none"
             viewBox="0.64 -28.6 310.08 28.92"
+            aria-label="Brand Icon"
           >
             <g transform="matrix(1 0 0 1 0 0)" className="fill-black text-base dark:fill-white">
               <path

@@ -18,8 +18,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const currentUser = user?.id as string
   const drafts = await getUserDrafts(userId)
 
-  console.log('isLoggedIn at drafts.tsx', isLoggedIn)
-
   const data = {
     drafts,
     userId,

@@ -38,9 +38,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const catCount = await getCategoryCounts()
 
   const { heroPost } = await getHeroPost()
-  console.log('isloggedin __app index route', isLoggedIn)
-  console.log(userRole)
-  console.log('curreent user at __ app index route', currentUser)
 
   if (!userPosts || !heroPost) {
     throw new Response(`Missing one of 4 requests`, {
@@ -108,8 +105,4 @@ export default function Home() {
       <div className="flex min-w-fit flex-row flex-wrap text-sm md:flex-col md:text-base"></div>
     </div>
   )
-}
-
-export function ErrorBoundary() {
-  return <div>Sorry, something went wrong! :/ Please try again later.</div>
 }
