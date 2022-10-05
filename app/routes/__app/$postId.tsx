@@ -316,7 +316,6 @@ export default function PostRoute() {
             htmlFor="postImg"
             label=""
             name="postImg"
-            type="hidden"
             value={formData.postImg}
             onChange={(event) => handleInputChange(event, 'postImg')}
           />{' '}
