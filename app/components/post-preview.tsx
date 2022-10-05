@@ -1,8 +1,6 @@
-import { Post } from '@prisma/client'
-import { Link, NavLink } from '@remix-run/react'
+import { Link } from '@remix-run/react'
 import { format } from 'date-fns'
-import { useReducer } from 'react'
-import { QueriedPost, SerializedPost } from '~/utils/types.server'
+import { QueriedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
 
@@ -19,7 +17,6 @@ export default function PostPreview({
   likeCount,
   isLoggedIn,
 }: PostPreviewProps) {
-  console.log('isloggedin at post preview containerner', isLoggedIn)
   return (
     <article className="">
       <div className="relative flex min-h-full max-w-prose flex-col overflow-hidden rounded-md border border-black transition-shadow duration-200 ease-in-out">

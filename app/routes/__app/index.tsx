@@ -13,25 +13,18 @@ import HeroPost from '~/components/hero-post-preview'
 type LoaderData = {
   userPosts: QueriedPost[]
   catCount: Awaited<ReturnType<typeof getCategoryCounts>>
-  isOwner: boolean
   isLoggedIn: boolean
   currentUser: string
-  user: QueriedUser
   firstName: string
-  userRole: string
-  userId: string
-
-  heroPost: Awaited<typeof getHeroPost> | QueriedPost[]
+    heroPost: Awaited<typeof getHeroPost> | QueriedPost[]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
-  const userId = user?.id as string
-  const userRole = user?.role as string
+
   const isLoggedIn = user === null ? false : true
 
   const currentUser = user?.id as string
-  const isOwner = user?.role === 'ADMIN'
   const firstName = user?.firstName as string
 
   const { userPosts } = await getPosts()
@@ -47,11 +40,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const data: LoaderData = {
     heroPost,
-    userId,
-    userRole,
-    userPosts,
+        userPosts,
     catCount,
-    isOwner,
     isLoggedIn,
     currentUser,
     firstName,
@@ -61,17 +51,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Home() {
   const data = useLoaderData<LoaderData>()
-  const {
-    heroPost,
-    userPosts,
-    catCount,
-    isOwner,
-    isLoggedIn,
-    currentUser,
-    firstName,
-    userRole,
-    userId,
-  } = data
+
 
   return (
     <div className="grid grid-cols-1 grid-rows-1 justify-center gap-4 p-2 md:grid-cols-6 md:grid-rows-none md:gap-8 md:p-4">
@@ -87,8 +67,8 @@ export default function Home() {
       <div className="col-span-full gap-4">
         <div>
           {' '}
-          {heroPost?.map((post) => (
-            <HeroPost key={post.id} post={post} isLoggedin={isLoggedIn} />
+          {data.heroPost?.map((post) => (
+            <HeroPost key={post.id} post={post} isLoggedin={data.isLoggedIn} />
           ))}
         </div>
       </div>
@@ -97,8 +77,9 @@ export default function Home() {
           <PostPreview
             key={post.id}
             post={post}
-            isLoggedIn={isLoggedIn}
-            currentUser={currentUser}
+            isLoggedIn={data.isLoggedIn}
+            currentUser={data.currentUser}
+            likeCount={post.likes.length}
           />
         ))}
       </div>

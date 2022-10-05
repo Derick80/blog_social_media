@@ -1,5 +1,4 @@
-import { Link, NavLink } from '@remix-run/react'
-import Icon from '~/components/shared/icon'
+import { NavLink } from '@remix-run/react'
 
 export interface CategoryContainerProps {
   category: {

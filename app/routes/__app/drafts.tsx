@@ -34,14 +34,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Drafts() {
   const data = useLoaderData<typeof loader>()
   const drafts = data.data.drafts
-  console.log(drafts)
 
   return (
     <>
       <div className="colums-2 col-span-full flex flex-wrap justify-around gap-4 ">
         {drafts.map((post) => (
           <Link
-            to={`/POSTS/${post.id}`}
+            to={`/posts/${post.id}`}
             key={post.id}
             className="w-full max-w-sm overflow-hidden rounded shadow-lg"
           >

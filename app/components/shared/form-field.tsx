@@ -40,7 +40,7 @@ export default function FormField({
         {label}
       </label>
       <input
-        className={className}
+        className={`form-field-primary ${className}`}
         onChange={(event) => {
           onChange(event)
           setErrorText('')

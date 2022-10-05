@@ -76,11 +76,12 @@ export default function NavigationBar({ data }: PrimaryNavProps) {
 
               <li className="nav-li">
                 <form className="" action="/logout" method="post">
-                  <Button type="submit">
+                  <Button type="submit" variant='outlined'>
                     {' '}
                     <span className="material-symbols-outlined">logout</span>
-                  </Button>
+
                   <p className="hidden md:block">Sign Out</p>
+                  </Button>
                 </form>
               </li>
             </>

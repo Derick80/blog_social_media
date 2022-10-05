@@ -20,7 +20,7 @@
   }
 
   .form-field-primary {
-    @apply mb-6 w-full rounded-xl border-2 border-black p-2 shadow-sm focus:border-slate-700 focus:outline-none focus:ring-1 dark:border-white dark:bg-slate-400;
+    @apply mb-6 w-full rounded-xl border-2 border-black p-2 shadow-sm focus:border-slate-700 focus:outline-none focus:ring-1 dark:border-white dark:bg-slate-400 resize;
   }
 
   .btn-primary {

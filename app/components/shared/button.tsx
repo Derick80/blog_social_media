@@ -9,18 +9,20 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof buttonVariantClasses
 }
 
-export const baseButton = 'flex justify-center items-center px-4 py-2 border text-sm rounded-md'
+export const baseButton = 'flex justify-center items-center px-4 py-2 border text-xs md:text-sm rounded-md'
 
 export const buttonVariantClasses = {
   primary: 'bg-primary',
   outlined: 'border shadow-sm',
-  solid: 'bg-red-500',
+  solid_primary: 'bg-green-500',
+  solid_danger: 'bg-red-500',
+  solid_warning: 'bg-yellow-500',
 }
 
 export default function Button({
   onClick,
   className,
-  variant = 'solid',
+  variant = 'solid_primary',
   children,
   type = 'submit',
 }: Props) {

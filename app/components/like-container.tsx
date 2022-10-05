@@ -42,10 +42,7 @@ export default function LikeContainer({
 
     fetcher.submit({ userId: currentUser, postId }, { method, action: `/posts/${postId}/like` })
   }
-  console.log('userlikedpost', userLikedPost)
-  console.log('currentUser at like container', currentUser)
 
-  console.log('isloggedin at like container', isLoggedIn)
   return (
     <>
       {currentUser ? (

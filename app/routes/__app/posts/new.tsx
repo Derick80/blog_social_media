@@ -9,6 +9,7 @@ import { getUser, requireUserId } from '~/utils/auth.server'
 import { createDraft } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
 import { getCategories } from '~/utils/categories.server'
+import Button from '~/components/shared/button'
 
 type LoaderData = {
   allCategories: Array<{ id: string; name: string }>
@@ -157,12 +158,12 @@ export default function NewPostRoute() {
     })
   }
   return (
-    <div className="flex w-full justify-center">
-      <div>{formError}</div>
-      <div>Write a new post</div>
+    <div className='flex flex-col items-center'>
+    <div>{formError}</div>
+      <h1 className='text-3xl font-semibold tracking-wide mt-6'>Write a new Post</h1>
       <form
         method="post"
-        className="flex w-1/2 flex-col space-y-4"
+        className="form-primary"
         onSubmit={(e) => (!confirm('Are you sure?') ? e.preventDefault() : true)}
       >
         <FormField
@@ -200,6 +201,7 @@ export default function NewPostRoute() {
           label="Write Your Post"
           name="body"
           type="textarea"
+          className='resize'
           value={formData.body}
           onChange={(event) => handleInputChange(event, 'body')}
           aria-invalid={Boolean(actionData?.fieldErrors?.body) || undefined}
@@ -224,8 +226,7 @@ export default function NewPostRoute() {
         </div>
         <FormField
           htmlFor="postImg"
-          label="Upload an Image"
-          labelClass="pt-4"
+          label=""
           name="postImg"
           type="hidden"
           className=""
@@ -234,12 +235,11 @@ export default function NewPostRoute() {
             handleInputChange(event, 'postImg')
           }
         />
-
-        <div className="flex flex-col items-center pb-4">
-          <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
-          <button type="submit" className="btn-primary mt-4 w-1/2 justify-center">
+<ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
+<div className='flex items-center justify-center py-2 md:py-4'>
+          <Button type="submit" >
             Save
-          </button>
+          </Button>
         </div>
       </form>
     </div>
