@@ -1,14 +1,22 @@
 interface props {
   options: {
+    id: string
     name: string
-    value: any
+    label: string
   }[]
   className?: string
   containerClassName?: string
+  defaultValue?: any
   id?: string
   name?: string
   label?: string
-  value?: any
+  value?: {
+    id: string
+    name: string
+    label: string
+  }[]
+  children?: React.ReactNode
+
   onChange?: (...args: any) => any
   multiple?: boolean
 }
@@ -18,29 +26,29 @@ export function SelectBox({
   onChange = () => {},
   className = '',
   containerClassName = '',
+  defaultValue = '',
   name,
   id,
-  value,
+  value =[],
   label,
   multiple,
+  children,
 }: props) {
   return (
     <div>
       <label htmlFor={id}>{label}</label>
       <div className={`flex items-center ${containerClassName} my-2`}>
         <select
-          className={`${className} appearance-none`}
+          className={`${className} form-field-primary`}
+          defaultValue={defaultValue}
           id={id}
           name={name}
           onChange={onChange}
-          value={value}
+          value={value.map((v) => v.name)}
           multiple={multiple}
         >
-          {options.map((option) => (
-            <option key={option.name} value={option.value}>
-              {option.name}
-            </option>
-          ))}
+          {children}
+
         </select>
         <svg
           className="pointer-events-none -ml-7 mt-1 h-4 w-4 fill-current text-gray-400"
