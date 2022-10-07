@@ -29,7 +29,7 @@ export function SelectBox({
   defaultValue = '',
   name,
   id,
-  value =[],
+  value = [],
   label,
   multiple,
   children,
@@ -48,7 +48,6 @@ export function SelectBox({
           multiple={multiple}
         >
           {children}
-
         </select>
         <svg
           className="pointer-events-none -ml-7 mt-1 h-4 w-4 fill-current text-gray-400"

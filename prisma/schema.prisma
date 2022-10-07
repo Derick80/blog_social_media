@@ -24,6 +24,7 @@ model User {
   profile   Profile?
   role      Role      @default(USER)
   likes     Like[]
+  avatar Avatar?
 
 }
 
@@ -48,7 +49,13 @@ model Post {
   @@index([userId])
 }
 
-
+model Avatar {
+  id        String   @id @unique @default(uuid())
+  description String
+  postImg String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String   @unique
+}
 
 model Like {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)

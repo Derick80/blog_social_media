@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async () => {
   const data = {
     allCategories,
   }
-  return json({  data })
+  return json({ data })
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -55,13 +55,11 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function Categories() {
-const data = useLoaderData()
+  const data = useLoaderData()
 
   return (
     <>
-      <div className="shadow-grey-300 mt-4 mb-4 w-full rounded-xl p-2 text-xl shadow-2xl ">
-
-      </div>
+      <div className="shadow-grey-300 mt-4 mb-4 w-full rounded-xl p-2 text-xl shadow-2xl "></div>
     </>
   )
 }
