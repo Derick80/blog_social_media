@@ -133,7 +133,7 @@ export async function updatePost({
   categories,
 }: Omit<CreateOrEditPost, 'userId'> & { userId: User['id'] }) {
   try {
-    const updatePost = await prisma.post.update({
+   await prisma.post.update({
       where: { id: id },
       data: {
         title,
@@ -162,7 +162,7 @@ export async function updateAndPublish({
   categories,
 }: CreateOrEditPost) {
   try {
-    const updateAndPublish = await prisma.post.update({
+     await prisma.post.update({
       where: { id: id },
       data: {
         title,
@@ -280,65 +280,3 @@ export const removeCategoryFromPost = async (id: string, categoryName: string) =
   })
   return updatedPostCategories
 }
-
-export const likePost = async (postId: string, userId: string) => {
-  console.log('likePost functiondb', postId, 'user', userId)
-
-  const liked = await prisma.post.findUnique({
-    where: {
-      id: postId,
-    },
-    select: {
-      likes: {
-        where: {
-          userId: userId,
-        },
-      },
-    },
-  })
-
-  if (!liked) {
-    return await prisma.post.update({
-      where: {
-        id: postId,
-      },
-      data: {
-        likes: {
-          connect: {
-            id: userId,
-          },
-        },
-      },
-    })
-  } else {
-    return await prisma.post.update({
-      where: {
-        id: postId,
-      },
-      data: {
-        likes: {
-          disconnect: {
-            id: userId,
-          },
-        },
-      },
-    })
-  }
-}
-
-// .then(()=>{
-//   return  prisma.post.findUnique({
-//     where: {
-//       id: postId
-
-//   },
-//   select:{
-//     likes: true,
-//      _count: {
-//         select: {
-//           likes: true
-//         }
-//       }
-//   }
-//     })
-// })

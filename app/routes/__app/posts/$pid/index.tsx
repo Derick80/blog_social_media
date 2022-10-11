@@ -20,6 +20,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const isLoggedIn = user === null ? false : true
   invariant(params.pid, 'Post id is required')
   const post = await getPost({ id: params.pid as string })
+  console.log('post pid index', params.pid);
+
   const likeCount = post?.likes.length as number
   if (!post) {
     throw new Response('Post not found', { status: 404 })
@@ -40,6 +42,7 @@ export default function PostRoute() {
   return (
     <>
       <div className="">
+        pid
         {data.post && (
           <PostContent
             key={data.post.id}

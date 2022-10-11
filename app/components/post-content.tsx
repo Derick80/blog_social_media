@@ -40,7 +40,7 @@ export default function PostContent({ post, currentUser, likeCount, isLoggedIn }
           />
           {currentUser === post?.userId ? (
             <div className="flex flex-row gap-5">
-              <Link to={`/${post.id}`} className="flex">
+              <Link to={`/posts/edit/${post.id}`} className="flex">
                 <Button type="button">Edit</Button>
               </Link>
             </div>

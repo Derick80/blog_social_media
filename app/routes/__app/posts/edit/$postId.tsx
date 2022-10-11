@@ -116,8 +116,7 @@ export const action: ActionFunction = async ({ request }) => {
     typeof description !== 'string' ||
     typeof body !== 'string' ||
     typeof userId !== 'string' ||
-    typeof postImg !== 'string' ||
-    typeof categories !== 'object'
+    typeof postImg !== 'string'
   ) {
     return json({ error: 'invalid form data category' }, { status: 400 })
   }
@@ -177,12 +176,16 @@ export const action: ActionFunction = async ({ request }) => {
         createdBy,
         categories: converted,
       })
+      console.log('update and publish', id);
+
       return redirect(`/`)
     case 'publish':
       if (typeof id !== 'string') {
         return json({ error: 'invalid form data publish' }, { status: 400 })
       }
       await publishPost(id)
+      console.log('published');
+
       return redirect('/')
     case 'unpublish':
       if (typeof id !== 'string') {
@@ -298,7 +301,7 @@ export default function PostRoute() {
               {actionData.fieldErrors.description}
             </p>
           ) : null}
-          <p>
+
             <label>
               <FormField
                 htmlFor="body"
@@ -311,11 +314,11 @@ export default function PostRoute() {
                 aria-errormessage={actionData?.fieldErrors?.body ? 'body-error' : undefined}
               />
             </label>
-          </p>
+
           <FormField
             htmlFor="postImg"
             label=""
-            name="postImg"
+            name="posImg"
             value={formData.postImg}
             onChange={(event) => handleInputChange(event, 'postImg')}
           />{' '}
