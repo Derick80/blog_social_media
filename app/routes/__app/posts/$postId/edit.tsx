@@ -147,7 +147,6 @@ export const action: ActionFunction = async ({ request,params }) => {
           },
           { status: 400 }
         )
-
       await updatePost({
         id:postId,
         userId,
@@ -158,7 +157,7 @@ export const action: ActionFunction = async ({ request,params }) => {
         createdBy,
         categories
       })
-      return redirect(`/`)
+      return redirect(`/drafts`)
     case 'updateAndPublish':
       await updatePostWithCategory({
         id:postId,
@@ -178,14 +177,13 @@ export const action: ActionFunction = async ({ request,params }) => {
       }
       await publishPost(postId)
       console.log('published');
-
       return redirect('/')
     case 'unpublish':
       if (typeof postId !== 'string') {
         return json({ error: 'invalid form data unpublish' }, { status: 400 })
       }
       await unpublishPost(postId)
-      return redirect('drafts')
+      return redirect('/drafts')
     case 'delete':
       if (typeof postId !== 'string') {
         return json({ error: 'invalid form data delete' }, { status: 400 })
@@ -199,7 +197,6 @@ export const action: ActionFunction = async ({ request,params }) => {
 }
 export default function PostRoute() {
   const data = useLoaderData<typeof loader>()
-  console.log('data', data);
 
   const actionData = useActionData()
   const [errors] = useState(actionData?.errors || {})
@@ -209,7 +206,7 @@ export default function PostRoute() {
     title: data.post.title,
     description: data.post.description,
     body: data.post.body,
-postImg:  data.post.postImg,
+  postImg:  data.post.postImg,
     createdBy: data.post.createdBy,
     categories: data.catResults || data.categories,
   })
@@ -310,15 +307,15 @@ postImg:  data.post.postImg,
                 onChange={(event) => handleInputChange(event, 'body')}
                 error={errors?.body}
               />
-  {/*
-            <FormField
+
+             <FormField
               htmlFor="postImg"
               label="Post Image"
               type="hidden"
               name="postImg"
               value={formData.postImg}
               onChange={(event) => handleInputChange(event, 'postImg')}
-            />{' '} */}
+            />
 
 
             <select
@@ -345,7 +342,7 @@ postImg:  data.post.postImg,
               <>
                 <div></div>
                 <button type="submit" name="_action" value="save">
-                  Update Post
+                  Save Post
                 </button>
                 <button type="submit" name="_action" value="unpublish">
                   Unpublish
@@ -355,9 +352,9 @@ postImg:  data.post.postImg,
               <>
                 <div></div>
                 <button type="submit" name="_action" value="save">
-                  Update Draft
+                  Save Draft
                 </button>
-                <button type="submit" name="_action" value="updateAndPublish">
+                <button type="submit" name="_action" value="publish">
                   Publish draft
                 </button>
               </>

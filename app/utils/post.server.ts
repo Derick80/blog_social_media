@@ -145,8 +145,8 @@ export async function updatePost({
 
         categories: {
           connectOrCreate: categories.map((category) => ({
-            where: { name: category.name },
-            create: { name: category.name },
+            where: { name: category },
+            create: { name: category },
           })),
         },
       },
