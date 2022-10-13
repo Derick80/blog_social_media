@@ -1,8 +1,7 @@
 interface props {
   options: {
-    id: string
     name: string
-    label: string
+    value: string
   }[]
   className?: string
   containerClassName?: string
@@ -10,7 +9,7 @@ interface props {
   id?: string
   name?: string
   label?: string
-  value?: {
+  value: {
     id: string
     name: string
     label: string
@@ -29,7 +28,7 @@ export function SelectBox({
   defaultValue = '',
   name,
   id,
-  value = [],
+  value,
   label,
   multiple,
   children,

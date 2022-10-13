@@ -38,7 +38,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
       status: 401,
     })
   }
-  return json({ data })
+  return json(data)
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -119,7 +119,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 }
 
 export default function ProfileRoute() {
-  const { data } = useLoaderData()
+  const  data  = useLoaderData()
+ const  pronouns ='she/her'
+
   const actionData = useActionData()
   const [errors, setErrors] = useState(actionData?.errors || {})
   const [formData, setFormData] = useState({
@@ -129,7 +131,7 @@ export default function ProfileRoute() {
     bio: data.profile.bio,
     birthDay: data.profile.birthDay,
     currentLocation: data.profile.currentLocation,
-    pronouns: actionData?.fields?.pronouns || data.profile.pronouns || 'THEY',
+    pronouns: actionData?.fields?.pronouns || pronouns,
     occupation: data.profile.occupation,
     postImg: data.profile.profilePicture,
     email: data.profile.email || '',

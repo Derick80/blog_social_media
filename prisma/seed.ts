@@ -67,6 +67,28 @@ const hashedPasswordUserThree = (await process.env.HASHEDPASSWORDUSERTHREE) as s
     }
   })
 
+  await prisma.miniPost.create({
+    data: {
+      title:'My First Post',
+      body:'This is my first post',
+      userId: user.id,
+      published: false,
+     categories: {
+        connectOrCreate: [
+          {
+            where: { name: 'TagResearch' },
+            create: { name: 'TagResearch' }
+          },
+          {
+            where: { name: 'TagBuilding' },
+            create: { name: 'TagBuilding' }
+          }
+        ]
+      }
+    }
+
+  })
+
   const post1 = await prisma.post.create({
     data: {
       title: 'Coordination of cleavage and polyadenylation with transcription',

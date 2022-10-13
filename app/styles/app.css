@@ -825,6 +825,10 @@ video {
   width: 1.25rem;
 }
 
+.w-52{
+  width: 13rem;
+}
+
 .w-4{
   width: 1rem;
 }
@@ -1399,6 +1403,11 @@ video {
   .dark\:text-white{
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-black{
+    --tw-text-opacity: 1;
+    color: rgb(0 0 0 / var(--tw-text-opacity));
   }
 
   .dark\:hover\:bg-slate-700:hover{
