@@ -3,7 +3,6 @@ import { format } from 'date-fns'
 import { QueriedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
-import Button from './shared/button'
 
 type PostProps = {
   post: QueriedPost
@@ -38,10 +37,10 @@ export default function PostContent({ post, currentUser, likeCount, isLoggedIn }
             post={post}
             isLoggedIn={isLoggedIn}
           />
-          {currentUser === post?.userId ? (
+          {currentUser === post?.user.id ? (
             <div className="flex flex-row gap-5">
-              <Link to={`/posts/edit/${post.id}`} className="flex">
-                <Button type="button">Edit</Button>
+              <Link to={`/posts/${post.id}/edit`} className="flex">
+                <button type="button">Edit</button>
               </Link>
             </div>
           ) : null}

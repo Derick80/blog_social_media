@@ -2,6 +2,7 @@ import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { useActionData, useLoaderData } from '@remix-run/react'
 import React, { useState } from 'react'
+import invariant from 'tiny-invariant'
 import { ImageUploader } from '~/components/image-uploader'
 import Button from '~/components/shared/button'
 import FormField from '~/components/shared/form-field'
@@ -14,6 +15,7 @@ import {
   unpublishPost,
   updateAndPublish,
   updatePost,
+  updatePostWithCategory,
 } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
 
@@ -25,6 +27,7 @@ type LoaderData = {
     body: string
     postImg: string
     published: boolean
+    createdBy: string
     user: {
       email: string
     }
@@ -35,7 +38,6 @@ type LoaderData = {
 
   allCategories: Array<{ id: string; name: string }>
 
-  postId: string
   currentUser: string
   isLoggedIn: boolean
 }
@@ -44,26 +46,20 @@ type LoaderData = {
 //   json(data, { status: 400 })
 // }
 export const loader: LoaderFunction = async ({ params, request }) => {
-  const userId = (await getUserId(request)) as string
+  const userId = (await getUserId(request))
   const user = await getUser(request)
   const isLoggedIn = user === null ? false : true
   const { allCategories } = await getCategories()
+  invariant(params.postId, `params.postId is required`);
+  const currentUser = user?.id
+  const post  =await getPost(params.postId)
 
-  const postId = params.postId
-  const currentUser = user?.id as string
-
-  if (!postId) {
-    return json({ postId: null }, { status: 404 })
-  }
-  const post = userId ? await getPost({ id: postId }) : null
   if (!post) {
     throw new Response('Post not found', { status: 404 })
   }
-  const email = post.user.email
-  if (email != user?.email) {
-    throw new Response('You are not authorized to edit this post', {
-      status: 401,
-    })
+
+  if(!currentUser){
+    throw new Response('Unauthorized', { status: 401 })
   }
   const categories = post.categories.map((category) => category)
 
@@ -79,54 +75,60 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const data: LoaderData = {
     post,
     isLoggedIn,
-    postId,
     categories,
     allCategories,
     catResults,
     currentUser,
   }
-  return json({
-    data,
-  })
+  return json(data)
 }
 
-export const action: ActionFunction = async ({ request }) => {
-  const userId = (await getUserId(request)) as string
+export const action: ActionFunction = async ({ request,params }) => {
+  const userId = await getUserId(request)
+  const postId = params.postId
   const formData = await request.formData()
-  const id = formData.get('id')
   const title = formData.get('title')
   const description = formData.get('description')
   const body = formData.get('body')
   const postImg = formData.get('postImg')
-  const createdBy = formData.get('createdBy') as string
-  const categories = formData.getAll('categories') as []
-
+  const createdBy = formData.get('createdBy')
+  const categories = formData.getAll('categories') as string[]
   const action = formData.get('_action')
   const converted = categories.map((category) => {
     return { name: category }
   })
+
+  if(!postId){
+    return json({ postId: null }, { status: 404 })
+  }
   if (!userId) {
     throw new Response('You are not authorized to edit this post', {
       status: 401,
     })
   }
   if (
-    typeof id !== 'string' ||
+    typeof postId !== 'string' ||
     typeof title !== 'string' ||
     typeof description !== 'string' ||
     typeof body !== 'string' ||
     typeof userId !== 'string' ||
-    typeof postImg !== 'string'
+    typeof postImg !== 'string' ||
+    typeof createdBy !== 'string' ||
+    typeof categories !== 'object'
+
   ) {
     return json({ error: 'invalid form data category' }, { status: 400 })
   }
 
   const errors = {
+    postId: validateText(postId),
     title: validateText(title as string),
     description: validateText(description as string),
     body: validateText(body as string),
     postImg: validateText(postImg as string),
+    createdBy: validateText(createdBy as string),
   }
+
   switch (action) {
     case 'save':
       if (Object.values(errors).some(Boolean))
@@ -134,9 +136,12 @@ export const action: ActionFunction = async ({ request }) => {
           {
             errors,
             fields: {
+              postId,
               title,
               description,
               body,
+              postImg,
+              createdBy,
             },
             form: action,
           },
@@ -144,60 +149,48 @@ export const action: ActionFunction = async ({ request }) => {
         )
 
       await updatePost({
-        id,
+        id:postId,
         userId,
         title,
         description,
         body,
         postImg,
         createdBy,
-        categories: converted,
+        categories
       })
       return redirect(`/`)
     case 'updateAndPublish':
-      if (
-        typeof id !== 'string' ||
-        typeof title !== 'string' ||
-        typeof description !== 'string' ||
-        typeof body !== 'string' ||
-        typeof userId !== 'string' ||
-        typeof postImg !== 'string'
-      ) {
-        return json({ error: 'invalid form data update and publhs' }, { status: 400 })
-      }
-
-      await updateAndPublish({
-        id,
+      await updatePostWithCategory({
+        id:postId,
         userId,
         title,
         description,
         body,
         postImg,
         createdBy,
-        categories: converted,
+        categories
       })
-      console.log('update and publish', id);
-
+      console.log('update and publish', postId);
       return redirect(`/`)
     case 'publish':
-      if (typeof id !== 'string') {
+      if (typeof postId !== 'string') {
         return json({ error: 'invalid form data publish' }, { status: 400 })
       }
-      await publishPost(id)
+      await publishPost(postId)
       console.log('published');
 
       return redirect('/')
     case 'unpublish':
-      if (typeof id !== 'string') {
+      if (typeof postId !== 'string') {
         return json({ error: 'invalid form data unpublish' }, { status: 400 })
       }
-      await unpublishPost(id)
-      return redirect('/drafts')
+      await unpublishPost(postId)
+      return redirect('drafts')
     case 'delete':
-      if (typeof id !== 'string') {
+      if (typeof postId !== 'string') {
         return json({ error: 'invalid form data delete' }, { status: 400 })
       }
-      await deletePost(id)
+      await deletePost(postId)
       return redirect('/')
 
     default:
@@ -205,7 +198,9 @@ export const action: ActionFunction = async ({ request }) => {
   }
 }
 export default function PostRoute() {
-  const { data, categories } = useLoaderData()
+  const data = useLoaderData<typeof loader>()
+  console.log('data', data);
+
   const actionData = useActionData()
   const [errors] = useState(actionData?.errors || {})
 
@@ -214,9 +209,9 @@ export default function PostRoute() {
     title: data.post.title,
     description: data.post.description,
     body: data.post.body,
-    postImg: data.post.postImg,
+postImg:  data.post.postImg,
     createdBy: data.post.createdBy,
-    categories: data.catResults || categories,
+    categories: data.catResults || data.categories,
   })
 
   const handleInputChange = (
@@ -229,6 +224,13 @@ export default function PostRoute() {
     }))
   }
 
+  const handleSelectChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    field: string
+  ) => {
+   const formData = new FormData()
+    formData.append(field, event.target.value)
+  }
   const handleFileUpload = async (file: File) => {
     const inputFormData = new FormData()
     inputFormData.append('postImg', file)
@@ -260,10 +262,10 @@ export default function PostRoute() {
           <FormField
             htmlFor="id"
             label=""
-            name="id"
+            name="postId"
             type="hidden"
             value={formData.id}
-            onChange={(event) => handleInputChange(event, 'id')}
+            onChange={(event) => handleInputChange(event, 'postId')}
             error={errors?.id}
           />{' '}
           <FormField
@@ -291,10 +293,7 @@ export default function PostRoute() {
             type="textarea"
             value={formData.description}
             onChange={(event) => handleInputChange(event, 'description')}
-            aria-invalid={Boolean(actionData?.fieldErrors?.description) || undefined}
-            aria-errormessage={
-              actionData?.fieldErrors?.description ? 'description-error' : undefined
-            }
+            error={errors?.description}
           />
           {actionData?.fieldErrors?.description ? (
             <p role="alert" id="description-error">
@@ -302,7 +301,6 @@ export default function PostRoute() {
             </p>
           ) : null}
 
-            <label>
               <FormField
                 htmlFor="body"
                 label="Write Your Post"
@@ -310,69 +308,69 @@ export default function PostRoute() {
                 className="form-field-primary"
                 value={formData.body}
                 onChange={(event) => handleInputChange(event, 'body')}
-                aria-invalid={Boolean(actionData?.fieldErrors?.body) || undefined}
-                aria-errormessage={actionData?.fieldErrors?.body ? 'body-error' : undefined}
+                error={errors?.body}
               />
-            </label>
+  {/*
+            <FormField
+              htmlFor="postImg"
+              label="Post Image"
+              type="hidden"
+              name="postImg"
+              value={formData.postImg}
+              onChange={(event) => handleInputChange(event, 'postImg')}
+            />{' '} */}
 
-          <FormField
-            htmlFor="postImg"
-            label=""
-            name="posImg"
-            value={formData.postImg}
-            onChange={(event) => handleInputChange(event, 'postImg')}
-          />{' '}
-          <div>
-            <label>Tag your post </label>
 
             <select
               name="categories"
               multiple={true}
               className="form-field-primary"
-              onChange={(event) => handleInputChange(event, 'categories')}
+              onChange={(event) => handleSelectChange(event, 'categories')}
             >
               {data.catResults.map((option) => (
                 <option
                   key={option.id}
                   value={option.name}
-                  selected={option.checked ? true : false}
+                  multiple={true}
+                  defaultValue={option.checked ? true : false}
                 >
                   {option.name}
                 </option>
               ))}
             </select>
-          </div>
-          <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
+
+            <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
           <div className="flex flex-row items-center justify-between py-2 md:py-4">
             {data?.post?.published ? (
               <>
                 <div></div>
-                <Button type="submit" name="_action" value="save">
+                <button type="submit" name="_action" value="save">
                   Update Post
-                </Button>
-                <Button type="submit" name="_action" value="unpublish" variant="solid_warning">
+                </button>
+                <button type="submit" name="_action" value="unpublish">
                   Unpublish
-                </Button>
+                </button>
               </>
             ) : (
               <>
                 <div></div>
-                <Button type="submit" name="_action" value="save">
+                <button type="submit" name="_action" value="save">
                   Update Draft
-                </Button>
-                <Button type="submit" name="_action" value="updateAndPublish">
+                </button>
+                <button type="submit" name="_action" value="updateAndPublish">
                   Publish draft
-                </Button>
+                </button>
               </>
             )}
 
-            <Button type="submit" name="_action" value="delete" variant="solid_danger">
+            <button type="submit" name="_action" value="delete">
               {data.post?.published ? 'Delete Post' : 'Delete Draft'}
-            </Button>
+            </button>
 
             <div></div>
           </div>
         </form>
+
       </div>
     </>
   )

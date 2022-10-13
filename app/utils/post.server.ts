@@ -32,11 +32,11 @@ export async function getPosts() {
   return { userPosts, likeCount }
 }
 
-export async function getPost({ id }: Pick<Post, 'id'>) {
+export async function getPost(postId: string) {
   const post = await prisma.post.findUnique({
-    where: { id: id },
+    where: { id: postId },
     include: {
-      user: { select: { email: true, firstName: true, lastName: true } },
+      user: { select: { email: true, firstName: true, lastName: true, role:true, id:true } },
       categories: true,
 
       likes: true,
@@ -100,8 +100,8 @@ export async function createDraft({
       },
       categories: {
         connectOrCreate: categories.map((category) => ({
-          where: { name: category.name },
-          create: { name: category.name },
+          where: { name: category },
+          create: { name: category },
         })),
       },
     },
@@ -130,6 +130,7 @@ export async function updatePost({
   description,
   body,
   postImg,
+  createdBy,
   categories,
 }: Omit<CreateOrEditPost, 'userId'> & { userId: User['id'] }) {
   try {
@@ -140,6 +141,7 @@ export async function updatePost({
         description,
         body,
         postImg,
+        createdBy,
 
         categories: {
           connectOrCreate: categories.map((category) => ({
@@ -160,6 +162,7 @@ export async function updateAndPublish({
   body,
   postImg,
   categories,
+  createdBy,
 }: CreateOrEditPost) {
   try {
      await prisma.post.update({
@@ -169,11 +172,12 @@ export async function updateAndPublish({
         description,
         body,
         postImg,
+        createdBy,
         published: true,
         categories: {
           connectOrCreate: categories.map((category) => ({
-            where: { name: category.name },
-            create: { name: category.name },
+            where: { name: category },
+            create: { name: category },
           })),
         },
       },
@@ -247,9 +251,10 @@ export async function getPostsByCategory(categoryName: string) {
 }
 
 export const updatePostWithCategory = async (form: UpdatePost) => {
-  const selected = form.categories.map((category) => category.name) as []
+  const selected = form.categories.map((category) => category) as []
+console.log('selected', selected);
 
-  const updatedPostCategories = await prisma.post.update({
+ await prisma.post.update({
     where: {
       id: form.id,
     },
@@ -258,6 +263,7 @@ export const updatePostWithCategory = async (form: UpdatePost) => {
       description: form.description,
       body: form.body,
       postImg: form.postImg,
+      createdBy: form.createdBy,
       categories: {
         set: selected,
       },

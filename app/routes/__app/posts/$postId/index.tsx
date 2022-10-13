@@ -9,18 +9,16 @@ type LoaderData = {
   post: QueriedPost
   likeCount: number
   currentUser: string
-  isLoggedin: boolean
+  isLoggedIn: boolean
   isOwner: boolean
 }
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await getUser(request)
   const currentUser = user?.id as string
 
-  const isOwner = user?.role == 'ADMIN'
   const isLoggedIn = user === null ? false : true
-  invariant(params.pid, 'Post id is required')
-  const post = await getPost({ id: params.pid as string })
-  console.log('post pid index', params.pid);
+  invariant(params.postId, 'Post id is required')
+  const post = await getPost(params.postId)
 
   const likeCount = post?.likes.length as number
   if (!post) {
@@ -32,13 +30,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     likeCount,
     isLoggedIn,
     currentUser,
-    isOwner,
-  }
+    isOwner: currentUser === post?.userId,
+    }
   return json(data)
 }
 
 export default function PostRoute() {
-  const data = useLoaderData<typeof loader>()
+  const data = useLoaderData<LoaderData>()
   return (
     <>
       <div className="">
