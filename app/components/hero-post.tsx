@@ -1,8 +1,6 @@
-import { Post } from '@prisma/client'
-import { Link, NavLink } from '@remix-run/react'
+import { Link } from '@remix-run/react'
 import { format } from 'date-fns'
-import { useReducer } from 'react'
-import { QueriedPost, SerializedPost } from '~/utils/types.server'
+import { QueriedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
 

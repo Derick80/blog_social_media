@@ -3,9 +3,7 @@ import { json, redirect } from '@remix-run/node'
 import { useActionData, useLoaderData } from '@remix-run/react'
 import React, { useRef, useState } from 'react'
 import invariant from 'tiny-invariant'
-import CategoryContainer from '~/components/category-container'
 import { ImageUploader } from '~/components/image-uploader'
-import Button from '~/components/shared/button'
 import FormField from '~/components/shared/form-field'
 import { getUser, getUserId } from '~/utils/auth.server'
 import { getCategories } from '~/utils/categories.server'
@@ -14,7 +12,6 @@ import {
   getPost,
   publishPost,
   unpublishPost,
-  updateAndPublish,
   updatePost,
   updatePostWithCategory,
 } from '~/utils/post.server'
@@ -30,9 +27,6 @@ type LoaderData = {
   selectedTags: string[]
 }
 
-// const badRequest = (data: ActionData) => {
-//   json(data, { status: 400 })
-// }
 export const loader: LoaderFunction = async ({ params, request }) => {
   const userId = await getUserId(request)
   const user = await getUser(request)
@@ -40,14 +34,12 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const { initialCategoryList } = await getCategories()
   invariant(params.postId, `params.postId is required`)
   const currentUser = user?.id
+  invariant(currentUser, `currentUser is required`)
+
   const { reducedPost } = await getPost(params.postId)
 
   if (!reducedPost) {
     throw new Response('Post not found', { status: 404 })
-  }
-
-  if (!currentUser) {
-    throw new Response('Unauthorized', { status: 401 })
   }
 
   const data: LoaderData = {

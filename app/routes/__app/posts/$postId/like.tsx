@@ -11,7 +11,8 @@ export const loader: LoaderFunction = ({ request }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await getUser(request)
   const postId = params.pid
-  const userId = user?.id as string
+  const userId = user?.id
+
   if (!userId || !postId) {
     return json({ error: 'invalid form data bad userId or PostId like' }, { status: 400 })
   }

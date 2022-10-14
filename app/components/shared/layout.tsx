@@ -8,13 +8,6 @@ export type LayoutProps = {
     isLoggedIn: boolean
     firstName: string
     userRole: string
-    catCount: Awaited<ReturnType<typeof getCategoryCounts>>
-    userId: string
-    totalPosts: number
-    mostPopularPost: {
-      title: string
-      id: string
-    }
   }
 
   children: React.ReactNode

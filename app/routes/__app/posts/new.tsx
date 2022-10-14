@@ -10,26 +10,30 @@ import { createDraft } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
 import { getCategories } from '~/utils/categories.server'
 import Button from '~/components/shared/button'
+import { SelectedCategories } from '~/utils/types.server'
+import invariant from 'tiny-invariant'
 
 type LoaderData = {
-  allCategories: Array<{ id: string; name: string }>
-  isOwner: boolean
+  initialCategoryList: SelectedCategories[]
+  isAdmin: boolean
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
-  const { allCategories } = await getCategories()
-  const isOwner = user?.role == 'ADMIN'
-  if (!isOwner) {
+  const { initialCategoryList } = await getCategories()
+  invariant(user, 'User is not available')
+  const isAdmin = user.role == 'ADMIN'
+
+  if (!isAdmin) {
     throw new Response('Unauthorized', { status: 401 })
   }
-  if (!allCategories) {
+  if (!initialCategoryList) {
     throw new Response('No Categories', { status: 404 })
   }
 
   const data: LoaderData = {
-    allCategories,
-    isOwner,
+    initialCategoryList,
+    isAdmin,
   }
 
   return json(data)
@@ -112,7 +116,7 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function NewPostRoute() {
-  const { allCategories } = useLoaderData<LoaderData>()
+  const { initialCategoryList } = useLoaderData<LoaderData>()
   const actionData = useActionData()
   const firstLoad = useRef(true)
   const [formError, setFormError] = useState(actionData?.error || '')
@@ -217,9 +221,9 @@ export default function NewPostRoute() {
               handleInputChange(event, 'categories')
             }
           >
-            {allCategories.map((option) => (
-              <option key={option.id} value={option.name}>
-                {option.name}
+            {initialCategoryList.map((option) => (
+              <option key={option.id} value={option.value}>
+                {option.label}
               </option>
             ))}
           </select>

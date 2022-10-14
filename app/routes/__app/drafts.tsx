@@ -1,6 +1,7 @@
 import type { LoaderFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
+import invariant from 'tiny-invariant'
 import { getUser, requireUserId } from '~/utils/auth.server'
 import { getUserDrafts } from '~/utils/post.server'
 
@@ -14,8 +15,9 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await requireUserId(request)
   const user = await getUser(request)
+  invariant(user, 'User is not available')
   const isLoggedIn = user === null ? false : true
-  const currentUser = user?.id as string
+  const currentUser = user.id
   const drafts = await getUserDrafts(userId)
 
   const data = {

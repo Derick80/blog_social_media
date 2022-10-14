@@ -6,9 +6,10 @@ import { getHeroPost, getPosts } from '~/utils/post.server'
 import PostPreview from '~/components/post-preview'
 import { getCategoryCounts } from '~/utils/categories.server'
 import CategoryCount from '~/components/category-count'
-import { QueriedPost, QueriedUser } from '~/utils/types.server'
+import { QueriedPost } from '~/utils/types.server'
 
 import HeroPost from '~/components/hero-post-preview'
+import invariant from 'tiny-invariant'
 
 type LoaderData = {
   userPosts: QueriedPost[]
@@ -21,15 +22,12 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
-
+  invariant(user, 'User is not available')
   const isLoggedIn = user === null ? false : true
-
-  const currentUser = user?.id as string
-  const firstName = user?.firstName as string
-
+  const currentUser = user.id
+  const firstName = user.firstName
   const { userPosts } = await getPosts()
   const catCount = await getCategoryCounts()
-
   const { heroPost } = await getHeroPost()
 
   if (!userPosts || !heroPost) {

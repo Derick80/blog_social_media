@@ -10,18 +10,19 @@ import { pronouns } from '~/utils/constants'
 import { getProfile, updateProfile } from '~/utils/profile.server'
 import { validateEmail, validateName, validateText } from '~/utils/validators.server'
 import { ImageUploader } from '~/components/image-uploader'
+import invariant from 'tiny-invariant'
 
 type LoaderData = {
   profile: Profile
-  userId: string
-  isOwner: boolean
+  isAdmin: boolean
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {
-  const userId = (await getUserId(request)) as string
-  const profileId = params.profileId as string
+  const userId = await getUserId(request)
+  const profileId = params.profileId
+  invariant(profileId, 'Profile id is required')
   const user = await getUser(request)
-  const isOwner = user?.role === 'ADMIN'
+  const isAdmin = user?.role === 'ADMIN'
 
   const profile = userId ? await getProfile(profileId) : null
   if (!profile) {
@@ -29,11 +30,10 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   }
   const data: LoaderData = {
     profile,
-    userId,
-    isOwner,
+    isAdmin,
   }
 
-  if (!isOwner) {
+  if (!isAdmin) {
     throw new Response('You are not authorized to edit this post', {
       status: 401,
     })
@@ -174,7 +174,7 @@ export default function ProfileRoute() {
             className="form-field-primary"
             type="hidden"
             value={formData.id}
-            onChange={(event: any) => handleInputChange(event, 'id')}
+            onChange={(event) => handleInputChange(event, 'id')}
             error={errors?.id}
           />
           <FormField
@@ -184,7 +184,7 @@ export default function ProfileRoute() {
             type="textarea"
             className="form-field-primary"
             value={formData.firstName}
-            onChange={(event: any) => handleInputChange(event, 'firstName')}
+            onChange={(event) => handleInputChange(event, 'firstName')}
             error={errors?.firstName}
           />
           <FormField
@@ -194,7 +194,7 @@ export default function ProfileRoute() {
             type="textarea"
             className="form-field-primary"
             value={formData.lastName}
-            onChange={(event: any) => handleInputChange(event, 'lastName')}
+            onChange={(event) => handleInputChange(event, 'lastName')}
             error={errors?.lastName}
           />
           <FormField
@@ -204,7 +204,7 @@ export default function ProfileRoute() {
             type="textarea"
             className="form-field-primary"
             value={formData.title}
-            onChange={(event: any) => handleInputChange(event, 'title')}
+            onChange={(event) => handleInputChange(event, 'title')}
             error={errors?.title}
           />
           <FormField
@@ -214,7 +214,7 @@ export default function ProfileRoute() {
             type="textarea"
             className="form-field-primary"
             value={formData.bio}
-            onChange={(event: any) => handleInputChange(event, 'bio')}
+            onChange={(event) => handleInputChange(event, 'bio')}
             error={errors?.bio}
           />
 
@@ -225,7 +225,7 @@ export default function ProfileRoute() {
             type="textarea"
             className="form-field-primary"
             value={formData.currentLocation}
-            onChange={(event: any) => handleInputChange(event, 'currentLocation')}
+            onChange={(event) => handleInputChange(event, 'currentLocation')}
             error={errors?.currentLocation}
           />
           <SelectBox
@@ -235,7 +235,7 @@ export default function ProfileRoute() {
             label="Pronouns"
             id="pronouns"
             value={pronouns}
-            onChange={(event: any) => handleInputChange(event, 'pronouns')}
+            onChange={(event) => handleInputChange(event, 'pronouns')}
           />
 
           <FormField
@@ -245,7 +245,7 @@ export default function ProfileRoute() {
             type="textarea"
             className="form-field-primary"
             value={formData.occupation}
-            onChange={(event: any) => handleInputChange(event, 'occupation')}
+            onChange={(event) => handleInputChange(event, 'occupation')}
             error={errors?.occupation}
           />
           <FormField
@@ -255,7 +255,7 @@ export default function ProfileRoute() {
             type="email"
             className="form-field-primary"
             value={formData.email}
-            onChange={(event: any) => handleInputChange(event, 'email')}
+            onChange={(event) => handleInputChange(event, 'email')}
             error={errors?.email}
           />
           <FormField
@@ -264,7 +264,7 @@ export default function ProfileRoute() {
             labelClass="uppercase"
             name="postImg"
             value={formData.postImg}
-            onChange={(event: any) => handleInputChange(event, 'postImg')}
+            onChange={(event) => handleInputChange(event, 'postImg')}
           />
 
           <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />

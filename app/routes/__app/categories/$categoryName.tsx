@@ -4,6 +4,7 @@ import { useLoaderData } from '@remix-run/react'
 import { getUser } from '~/utils/auth.server'
 
 import PostPreview from '~/components/post-preview'
+import invariant from 'tiny-invariant'
 
 // use this to look at json
 // http://192.168.86.32:5322/categories?_data=routes%2Fcategories
@@ -16,7 +17,7 @@ type LoaderData = {
     createdAt: string
     categories: Array<{ id: string; name: string }>
   }>
-  isOwner: boolean
+  isAdmin: boolean
   categoryName: string
   isLoggedIn: boolean
   currentUser: string
@@ -24,10 +25,11 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ params, request }) => {
   const categoryName = params.categoryName as string
   const user = await getUser(request)
-  const isOwner = user?.role === 'ADMIN'
+  invariant(user, 'User is not available')
+  const isAdmin = user.role === 'ADMIN'
   const isLoggedIn = user === null ? false : true
 
-  const currentUser = user?.id as string
+  const currentUser = user.id
   const postsByCategory = await getPostsByCategory(categoryName)
   if (!postsByCategory) {
     throw new Response("Couldn't find any posts with that category", {
@@ -37,7 +39,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
   const data: LoaderData = {
     postsByCategory,
-    isOwner,
+    isAdmin,
     categoryName,
     isLoggedIn,
     currentUser,

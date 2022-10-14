@@ -1,16 +1,13 @@
-import { Post } from '@prisma/client'
-import { Link, NavLink } from '@remix-run/react'
+import { Link } from '@remix-run/react'
 import { format } from 'date-fns'
-import { QueriedPost, SerializedPost } from '~/utils/types.server'
+import { QueriedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
-import LikeContainer from './like-container'
 
 export type HeroPostProps = {
   post: QueriedPost
-  isLoggedin: boolean
 }
 
-export default function HeroPost({ post, isLoggedin }: HeroPostProps) {
+export default function HeroPost({ post }: HeroPostProps) {
   return (
     <article className="">
       <div className="relative flex min-h-full flex-col overflow-hidden rounded-md border border-black transition-shadow duration-200 ease-in-out">

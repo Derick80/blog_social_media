@@ -6,7 +6,7 @@ import { getCategories } from '~/utils/categories.server'
 import { editMiniPostCategories, getMiniPostById } from '~/utils/postv2.server'
 import { CategoryForm, SelectedCategories } from '~/utils/types.server'
 
-export const loader: LoaderFunction = async ({  params }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   const initialCategoryList = await getCategories()
   const miniPostId = params.miniPostId
   invariant(miniPostId, 'No Mini Post Id')
@@ -31,16 +31,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   // reshape category form data for db
   const correctedCategories = categories.map((cat) => {
     return {
-      name: cat
+      name: cat,
     }
-  }
-  ) as CategoryForm[]
+  }) as CategoryForm[]
 
   invariant(postId, 'No Post Id')
 
   await editMiniPostCategories(postId, correctedCategories)
   return redirect('/miniPosts')
-
 }
 
 export default function MiniPost() {
@@ -51,20 +49,18 @@ export default function MiniPost() {
     return category.value
   })
 
-
   const [formData, setFormData] = React.useState({
     categories: tags,
   })
 
   const [selected, setSelected] = React.useState<string[]>(tags)
 
-
   const handleSelectChanges = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target
     if (formData.categories.includes(value)) {
       setFormData((prev) => ({
         ...prev,
-        categories: prev.categories.filter((item:string) => item !== value),
+        categories: prev.categories.filter((item: string) => item !== value),
       }))
       setSelected((prev) => [...prev.filter((item) => item !== value)])
     } else {
@@ -75,7 +71,6 @@ export default function MiniPost() {
       setSelected((prev) => [...prev, value])
     }
   }
-
 
   return (
     <div className="grid grid-cols-1 grid-rows-1 justify-center gap-4 p-2 md:grid-cols-6 md:grid-rows-none md:gap-8 md:p-4">
@@ -88,7 +83,9 @@ export default function MiniPost() {
                   onClick={() => {
                     setFormData((prev) => ({
                       ...prev,
-                      categories: prev.categories.filter((selectedItem: string) => selectedItem !== item),
+                      categories: prev.categories.filter(
+                        (selectedItem: string) => selectedItem !== item
+                      ),
                     }))
                     setSelected(selected.filter((selectedItem) => selectedItem !== item))
                   }}
