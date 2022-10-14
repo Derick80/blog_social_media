@@ -1,4 +1,5 @@
 import { prisma } from './prisma.server'
+import { CategoryForm } from './types.server'
 
 const defaultMiniPostSelect = {
   id: true,
@@ -42,14 +43,14 @@ export async function getMiniPostById(id: string) {
   return { minifiedPost }
 }
 
-export async function editMiniPostCategories(postId: string, categories: string[]) {
+export async function editMiniPostCategories(postId: string, correctedCategories: CategoryForm[]) {
   const miniPost = await prisma.miniPost.update({
     where: {
       id: postId,
     },
     data: {
       categories: {
-        set: categories,
+        set: correctedCategories,
       },
     },
   })

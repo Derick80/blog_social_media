@@ -4,8 +4,9 @@ import React from 'react'
 import invariant from 'tiny-invariant'
 import { getCategories } from '~/utils/categories.server'
 import { editMiniPostCategories, getMiniPostById } from '~/utils/postv2.server'
+import { CategoryForm, SelectedCategories } from '~/utils/types.server'
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({  params }) => {
   const initialCategoryList = await getCategories()
   const miniPostId = params.miniPostId
   invariant(miniPostId, 'No Mini Post Id')
@@ -25,21 +26,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData()
   const postId = params.miniPostId
-  const categories = formData.getAll('categories') as string[]
+  const categories = formData.getAll('categories')
 
+  // reshape category form data for db
   const correctedCategories = categories.map((cat) => {
     return {
       name: cat
     }
   }
-  )
-  console.log(correctedCategories);
-
-
+  ) as CategoryForm[]
 
   invariant(postId, 'No Post Id')
-  invariant(categories, 'No Categories')
-  console.log('categories', categories)
 
   await editMiniPostCategories(postId, correctedCategories)
   return redirect('/miniPosts')
@@ -50,7 +47,7 @@ export default function MiniPost() {
   const data = useLoaderData()
   const { initialCategoryList } = data.initialCategoryList
 
-  const tags = data.minifiedPost.selectedTags.map((category) => {
+  const tags = data.minifiedPost.selectedTags.map((category: { value: string }) => {
     return category.value
   })
 
@@ -61,13 +58,13 @@ export default function MiniPost() {
 
   const [selected, setSelected] = React.useState<string[]>(tags)
 
-  console.log('selected', selected)
+
   const handleSelectChanges = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target
     if (formData.categories.includes(value)) {
       setFormData((prev) => ({
         ...prev,
-        categories: prev.categories.filter((item) => item !== value),
+        categories: prev.categories.filter((item:string) => item !== value),
       }))
       setSelected((prev) => [...prev.filter((item) => item !== value)])
     } else {
@@ -87,7 +84,7 @@ export default function MiniPost() {
           <div className="flex flex-col">
             <div className="mx-1 mt-2 mb-2 flex flex-wrap space-x-2 md:mt-4">
               {selected.map((item) => (
-                <button
+                <span
                   onClick={() => {
                     setFormData((prev) => ({
                       ...prev,
@@ -103,7 +100,7 @@ export default function MiniPost() {
                   <span className="material-symbols-outlined flex items-center self-stretch rounded-tr-md rounded-br-md border bg-gray-700 px-1  text-white dark:bg-slate-500">
                     close
                   </span>
-                </button>
+                </span>
               ))}
             </div>
             <select
@@ -114,7 +111,7 @@ export default function MiniPost() {
               value={formData.categories}
               onChange={(event) => handleSelectChanges(event)}
             >
-              {initialCategoryList.map((item) => (
+              {initialCategoryList.map((item: Partial<SelectedCategories>) => (
                 <option className="" key={item.id} value={item.value}>
                   {item.value}
                 </option>

@@ -44,9 +44,11 @@ export interface UpdatePost {
   userId: string
 }
 
+
+// use this type when transforming formData to db format
 export interface CategoryForm {
   name: string
-}
+}[]
 
 export interface UpdateCategoryForm {
   id: string
@@ -88,6 +90,8 @@ export type SelectedCategories = {
   value: string
   label: string
 }
+
+// Type for returned SIngle Post
 export type SinglePost = {
   createdAt: string
   id: string
