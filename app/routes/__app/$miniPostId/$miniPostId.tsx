@@ -1,10 +1,9 @@
-import { LoaderFunction, json, ActionFunction } from '@remix-run/node'
+import { LoaderFunction, json, ActionFunction, redirect } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import React from 'react'
 import invariant from 'tiny-invariant'
-
 import { getCategories } from '~/utils/categories.server'
-import { getMiniPostById } from '~/utils/postv2.server'
+import { editMiniPostCategories, getMiniPostById } from '~/utils/postv2.server'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const initialCategoryList = await getCategories()
@@ -25,8 +24,26 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 }
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData()
+  const postId = params.miniPostId
   const categories = formData.getAll('categories') as string[]
+
+  const correctedCategories = categories.map((cat) => {
+    return {
+      name: cat
+    }
+  }
+  )
+  console.log(correctedCategories);
+
+
+
+  invariant(postId, 'No Post Id')
+  invariant(categories, 'No Categories')
   console.log('categories', categories)
+
+  await editMiniPostCategories(postId, correctedCategories)
+  return redirect('/miniPosts')
+
 }
 
 export default function MiniPost() {
@@ -37,10 +54,7 @@ export default function MiniPost() {
     return category.value
   })
 
-  const testTags = data.minifiedPost.selectedTags.map((category) => category.value)
 
-  console.log('testTags', testTags)
-  console.log(tags)
   const [formData, setFormData] = React.useState({
     categories: tags,
   })
@@ -64,6 +78,8 @@ export default function MiniPost() {
       setSelected((prev) => [...prev, value])
     }
   }
+
+
   return (
     <div className="grid grid-cols-1 grid-rows-1 justify-center gap-4 p-2 md:grid-cols-6 md:grid-rows-none md:gap-8 md:p-4">
       <div className="col-span-full col-start-1 mb-2 justify-center md:col-start-2 md:col-end-6 md:row-end-1 md:mb-2 md:flex-wrap">
@@ -75,7 +91,7 @@ export default function MiniPost() {
                   onClick={() => {
                     setFormData((prev) => ({
                       ...prev,
-                      categories: prev.categories.filter((selectedItem) => selectedItem !== item),
+                      categories: prev.categories.filter((selectedItem: string) => selectedItem !== item),
                     }))
                     setSelected(selected.filter((selectedItem) => selectedItem !== item))
                   }}
@@ -104,6 +120,11 @@ export default function MiniPost() {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="text-container max-w-full">
+            <button type="submit" className="btn-primary">
+              Save
+            </button>
           </div>
         </form>
       </div>

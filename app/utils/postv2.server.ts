@@ -42,10 +42,10 @@ export async function getMiniPostById(id: string) {
   return { minifiedPost }
 }
 
-export async function editMiniPostCategories(id: string, categories: string[]) {
+export async function editMiniPostCategories(postId: string, categories: string[]) {
   const miniPost = await prisma.miniPost.update({
     where: {
-      id: id,
+      id: postId,
     },
     data: {
       categories: {
