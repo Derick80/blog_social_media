@@ -23,7 +23,31 @@ children: React.ReactNode
 
 export default function MultipleSelect({options, value,multiple, className, label, name,onChange, defaultValue, children}:MultiSelectProps) {
 
+const handleSelectChanges= (event: React.ChangeEvent<HTMLSelectElement>) => {
 
+        const { value } = e.target;
+        if (formData.categories.includes(value)) {
+          setFormData((prev) => ({
+            ...prev,
+            categories: prev.categories.filter((item) => item !== value),
+          }));
+          setSelected((prev)=> ([
+
+            ...prev.filter((item) => item !== value)
+
+
+          ]))
+
+        } else {
+          setFormData((prev) => ({
+            ...prev,
+            categories: [...prev.categories, value],
+          }));
+          setSelected((prev)=> (
+            [...prev, value]
+            ))
+        }
+      }
     return(
         <>
          <label htmlFor={label}>{label}</label>

@@ -1,8 +1,5 @@
 interface props {
-  options: {
-    name: string
-    value: string
-  }[]
+  options: string[]
   className?: string
   containerClassName?: string
   defaultValue?: any
@@ -10,9 +7,8 @@ interface props {
   name?: string
   label?: string
   value: {
-    id: string
     name: string
-    label: string
+    value: string
   }[]
   children?: React.ReactNode
 
@@ -21,7 +17,7 @@ interface props {
 }
 
 export function SelectBox({
-  options = [],
+  options,
   onChange = () => {},
   className = '',
   containerClassName = '',
@@ -38,13 +34,14 @@ export function SelectBox({
       <label htmlFor={id}>{label}</label>
       <div className={`flex items-center ${containerClassName} my-2`}>
         <select
-          className={`${className} form-field-primary`}
+          className={`${className}`}
           defaultValue={defaultValue}
           id={id}
           name={name}
           onChange={onChange}
           value={value.map((v) => v.name)}
           multiple={multiple}
+          options={options}
         >
           {children}
         </select>

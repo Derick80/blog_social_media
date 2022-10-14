@@ -22,16 +22,17 @@ export type LayoutProps = {
 
 // removed this from the div grid-rows-[(1fr, 200px, 1fr, 1fr)] grid-cols-[(1fr, 2fr, 2fr, 1fr)] grid gap-4
 export default function Layout({ data, children }: LayoutProps) {
+  // bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500
   return (
-    <div className="col-start-1 row-start-1 m-0 gap-4 p-2 md:col-start-1 md:col-end-6 md:grid md:p-6">
+    <div className="col-start-1 row-start-1 m-0 gap-4 p-2 md:col-start-1 md:col-end-6 md:grid md:p-6 overflow-scroll">
       <div className="col-span-6 col-start-1 row-start-1 row-end-1">
         <NavigationBar data={data} />
       </div>
 
-      <div className="col-span-full col-start-1 row-start-2 items-center md:col-start-2 md:col-end-6 md:justify-center">
+      <div className="col-span-full col-start-1 row-start-2 items-center md:col-start-2 md:col-end-6 md:justify-center h-screen">
         {children}
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }

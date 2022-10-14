@@ -45,7 +45,7 @@ function Document({
         <Meta />
         {title ? <title>{title}</title> : null} <Links />
       </head>
-      <body className="font-Condensed dark:bg-gray-700 dark:text-white">
+      <body className="font-Condensed dark:bg-gray-700 dark:text-white overflow-scroll">
         {children}
         <ScrollRestoration />
         <Scripts />

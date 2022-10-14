@@ -120,7 +120,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function ProfileRoute() {
   const  data  = useLoaderData()
- const  pronouns ='she/her'
+
 
   const actionData = useActionData()
   const [errors, setErrors] = useState(actionData?.errors || {})
@@ -131,7 +131,7 @@ export default function ProfileRoute() {
     bio: data.profile.bio,
     birthDay: data.profile.birthDay,
     currentLocation: data.profile.currentLocation,
-    pronouns: actionData?.fields?.pronouns || pronouns,
+    pronouns: actionData?.fields?.pronouns || data.profile.pronouns,
     occupation: data.profile.occupation,
     postImg: data.profile.profilePicture,
     email: data.profile.email || '',
@@ -235,7 +235,7 @@ export default function ProfileRoute() {
             className="form-field-primary"
             label="Pronouns"
             id="pronouns"
-            value={formData.pronouns}
+            value={pronouns}
             onChange={(event: any) => handleInputChange(event, 'pronouns')}
           />
 
