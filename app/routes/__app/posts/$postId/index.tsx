@@ -4,9 +4,9 @@ import invariant from 'tiny-invariant'
 import PostContent from '~/components/post-content'
 import { getUser } from '~/utils/auth.server'
 import { getPost } from '~/utils/post.server'
-import { QueriedPost } from '~/utils/types.server'
+import { QueriedPost, SinglePost } from '~/utils/types.server'
 type LoaderData = {
-  post: QueriedPost
+  reducedPost:  SinglePost
   likeCount: number
   currentUser: string
   isLoggedIn: boolean
@@ -18,36 +18,35 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const isLoggedIn = user === null ? false : true
   invariant(params.postId, 'Post id is required')
-  const post = await getPost(params.postId)
+  const {reducedPost } = await getPost(params.postId)
 
-  const likeCount = post?.likes.length as number
-  if (!post) {
+  if (!reducedPost) {
     throw new Response('Post not found', { status: 404 })
   }
 
   const data: LoaderData = {
-    post,
-    likeCount,
+    reducedPost,
+
     isLoggedIn,
     currentUser,
-    isOwner: currentUser === post?.userId,
+    isOwner: currentUser === reducedPost?.userId,
     }
   return json(data)
 }
 
 export default function PostRoute() {
   const data = useLoaderData<LoaderData>()
+  const { reducedPost, isOwner,currentUser, isLoggedIn } = data
   return (
     <>
       <div className="">
         pid
-        {data.post && (
+        {reducedPost && (
           <PostContent
-            key={data.post.id}
-            post={data.post}
-            currentUser={data.currentUser}
-            likeCount={data.likeCount}
-            isLoggedIn={data.isLoggedIn}
+            key={reducedPost.id}
+            post={reducedPost}
+            currentUser={currentUser}
+            isLoggedIn={isLoggedIn}
           />
         )}
       </div>

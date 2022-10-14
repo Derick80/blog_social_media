@@ -28,6 +28,7 @@ export async function getPosts() {
       createdAt: 'asc',
     },
   })
+
   const likeCount = userPosts.map((post) => post._count?.likes)
   return { userPosts, likeCount }
 }
@@ -47,7 +48,34 @@ export async function getPost(postId: string) {
       },
     },
   })
-  return post
+  const selectedTags = post?.categories.map((cat)  =>{
+    return {
+      id: cat.id,
+      value: cat.name,
+      label: cat.name,
+    }
+  })
+
+  const reducedPost = {
+    id: post?.id,
+    title: post?.title,
+    description: post?.description,
+    body: post?.body,
+    postImg: post?.postImg,
+    createdBy:post?.createdBy,
+    published: post?.published,
+    createdAt: post?.createdAt.toISOString(),
+    likes: post?.likes,
+    _count: post?._count,
+    likeCount: post?._count?.likes,
+    userId: post?.userId,
+    user: post?.user,
+    selectedTags,
+
+  }
+  return { reducedPost }
+
+
 }
 
 export async function getHeroPost() {

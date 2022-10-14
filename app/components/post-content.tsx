@@ -1,17 +1,16 @@
 import { Link } from '@remix-run/react'
 import { format } from 'date-fns'
-import { QueriedPost } from '~/utils/types.server'
+import {  SinglePost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
 
 type PostProps = {
-  post: QueriedPost
+  post:  SinglePost
   currentUser: string
   isLoggedIn: boolean
-  likeCount: number
 }
 
-export default function PostContent({ post, currentUser, likeCount, isLoggedIn }: PostProps) {
+export default function PostContent({ post, currentUser, isLoggedIn }: PostProps) {
   const likeCounts = post.likes.length as number
   return (
     <article key={post.id} className="p-2">
@@ -22,7 +21,7 @@ export default function PostContent({ post, currentUser, likeCount, isLoggedIn }
 
         <div className="flex flex-auto items-center justify-between p-2 md:flex-row md:p-4">
           <div className=" flex flex-row justify-center">
-            {post?.categories?.map((category) => (
+            {post?.selectedTags?.map((category) => (
               <CategoryContainer key={category.id} category={category} />
             ))}
           </div>

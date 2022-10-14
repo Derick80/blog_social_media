@@ -75,6 +75,43 @@ export type QueriedPost = {
   };
 };
 
+export type QueriedCategories = {
+  option: {
+    id: string;
+    name?: string;
+    value?: string;
+    label?: string;
+  };
+}
+export type SelectedCategories ={
+  id: string;
+  value: string;
+  label: string;
+}
+export type SinglePost = {
+  createdAt: string;
+  id: string;
+  createdBy: string;
+  title: string;
+  description: string;
+  body: string;
+  postImg: string;
+published: boolean;
+  userId: string;
+  user:{
+    id: string;
+    role?: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  }
+  likes: Like[];
+  _count: {
+    likes: number;
+  };
+  selectedTags: SelectedCategories[];
+
+};
 export type QueriedUser = Partial<User>;
 
 export type UserProfileToSerialize = Partial<Profile>;

@@ -1,8 +1,9 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { useActionData, useLoaderData } from '@remix-run/react'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import invariant from 'tiny-invariant'
+import CategoryContainer from '~/components/category-container'
 import { ImageUploader } from '~/components/image-uploader'
 import Button from '~/components/shared/button'
 import FormField from '~/components/shared/form-field'
@@ -17,29 +18,16 @@ import {
   updatePost,
   updatePostWithCategory,
 } from '~/utils/post.server'
+import { QueriedCategories, SelectedCategories, SinglePost } from '~/utils/types.server'
 import { validateText } from '~/utils/validators.server'
+let nextId = 0;
 
 type LoaderData = {
-  post: {
-    id: string
-    description: string
-    title: string
-    body: string
-    postImg: string
-    published: boolean
-    createdBy: string
-    user: {
-      email: string
-    }
-    categories: Array<{ id: string; name: string }>
-  }
-  categories: Array<{ id: string; name: string }>
-  catResults: Array<{ id: string; name: string }>
-
-  allCategories: Array<{ id: string; name: string }>
-
+  reducedPost: SinglePost
+  initialCategoryList: SelectedCategories[]
   currentUser: string
   isLoggedIn: boolean
+  selectedTags: string[]
 }
 
 // const badRequest = (data: ActionData) => {
@@ -49,36 +37,30 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const userId = (await getUserId(request))
   const user = await getUser(request)
   const isLoggedIn = user === null ? false : true
-  const { allCategories } = await getCategories()
+  const { initialCategoryList } = await getCategories()
   invariant(params.postId, `params.postId is required`);
   const currentUser = user?.id
-  const post  =await getPost(params.postId)
+  const {reducedPost}  =await getPost(params.postId)
 
-  if (!post) {
+  if (!reducedPost) {
     throw new Response('Post not found', { status: 404 })
   }
+
+
 
   if(!currentUser){
     throw new Response('Unauthorized', { status: 401 })
   }
-  const categories = post.categories.map((category) => category)
 
-  const catResults = allCategories.map((category) => {
-    const cat = categories.find((cat) => cat.id == category.id)
-    if (cat) {
-      return { ...category, checked: true }
-    } else {
-      return { ...category, checked: false }
-    }
-  })
+
+
 
   const data: LoaderData = {
-    post,
+    reducedPost,
     isLoggedIn,
-    categories,
-    allCategories,
-    catResults,
+    initialCategoryList,
     currentUser,
+
   }
   return json(data)
 }
@@ -196,19 +178,34 @@ export const action: ActionFunction = async ({ request,params }) => {
   }
 }
 export default function PostRoute() {
-  const data = useLoaderData<typeof loader>()
+  const tagRef = useRef(null);
 
+  const data = useLoaderData<typeof loader>()
+  const defV = data.reducedPost.selectedTags.map((tag)=>
+
+   {
+    return {id:nextId++, tag}
+   }
+
+
+  )
+
+
+const [selected, setSelected] = useState(defV)
   const actionData = useActionData()
   const [errors] = useState(actionData?.errors || {})
 
+
+  console.log('defV', defV);
+
   const [formData, setFormData] = useState({
-    id: data.post.id,
-    title: data.post.title,
-    description: data.post.description,
-    body: data.post.body,
-  postImg:  data.post.postImg,
-    createdBy: data.post.createdBy,
-    categories: data.catResults || data.categories,
+    id: data.reducedPost.id,
+    title: data.reducedPost.title,
+    description: data.reducedPost.description,
+    body: data.reducedPost.body,
+  postImg:  data.reducedPost.postImg,
+    createdBy: data.reducedPost.createdBy,
+    categories: defV || data.categories,
   })
 
   const handleInputChange = (
@@ -219,6 +216,15 @@ export default function PostRoute() {
       ...form,
       [field]: event.target.value,
     }))
+  }
+
+  const handleClick=(event: React.ChangeEvent<HTMLInputElement>, field: string) =>{
+    const newItems = [
+      ...defV.slice(0, 1),
+       tagRef.current.value,
+
+    ]
+    setSelected(newItems)
   }
 
   const handleSelectChange = (
@@ -318,24 +324,37 @@ export default function PostRoute() {
             />
 
 
-            <select
+           <div>
+            {selected.map((item)=>(
+              <div className="mx-2 mt-2 flex md:mt-4">
+              <label
+                className="h-fit max-w-full border-2 border-black p-1 text-center text-xs hover:cursor-pointer dark:border-white md:text-sm md:tracking-wide"
+key={item.id}
+              >
+                {item.tag.value}
+              </label>
+            </div>
+            ))}
+
+           <select
               name="categories"
               multiple={true}
               className="form-field-primary"
-              onChange={(event) => handleSelectChange(event, 'categories')}
+                       onChange={(event) => handleSelectChange(event, 'categories')}
+              defaultValue={data.selectedTags}
             >
-              {data.catResults.map((option) => (
+              {data.initialCategoryList.map(({option}:QueriedCategories) => (
                 <option
-                  key={option.id}
-                  value={option.name}
-                  multiple={true}
-                  defaultValue={option.checked ? true : false}
+                  key={option?.id}
+                  value={option?.value}
+
                 >
-                  {option.name}
+                  {option?.label}
                 </option>
               ))}
             </select>
 
+           </div>
             <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
           <div className="flex flex-row items-center justify-between py-2 md:py-4">
             {data?.post?.published ? (

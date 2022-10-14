@@ -21,7 +21,7 @@ children: React.ReactNode
 }
 
 
-export default function MultiSelect({options, value,multiple, className, label, name,onChange, defaultValue, children}:MultiSelectProps) {
+export default function MultipleSelect({options, value,multiple, className, label, name,onChange, defaultValue, children}:MultiSelectProps) {
 
 
     return(

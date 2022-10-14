@@ -1,9 +1,9 @@
 import { FormMethod, NavLink, useFetcher, useLoaderData } from '@remix-run/react'
 import { useRef, useState } from 'react'
-import { QueriedPost } from '~/utils/types.server'
+import { QueriedPost, SinglePost } from '~/utils/types.server'
 
 export type LikeContainerProps = {
-  post: QueriedPost
+  post: SinglePost
   currentUser: string
   postId: string | ''
   likeCount: number

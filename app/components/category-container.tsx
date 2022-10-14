@@ -3,7 +3,8 @@ import { NavLink } from '@remix-run/react'
 export interface CategoryContainerProps {
   category: {
     id: string
-    name: string
+    label?: string
+    value: string
   }
 }
 
@@ -14,7 +15,7 @@ export default function CategoryContainer({ category }: CategoryContainerProps) 
         className="h-fit max-w-full border-2 border-black p-1 text-center text-xs hover:cursor-pointer dark:border-white md:text-sm md:tracking-wide"
         key={category.id}
       >
-        <NavLink to={`/categories/${category.name}`}>{category.name}</NavLink>
+        <NavLink to={`/categories/${category.value}`}>{category.value}</NavLink>
       </label>
     </div>
   )

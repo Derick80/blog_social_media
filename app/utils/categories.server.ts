@@ -8,10 +8,10 @@ export async function getCategories() {
     return {
       id: category.id,
       value: category.name,
-      name: category.name,
+      label: category.name,
     }
   })
-  return { allCategories, initialCategoryList }
+  return {  initialCategoryList }
 }
 
 export const createCategory = async (form: CategoryForm) => {

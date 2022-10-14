@@ -1,75 +1,95 @@
-import { LoaderFunction, json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import React from 'react'
-import invariant from 'tiny-invariant'
-import CategoryContainer from '~/components/category-container'
-import MultiSelect from '~/components/shared/multi-select'
-import { requireUserId } from '~/utils/auth.server'
-import { getCategories } from '~/utils/categories.server'
-import { getMiniPostById } from '~/utils/postv2.server'
+import { MultiSelect } from "@mantine/core";
+import { LoaderFunction, json, ActionFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import React from "react";
+import invariant from "tiny-invariant";
+import CategoryContainer from "~/components/category-container";
+import MultipleSelect from "~/components/shared/multi-select";
+import { requireUserId } from "~/utils/auth.server";
+import { getCategories } from "~/utils/categories.server";
+import { getMiniPostById } from "~/utils/postv2.server";
 
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const initialCategoryList = await getCategories();
+  const miniPostId = params.miniPostId;
+  invariant(miniPostId, "No Mini Post Id");
+  const { minifiedPost } = await getMiniPostById(miniPostId);
 
+  if (!minifiedPost || !initialCategoryList) {
+    throw new Error("No Mini Post");
+  }
 
-export const loader: LoaderFunction = async ({ request,params }) => {
-const initialCategoryList = await getCategories()
-const miniPostId = params.miniPostId
-invariant(miniPostId, 'No Mini Post Id')
-const {minifiedPost, } = await getMiniPostById(miniPostId)
-
-if(!minifiedPost || !initialCategoryList) {
-
-    throw new Error('No Mini Post')
-
-
-}
-
-
-const data = {
+  const data = {
     minifiedPost,
-    initialCategoryList
+    initialCategoryList,
+  };
 
+  return json(data);
+};
+export const action: ActionFunction = async ({ request, params }) => {
+  const formData = await request.formData();
+  const categories = formData.getAll("categories") as string[];
+  console.log("categories", categories);
+};
+
+export default function MiniPost() {
+  const data = useLoaderData();
+  const {initialCategoryList}= data.initialCategoryList
+
+
+  const tags = data.minifiedPost.selectedTags.map((category) =>
+  {
+    return category.value
+  }
+  )
+
+  console.log(tags);
+  const [formData, setFormData] = React.useState({
+    categories: tags,
+  });
+
+  return (
+    <>
+      {data.minifiedPost.selectedTags?.map((item) => (
+        <CategoryContainer key={item.id} category={item} />
+      ))}
+      <form method="post">
+
+
+<select
+        multiple
+        name="categories"
+        value={formData.categories}
+        onChange={(e) => {
+            const { value } = e.target;
+if(formData.categories.includes(value)){
+    setFormData((prev) => ({
+        ...prev,
+        categories: prev.categories.filter((item) => item !== value),
+    }));
 }
-
-return json(data)
-
+else{
+    setFormData((prev) => ({
+        ...prev,
+        categories: [...prev.categories, value],
+    }));
 }
+        }}
+
+        >
+{initialCategoryList.map((item) => (
+          <option key={item.id} value={item.value}
+         selected={data.minifiedPost.selectedTags?.map((item)=> item.value)}
+
+          >
+            {item.value}
+            </option>
+        ))}
 
 
-export default function MiniPost(){
-    const data = useLoaderData()
-    const [selected, setSelected] = React.useState(data.minifiedPost.selectedTags   )
+        </select>
 
-    const [formData, setFormData] = React.useState({
-       categories: data.initialCategoryList.initialCategoryList
-
-
-    })
-
-    return(
-        <>
-{selected?.map((item)=>(
-                          <CategoryContainer key={item.id} category={item} />
-
-))}
- <select
-              name="categories"
-              multiple={true}
-              className="form-field-primary"
-            value={formData.categories}
-
-            >
-{formData.categories.map((cat)=>(
-    <option
-    key={cat.id}
-    value={cat.value}
-    >
-        {cat.name}
-    </option>
-))}
-
-            </select>
-
-
-        </>
-    )
+      </form>
+    </>
+  );
 }

@@ -5,6 +5,7 @@ const defaultMiniPostSelect ={
         id:true,
         title:true,
         body:true,
+        published:true,
         userId:true,
         categories:true,
 
@@ -36,7 +37,7 @@ export async function getMiniPostById(id:string){
         return {
           id: category.id,
           value: category.name,
-          name: category.name,
+          label: category.name,
         }
       })
 const  minifiedPost = {

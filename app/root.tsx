@@ -10,8 +10,8 @@ import {
 } from '@remix-run/react'
 import spriteSrc from '~/sprites.svg'
 import styles from './styles/app.css'
-import { CatchBoundary, ErrorBoundary } from './components/shared/errors'
-
+import { StylesPlaceholder } from '@mantine/remix'
+import { createEmotionCache, MantineProvider } from '@mantine/core'
 export const meta: MetaFunction = () => {
   const description = `See what I've been up to`
   return {
@@ -28,6 +28,8 @@ export const links: LinksFunction = () => [
   { rel: 'preload', href: spriteSrc, as: 'image' },
 ]
 
+
+createEmotionCache({key: 'mantine'})
 function Document({
   children,
   title = `My Personal Blog`,
@@ -36,8 +38,10 @@ function Document({
   title?: string
 }) {
   return (
-    <html lang="en">
+   <MantineProvider withGlobalStyles withNormalizeCSS>
+     <html lang="en">
       <head>
+        <StylesPlaceholder />
         <Meta />
         {title ? <title>{title}</title> : null} <Links />
       </head>
@@ -48,6 +52,7 @@ function Document({
         <LiveReload />
       </body>
     </html>
+   </MantineProvider>
   )
 }
 
