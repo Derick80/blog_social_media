@@ -8,10 +8,8 @@ import {
   ScrollRestoration,
   useCatch,
 } from '@remix-run/react'
-import spriteSrc from '~/sprites.svg'
 import styles from './styles/app.css'
-import { StylesPlaceholder } from '@mantine/remix'
-import { createEmotionCache, MantineProvider } from '@mantine/core'
+
 export const meta: MetaFunction = () => {
   const description = `See what I've been up to`
   return {
@@ -23,12 +21,8 @@ export const meta: MetaFunction = () => {
   }
 }
 
-export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: styles },
-  { rel: 'preload', href: spriteSrc, as: 'image' },
-]
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
-createEmotionCache({ key: 'mantine' })
 function Document({
   children,
   title = `My Personal Blog`,
@@ -37,21 +31,18 @@ function Document({
   title?: string
 }) {
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
-      <html lang="en">
-        <head>
-          <StylesPlaceholder />
-          <Meta />
-          {title ? <title>{title}</title> : null} <Links />
-        </head>
-        <body className="overflow-scroll font-Condensed dark:bg-gray-700 dark:text-white">
-          {children}
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
-        </body>
-      </html>
-    </MantineProvider>
+    <html lang="en">
+      <head>
+        <Meta />
+        {title ? <title>{title}</title> : null} <Links />
+      </head>
+      <body className="overflow-scroll font-Condensed dark:bg-gray-700 dark:text-white">
+        {children}
+        <ScrollRestoration />
+        <Scripts x={undefined} />
+        <LiveReload />
+      </body>
+    </html>
   )
 }
 

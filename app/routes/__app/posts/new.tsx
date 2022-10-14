@@ -4,12 +4,10 @@ import { useActionData, useLoaderData } from '@remix-run/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { ImageUploader } from '~/components/image-uploader'
 import FormField from '~/components/shared/form-field'
-
 import { getUser, requireUserId } from '~/utils/auth.server'
 import { createDraft } from '~/utils/post.server'
 import { validateText } from '~/utils/validators.server'
 import { getCategories } from '~/utils/categories.server'
-import Button from '~/components/shared/button'
 import { SelectedCategories } from '~/utils/types.server'
 import invariant from 'tiny-invariant'
 
@@ -241,7 +239,7 @@ export default function NewPostRoute() {
         />
         <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
         <div className="flex items-center justify-center py-2 md:py-4">
-          <Button type="submit">Save</Button>
+          <button type="submit">Save</button>
         </div>
       </form>
     </div>

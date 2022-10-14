@@ -1,5 +1,4 @@
 import { NavLink } from '@remix-run/react'
-import Button from '../shared/button'
 
 type PrimaryNavProps = {
   data: {
@@ -76,11 +75,11 @@ export default function NavigationBar({ data }: PrimaryNavProps) {
 
               <li className="nav-li">
                 <form className="" action="/logout" method="post">
-                  <Button type="submit" variant="outlined">
+                  <button type="submit">
                     {' '}
                     <span className="material-symbols-outlined">logout</span>
                     <p className="hidden md:block">Sign Out</p>
-                  </Button>
+                  </button>
                 </form>
               </li>
             </>

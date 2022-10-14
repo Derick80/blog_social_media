@@ -40,7 +40,6 @@ export default function PostRoute() {
   return (
     <>
       <div className="">
-        pid
         {reducedPost && (
           <PostContent
             key={reducedPost.id}

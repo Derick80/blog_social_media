@@ -1,9 +1,6 @@
-import { Profile } from '@prisma/client'
 import { Link } from '@remix-run/react'
 import { QueriedUserProfile } from '~/utils/types.server'
-import Button from './shared/button'
-import blacktransparent from '../resources/logos/blacktransparent.png'
-// look at history
+
 export type ProfileProps = {
   data: {
     userProfile: QueriedUserProfile
