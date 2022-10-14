@@ -12,25 +12,25 @@ import { SelectedCategories } from '~/utils/types.server'
 import invariant from 'tiny-invariant'
 
 type LoaderData = {
-  initialCategoryList: SelectedCategories[]
+  fullCategoryList: FullCategoryList[]
   isAdmin: boolean
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
-  const { initialCategoryList } = await getCategories()
+  const { fullCategoryList } = await getCategories()
   invariant(user, 'User is not available')
   const isAdmin = user.role == 'ADMIN'
 
   if (!isAdmin) {
     throw new Response('Unauthorized', { status: 401 })
   }
-  if (!initialCategoryList) {
+  if (!fullCategoryList) {
     throw new Response('No Categories', { status: 404 })
   }
 
   const data: LoaderData = {
-    initialCategoryList,
+    fullCategoryList,
     isAdmin,
   }
 
@@ -114,12 +114,11 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function NewPostRoute() {
-  const { initialCategoryList } = useLoaderData<LoaderData>()
+  const { fullCategoryList } = useLoaderData<LoaderData>()
   const actionData = useActionData()
   const firstLoad = useRef(true)
   const [formError, setFormError] = useState(actionData?.error || '')
   const [errors, setErrors] = useState(actionData?.errors || {})
-  console.log(actionData)
   const [formData, setFormData] = useState({
     title: actionData?.fields?.title || '',
     description: actionData?.fields?.description || '',
@@ -219,7 +218,7 @@ export default function NewPostRoute() {
               handleInputChange(event, 'categories')
             }
           >
-            {initialCategoryList.map((option) => (
+            {fullCategoryList.map((option) => (
               <option key={option.id} value={option.value}>
                 {option.label}
               </option>

@@ -1,29 +1,41 @@
 import { Post, Prisma, User } from '@prisma/client'
+import invariant from 'tiny-invariant'
 import { prisma } from './prisma.server'
-import type { CreateOrEditPost, UpdatePost } from './types.server'
+import type { CreateOrEditPost, SavePost, UpdatePost } from './types.server'
+
+const defaultPostSelect = {
+  id: true,
+  title: true,
+  description: true,
+  body: true,
+  postImg: true,
+  createdBy: true,
+  published: true,
+  createdAt: true,
+  userId: true,
+  categories: true,
+  likes: true,
+  _count: {
+    select: {
+      likes: true,
+    },
+  },
+  user: {
+    select: {
+      id: true,
+      firstName: true,
+      email: true,
+      lastName: true,
+    },
+  },
+}
 
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
     where: {
       published: true,
     },
-    include: {
-      categories: true,
-
-      likes: true,
-      _count: {
-        select: {
-          likes: true,
-        },
-      },
-      user: {
-        select: {
-          role: true,
-          firstName: true,
-          lastName: true,
-        },
-      },
-    },
+    select: defaultPostSelect,
     orderBy: {
       createdAt: 'asc',
     },
@@ -48,29 +60,34 @@ export async function getPost(postId: string) {
       },
     },
   })
-  const selectedTags = post?.categories.map((cat) => {
+  invariant(post, 'Post not found')
+
+  const selectedPostCategories = post.categories.map((cat) => {
     return {
       id: cat.id,
       value: cat.name,
       label: cat.name,
+      name: cat.name,
     }
   })
 
+  invariant(selectedPostCategories, 'No tags found')
+
   const reducedPost = {
-    id: post?.id,
-    title: post?.title,
-    description: post?.description,
-    body: post?.body,
-    postImg: post?.postImg,
-    createdBy: post?.createdBy,
-    published: post?.published,
-    createdAt: post?.createdAt.toISOString(),
-    likes: post?.likes,
-    _count: post?._count,
-    likeCount: post?._count?.likes,
-    userId: post?.userId,
-    user: post?.user,
-    selectedTags,
+    id: post.id,
+    title: post.title,
+    description: post.description,
+    body: post.body,
+    postImg: post.postImg,
+    createdBy: post.createdBy,
+    published: post.published,
+    createdAt: post.createdAt.toISOString(),
+    likes: post.likes,
+    _count: post._count,
+    likeCount: post._count.likes,
+    userId: post.userId,
+    user: post.user,
+    selectedPostCategories,
   }
   return { reducedPost }
 }
@@ -124,7 +141,7 @@ export async function createDraft({
         },
       },
       categories: {
-        connectOrCreate: categories.map((category) => ({
+        connectOrCreate: categories.map((category: any) => ({
           where: { name: category },
           create: { name: category },
         })),
@@ -149,6 +166,28 @@ export async function getUserDrafts(userId: string) {
   return userDrafts
 }
 
+export async function savePost({
+  postId,
+  title,
+  description,
+  body,
+  postImg,
+  correctedCategories,
+}: SavePost) {
+  await prisma.post.update({
+    where: { id: postId },
+    data: {
+      title,
+      description,
+      body,
+      postImg,
+      categories: {
+        set: correctedCategories,
+      },
+    },
+  })
+  return true
+}
 export async function updatePost({
   id,
   title,

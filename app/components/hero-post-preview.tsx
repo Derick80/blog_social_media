@@ -27,7 +27,7 @@ export default function HeroPost({ post }: HeroPostProps) {
             </Link>
           </p>
           <div className="flex flex-row">
-            {post?.categories?.map((category) => (
+            {post.selectedPostCategories.map((category) => (
               <CategoryContainer key={category.id} category={category} />
             ))}
           </div>

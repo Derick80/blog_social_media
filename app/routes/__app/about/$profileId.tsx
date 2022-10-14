@@ -52,7 +52,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   const bio = formData.get('bio')
   const title = formData.get('title')
   const currentLocation = formData.get('currentLocation')
-  const pronouns = formData.get('pronouns')
   const occupation = formData.get('occupation')
   const postImg = formData.get('postImg')
   const email = formData.get('email')
@@ -64,7 +63,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     typeof bio !== 'string' ||
     typeof currentLocation !== 'string' ||
     typeof occupation !== 'string' ||
-    typeof pronouns !== 'string' ||
     typeof userId !== 'string' ||
     typeof email !== 'string' ||
     typeof title !== 'string' ||
@@ -78,7 +76,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     bio: validateText(bio as string),
     currentLocation: validateText(currentLocation as string),
     occupation: validateText(occupation as string),
-    pronouns: validateName(pronouns),
     email: validateEmail(email as string),
     title: validateText(title as string),
   }
@@ -92,9 +89,7 @@ export const action: ActionFunction = async ({ request, params }) => {
           lastName,
           bio,
           currentLocation,
-          occupation,
-          pronouns,
-          email,
+          occupation,          email,
           title,
         },
         form: action,
@@ -110,7 +105,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     bio: bio,
     currentLocation: currentLocation,
     occupation: occupation,
-    pronouns: pronouns as Pronouns,
     profilePicture: postImg,
     email: email,
     title: title,
@@ -130,7 +124,6 @@ export default function ProfileRoute() {
     bio: data.profile.bio,
     birthDay: data.profile.birthDay,
     currentLocation: data.profile.currentLocation,
-    pronouns: actionData?.fields?.pronouns || data.profile.pronouns,
     occupation: data.profile.occupation,
     postImg: data.profile.profilePicture,
     email: data.profile.email || '',
@@ -228,15 +221,7 @@ export default function ProfileRoute() {
             onChange={(event) => handleInputChange(event, 'currentLocation')}
             error={errors?.currentLocation}
           />
-          <SelectBox
-            options={pronouns}
-            name="pronouns"
-            className="form-field-primary"
-            label="Pronouns"
-            id="pronouns"
-            value={pronouns}
-            onChange={(event) => handleInputChange(event, 'pronouns')}
-          />
+
 
           <FormField
             htmlFor="occupation"

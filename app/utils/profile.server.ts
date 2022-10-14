@@ -27,7 +27,6 @@ export async function updateProfile({
   bio,
   title,
   currentLocation,
-  pronouns,
   occupation,
   profilePicture,
   email,
@@ -41,7 +40,7 @@ export async function updateProfile({
       bio,
       title,
       currentLocation,
-      pronouns,
+
       occupation,
       profilePicture,
       email,

@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant'
 import { prisma } from './prisma.server'
 import { CategoryForm } from './types.server'
 
@@ -25,7 +26,8 @@ export async function getMiniPostById(id: string) {
     select: defaultMiniPostSelect,
   })
 
-  const selectedTags = miniPost?.categories.map((category) => {
+  invariant(miniPost, 'MiniPost not found')
+  const selectedCategories = miniPost.categories.map((category) => {
     return {
       id: category.id,
       value: category.name,
@@ -33,11 +35,11 @@ export async function getMiniPostById(id: string) {
     }
   })
   const minifiedPost = {
-    id: miniPost?.id,
-    title: miniPost?.title,
-    body: miniPost?.body,
-    userId: miniPost?.userId,
-    selectedTags,
+    id: miniPost.id,
+    title: miniPost.title,
+    body: miniPost.body,
+    userId: miniPost.userId,
+    selectedCategories,
   }
 
   return { minifiedPost }

@@ -28,7 +28,7 @@ export default function PostPreview({
             <Link to={`/posts/${post.id}`}>{post.title}</Link>
           </h3>
           <div className="flex flex-row border-t-2 border-black dark:border-white">
-            {post?.categories?.map((category) => (
+            {post?.selectedPostCategories?.map((category) => (
               <CategoryContainer key={category.id} category={category} />
             ))}
           </div>

@@ -7,18 +7,18 @@ import { editMiniPostCategories, getMiniPostById } from '~/utils/postv2.server'
 import { CategoryForm, SelectedCategories } from '~/utils/types.server'
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const initialCategoryList = await getCategories()
+  const fullCategoryList = await getCategories()
   const miniPostId = params.miniPostId
   invariant(miniPostId, 'No Mini Post Id')
   const { minifiedPost } = await getMiniPostById(miniPostId)
 
-  if (!minifiedPost || !initialCategoryList) {
+  if (!minifiedPost || !fullCategoryList) {
     throw new Error('No Mini Post')
   }
 
   const data = {
     minifiedPost,
-    initialCategoryList,
+    fullCategoryList,
   }
 
   return json(data)
@@ -43,7 +43,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function MiniPost() {
   const data = useLoaderData()
-  const { initialCategoryList } = data.initialCategoryList
+  const { fullCategoryList } = data.fullCategoryList
 
   const tags = data.minifiedPost.selectedTags.map((category: { value: string }) => {
     return category.value
@@ -103,12 +103,12 @@ export default function MiniPost() {
             <select
               className="form-field-primary flex w-full border-t-0 p-2"
               multiple
-              size={initialCategoryList.length}
+              size={fullCategoryList.length}
               name="categories"
               value={formData.categories}
               onChange={(event) => handleSelectChanges(event)}
             >
-              {initialCategoryList.map((item: Partial<SelectedCategories>) => (
+              {fullCategoryList.map((item: Partial<SelectedCategories>) => (
                 <option className="" key={item.id} value={item.value}>
                   {item.value}
                 </option>

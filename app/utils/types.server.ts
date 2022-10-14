@@ -1,4 +1,4 @@
-import { Category, Like, Post, Profile, User } from '@prisma/client'
+import { Like, Profile, User } from '@prisma/client'
 import { SerializeFrom } from '@remix-run/node'
 
 export interface LoginForm {
@@ -13,37 +13,38 @@ export interface RegisterForm {
   lastName: string
 }
 
-// Authinput will eventually replace login/reg form
-export interface AuthInput {
-  email: string
-  password: string
-  redirectTo?: string
-  token?: string
-}
-export interface CreateOrEditPost {
-  id?: string
+// export interface CreateOrEditPost {
+//   id?: string
+//   title: string
+//   description: string
+//   body: string
+//   postImg: string
+//   createdBy: string
+//   categories: string[]
+
+//   userId: string
+// }
+
+// export interface UpdatePost {
+//   id: string
+//   title: string
+//   description: string
+//   body: string
+//   postImg: string
+
+//   createdBy: string
+//   categories: [string]
+//   userId: string
+// }
+
+export interface SavePost {
+  postId: string
   title: string
   description: string
   body: string
   postImg: string
-  createdBy: string
-  categories: string[]
-
-  userId: string
+  correctedCategories: CategoryForm[]
 }
-
-export interface UpdatePost {
-  id: string
-  title: string
-  description: string
-  body: string
-  postImg: string
-
-  createdBy: string
-  categories: [string]
-  userId: string
-}
-
 // use this type when transforming formData to db format
 export interface CategoryForm {
   name: string
@@ -56,15 +57,16 @@ export interface UpdateCategoryForm {
 }
 
 export type QueriedPost = {
-  createdAt: Date
+  createdAt: string
   id: string
   createdBy: string
   title: string
   description: string
   body: string
   postImg: string
+  published: boolean
+  userId: string
   likes: Like[]
-  categories: Category[]
   _count: {
     likes: number
   }
@@ -74,6 +76,12 @@ export type QueriedPost = {
     firstName: string
     lastName: string
     email: string
+  }
+  selectedPostCategories: {
+    id: string,
+    name: string,
+    value: string,
+    label: string
   }
 }
 
@@ -85,12 +93,39 @@ export type QueriedCategories = {
     label?: string
   }
 }
+
+export type SelectCategories = {
+
+    id: string
+    value: string
+    label: string
+    name: string
+
+}
 export type SelectedCategories = {
+  selectedPostCategories: {
+    id: string
+    value: string
+    label: string
+    name: string
+  }
+}
+
+export type FullCategoryList = {
+  fullCategoryList: {
+    id: string
+    value: string
+    label: string
+    name: string
+  }
+}
+// use FullCategoryListDestructure to type the destructured object (item)
+export type FullCategoryListDestructure = {
   id: string
   value: string
   label: string
+  name: string
 }
-
 // Type for returned SIngle Post
 export type SinglePost = {
   createdAt: string
@@ -113,7 +148,7 @@ export type SinglePost = {
   _count: {
     likes: number
   }
-  selectedTags: SelectedCategories[]
+  selectedPostCategories: SelectedCategories[]
 }
 export type QueriedUser = Partial<User>
 

@@ -64,9 +64,9 @@ export default function Home() {
       <div className="col-span-full gap-4">
         <div>
           {' '}
-          {data.heroPost?.map((post) => (
+          {/* {data.heroPost?.map((post) => (
             <HeroPost key={post.id} post={post} isLoggedin={data.isLoggedIn} />
-          ))}
+          ))} */}
         </div>
       </div>
       <div className="colums-2 col-span-full flex flex-wrap justify-around gap-4">

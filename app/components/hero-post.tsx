@@ -1,11 +1,11 @@
 import { Link } from '@remix-run/react'
 import { format } from 'date-fns'
-import { QueriedPost } from '~/utils/types.server'
+import { QueriedPost, SinglePost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
 
 export type HeroPostProps = {
-  post: QueriedPost
+  post: any
   isLoggedin: boolean
   currentUser: string
   likeCount: number
@@ -26,7 +26,7 @@ export default function HeroPost({ post, currentUser, likeCount, isLoggedin }: H
                   <Link to={`/posts/${post.id}`}>{post.title}</Link>
                 </h3>
                 <div className="flex flex-row border-t-2 border-black dark:border-white">
-                  {post?.categories?.map((category) => (
+                  {post.selectedPostCategories.map((category) => (
                     <CategoryContainer key={category.id} category={category} />
                   ))}
                 </div>

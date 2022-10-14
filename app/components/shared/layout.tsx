@@ -25,7 +25,7 @@ export default function Layout({ data, children }: LayoutProps) {
       <div className="col-span-full col-start-1 row-start-2 h-screen items-center md:col-start-2 md:col-end-6 md:justify-center">
         {children}
       </div>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   )
 }

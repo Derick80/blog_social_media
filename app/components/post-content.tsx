@@ -1,11 +1,11 @@
 import { Link } from '@remix-run/react'
 import { format } from 'date-fns'
-import { SinglePost } from '~/utils/types.server'
+import { QueriedPost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
 
 type PostProps = {
-  post: SinglePost
+  post: QueriedPost
   currentUser: string
   isLoggedIn: boolean
 }
@@ -21,12 +21,12 @@ export default function PostContent({ post, currentUser, isLoggedIn }: PostProps
 
         <div className="flex flex-auto items-center justify-between p-2 md:flex-row md:p-4">
           <div className=" flex flex-row justify-center">
-            {post?.selectedTags?.map((category) => (
+            {post.selectedPostCategories.map((category) => (
               <CategoryContainer key={category.id} category={category} />
             ))}
           </div>
 
-          <small>{`By ${post.user?.firstName} ${post.user?.lastName}`}</small>
+          <small>{`By ${post.user?.firstName} ${post.user.lastName}`}</small>
           <small>{format(new Date(post.createdAt), 'MMMM dd, yyyy')}</small>
           <LikeContainer
             postId={post.id}
@@ -36,7 +36,7 @@ export default function PostContent({ post, currentUser, isLoggedIn }: PostProps
             post={post}
             isLoggedIn={isLoggedIn}
           />
-          {currentUser === post?.user.id ? (
+          {currentUser === post.user.id ? (
             <div className="flex flex-row gap-5">
               <Link to={`/posts/${post.id}/edit`} className="flex">
                 <button type="button">Edit</button>

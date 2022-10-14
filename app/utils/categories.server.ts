@@ -4,14 +4,15 @@ import { json } from '@remix-run/node'
 
 export async function getCategories() {
   const allCategories = await prisma.category.findMany({})
-  const initialCategoryList = allCategories.map((category) => {
+  const fullCategoryList = allCategories.map((category) => {
     return {
       id: category.id,
       value: category.name,
       label: category.name,
+      name: category.name,
     }
   })
-  return { initialCategoryList }
+  return { fullCategoryList }
 }
 
 export const createCategory = async (form: CategoryForm) => {
