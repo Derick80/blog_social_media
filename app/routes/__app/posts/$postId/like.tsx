@@ -1,7 +1,7 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 
-import { getUser, requireUserId } from '~/utils/auth.server'
+import { getUser } from '~/utils/auth.server'
 import { createLike, deleteLike } from '~/utils/like.server'
 
 export const loader: LoaderFunction = ({ request }) => {
@@ -10,7 +10,7 @@ export const loader: LoaderFunction = ({ request }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await getUser(request)
-  const postId = params.pid
+  const postId = params.postId
   const userId = user?.id
 
   if (!userId || !postId) {
