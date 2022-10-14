@@ -28,8 +28,7 @@ export const links: LinksFunction = () => [
   { rel: 'preload', href: spriteSrc, as: 'image' },
 ]
 
-
-createEmotionCache({key: 'mantine'})
+createEmotionCache({ key: 'mantine' })
 function Document({
   children,
   title = `My Personal Blog`,
@@ -38,21 +37,21 @@ function Document({
   title?: string
 }) {
   return (
-   <MantineProvider withGlobalStyles withNormalizeCSS>
-     <html lang="en">
-      <head>
-        <StylesPlaceholder />
-        <Meta />
-        {title ? <title>{title}</title> : null} <Links />
-      </head>
-      <body className="font-Condensed dark:bg-gray-700 dark:text-white overflow-scroll">
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
-   </MantineProvider>
+    <MantineProvider withGlobalStyles withNormalizeCSS>
+      <html lang="en">
+        <head>
+          <StylesPlaceholder />
+          <Meta />
+          {title ? <title>{title}</title> : null} <Links />
+        </head>
+        <body className="overflow-scroll font-Condensed dark:bg-gray-700 dark:text-white">
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </body>
+      </html>
+    </MantineProvider>
   )
 }
 

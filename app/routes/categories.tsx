@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async () => {
     }
   })
 
-  console.log('initialCategoryList', initialCategoryList);
+  console.log('initialCategoryList', initialCategoryList)
 
   const data = {
     initialCategoryList,
@@ -72,27 +72,25 @@ export default function Categories() {
 
   return (
     <>
-      <div className="flex shadow-grey-300 mt-4 mb-4 w-full rounded-xl p-2 text-xl shadow-2xl items-center justify-center">
-
-<div className=''>
-
-<select multiple={true} name='categories' value={initialCategories} placeholder='Pick one or more tags for your post'  className='text-white dark:text-black w-52'/>
-</div>
+      <div className="shadow-grey-300 mt-4 mb-4 flex w-full items-center justify-center rounded-xl p-2 text-xl shadow-2xl">
+        <div className="">
+          <select
+            multiple={true}
+            name="categories"
+            value={initialCategories}
+            placeholder="Pick one or more tags for your post"
+            className="w-52 text-white dark:text-black"
+          />
+        </div>
       </div>
       <MultiSelect
-      label='Pick one or More Categories'
-      className='text-bold'
-      multiple={true}
-      name='categories'
-      defaultValue={initialCategories}
-
-      options={initialCategories}
-      >
-
-
-
-
-      </MultiSelect>
+        label="Pick one or More Categories"
+        className="text-bold"
+        multiple={true}
+        name="categories"
+        defaultValue={initialCategories}
+        options={initialCategories}
+      ></MultiSelect>
     </>
   )
 }

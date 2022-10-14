@@ -37,7 +37,7 @@ export async function getPost(postId: string) {
   const post = await prisma.post.findUnique({
     where: { id: postId },
     include: {
-      user: { select: { email: true, firstName: true, lastName: true, role:true, id:true } },
+      user: { select: { email: true, firstName: true, lastName: true, role: true, id: true } },
       categories: true,
 
       likes: true,
@@ -48,7 +48,7 @@ export async function getPost(postId: string) {
       },
     },
   })
-  const selectedTags = post?.categories.map((cat)  =>{
+  const selectedTags = post?.categories.map((cat) => {
     return {
       id: cat.id,
       value: cat.name,
@@ -62,7 +62,7 @@ export async function getPost(postId: string) {
     description: post?.description,
     body: post?.body,
     postImg: post?.postImg,
-    createdBy:post?.createdBy,
+    createdBy: post?.createdBy,
     published: post?.published,
     createdAt: post?.createdAt.toISOString(),
     likes: post?.likes,
@@ -71,11 +71,8 @@ export async function getPost(postId: string) {
     userId: post?.userId,
     user: post?.user,
     selectedTags,
-
   }
   return { reducedPost }
-
-
 }
 
 export async function getHeroPost() {
@@ -162,7 +159,7 @@ export async function updatePost({
   categories,
 }: Omit<CreateOrEditPost, 'userId'> & { userId: User['id'] }) {
   try {
-   await prisma.post.update({
+    await prisma.post.update({
       where: { id: id },
       data: {
         title,
@@ -193,7 +190,7 @@ export async function updateAndPublish({
   createdBy,
 }: CreateOrEditPost) {
   try {
-     await prisma.post.update({
+    await prisma.post.update({
       where: { id: id },
       data: {
         title,
@@ -280,9 +277,9 @@ export async function getPostsByCategory(categoryName: string) {
 
 export const updatePostWithCategory = async (form: UpdatePost) => {
   const selected = form.categories.map((category) => category) as []
-console.log('selected', selected);
+  console.log('selected', selected)
 
- await prisma.post.update({
+  await prisma.post.update({
     where: {
       id: form.id,
     },

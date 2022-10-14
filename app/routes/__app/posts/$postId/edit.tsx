@@ -20,7 +20,7 @@ import {
 } from '~/utils/post.server'
 import { QueriedCategories, SelectedCategories, SinglePost } from '~/utils/types.server'
 import { validateText } from '~/utils/validators.server'
-let nextId = 0;
+let nextId = 0
 
 type LoaderData = {
   reducedPost: SinglePost
@@ -34,38 +34,32 @@ type LoaderData = {
 //   json(data, { status: 400 })
 // }
 export const loader: LoaderFunction = async ({ params, request }) => {
-  const userId = (await getUserId(request))
+  const userId = await getUserId(request)
   const user = await getUser(request)
   const isLoggedIn = user === null ? false : true
   const { initialCategoryList } = await getCategories()
-  invariant(params.postId, `params.postId is required`);
+  invariant(params.postId, `params.postId is required`)
   const currentUser = user?.id
-  const {reducedPost}  =await getPost(params.postId)
+  const { reducedPost } = await getPost(params.postId)
 
   if (!reducedPost) {
     throw new Response('Post not found', { status: 404 })
   }
 
-
-
-  if(!currentUser){
+  if (!currentUser) {
     throw new Response('Unauthorized', { status: 401 })
   }
-
-
-
 
   const data: LoaderData = {
     reducedPost,
     isLoggedIn,
     initialCategoryList,
     currentUser,
-
   }
   return json(data)
 }
 
-export const action: ActionFunction = async ({ request,params }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const userId = await getUserId(request)
   const postId = params.postId
   const formData = await request.formData()
@@ -80,7 +74,7 @@ export const action: ActionFunction = async ({ request,params }) => {
     return { name: category }
   })
 
-  if(!postId){
+  if (!postId) {
     return json({ postId: null }, { status: 404 })
   }
   if (!userId) {
@@ -97,7 +91,6 @@ export const action: ActionFunction = async ({ request,params }) => {
     typeof postImg !== 'string' ||
     typeof createdBy !== 'string' ||
     typeof categories !== 'object'
-
   ) {
     return json({ error: 'invalid form data category' }, { status: 400 })
   }
@@ -130,35 +123,35 @@ export const action: ActionFunction = async ({ request,params }) => {
           { status: 400 }
         )
       await updatePost({
-        id:postId,
+        id: postId,
         userId,
         title,
         description,
         body,
         postImg,
         createdBy,
-        categories
+        categories,
       })
       return redirect(`/drafts`)
     case 'updateAndPublish':
       await updatePostWithCategory({
-        id:postId,
+        id: postId,
         userId,
         title,
         description,
         body,
         postImg,
         createdBy,
-        categories
+        categories,
       })
-      console.log('update and publish', postId);
+      console.log('update and publish', postId)
       return redirect(`/`)
     case 'publish':
       if (typeof postId !== 'string') {
         return json({ error: 'invalid form data publish' }, { status: 400 })
       }
       await publishPost(postId)
-      console.log('published');
+      console.log('published')
       return redirect('/')
     case 'unpublish':
       if (typeof postId !== 'string') {
@@ -178,32 +171,25 @@ export const action: ActionFunction = async ({ request,params }) => {
   }
 }
 export default function PostRoute() {
-  const tagRef = useRef(null);
+  const tagRef = useRef(null)
 
   const data = useLoaderData<typeof loader>()
-  const defV = data.reducedPost.selectedTags.map((tag)=>
+  const defV = data.reducedPost.selectedTags.map((tag) => {
+    return { id: nextId++, tag }
+  })
 
-   {
-    return {id:nextId++, tag}
-   }
-
-
-  )
-
-
-const [selected, setSelected] = useState(defV)
+  const [selected, setSelected] = useState(defV)
   const actionData = useActionData()
   const [errors] = useState(actionData?.errors || {})
 
-
-  console.log('defV', defV);
+  console.log('defV', defV)
 
   const [formData, setFormData] = useState({
     id: data.reducedPost.id,
     title: data.reducedPost.title,
     description: data.reducedPost.description,
     body: data.reducedPost.body,
-  postImg:  data.reducedPost.postImg,
+    postImg: data.reducedPost.postImg,
     createdBy: data.reducedPost.createdBy,
     categories: defV || data.categories,
   })
@@ -218,12 +204,8 @@ const [selected, setSelected] = useState(defV)
     }))
   }
 
-  const handleClick=(event: React.ChangeEvent<HTMLInputElement>, field: string) =>{
-    const newItems = [
-      ...defV.slice(0, 1),
-       tagRef.current.value,
-
-    ]
+  const handleClick = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    const newItems = [...defV.slice(0, 1), tagRef.current.value]
     setSelected(newItems)
   }
 
@@ -231,7 +213,7 @@ const [selected, setSelected] = useState(defV)
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
     field: string
   ) => {
-   const formData = new FormData()
+    const formData = new FormData()
     formData.append(field, event.target.value)
   }
   const handleFileUpload = async (file: File) => {
@@ -303,59 +285,50 @@ const [selected, setSelected] = useState(defV)
               {actionData.fieldErrors.description}
             </p>
           ) : null}
-
-              <FormField
-                htmlFor="body"
-                label="Write Your Post"
-                name="body"
-                className="form-field-primary"
-                value={formData.body}
-                onChange={(event) => handleInputChange(event, 'body')}
-                error={errors?.body}
-              />
-
-             <FormField
-              htmlFor="postImg"
-              label="Post Image"
-              type="hidden"
-              name="postImg"
-              value={formData.postImg}
-              onChange={(event) => handleInputChange(event, 'postImg')}
-            />
-
-
-           <div>
-            {selected.map((item)=>(
+          <FormField
+            htmlFor="body"
+            label="Write Your Post"
+            name="body"
+            className="form-field-primary"
+            value={formData.body}
+            onChange={(event) => handleInputChange(event, 'body')}
+            error={errors?.body}
+          />
+          <FormField
+            htmlFor="postImg"
+            label="Post Image"
+            type="hidden"
+            name="postImg"
+            value={formData.postImg}
+            onChange={(event) => handleInputChange(event, 'postImg')}
+          />
+          <div>
+            {selected.map((item) => (
               <div className="mx-2 mt-2 flex md:mt-4">
-              <label
-                className="h-fit max-w-full border-2 border-black p-1 text-center text-xs hover:cursor-pointer dark:border-white md:text-sm md:tracking-wide"
-key={item.id}
-              >
-                {item.tag.value}
-              </label>
-            </div>
+                <label
+                  className="h-fit max-w-full border-2 border-black p-1 text-center text-xs hover:cursor-pointer dark:border-white md:text-sm md:tracking-wide"
+                  key={item.id}
+                >
+                  {item.tag.value}
+                </label>
+              </div>
             ))}
 
-           <select
+            <select
               name="categories"
               multiple={true}
               className="form-field-primary"
-                       onChange={(event) => handleSelectChange(event, 'categories')}
+              onChange={(event) => handleSelectChange(event, 'categories')}
               defaultValue={data.selectedTags}
             >
-              {data.initialCategoryList.map(({option}:QueriedCategories) => (
-                <option
-                  key={option?.id}
-                  value={option?.value}
-
-                >
+              {data.initialCategoryList.map(({ option }: QueriedCategories) => (
+                <option key={option?.id} value={option?.value}>
                   {option?.label}
                 </option>
               ))}
             </select>
-
-           </div>
-            <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
+          </div>
+          <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
           <div className="flex flex-row items-center justify-between py-2 md:py-4">
             {data?.post?.published ? (
               <>
@@ -386,7 +359,6 @@ key={item.id}
             <div></div>
           </div>
         </form>
-
       </div>
     </>
   )

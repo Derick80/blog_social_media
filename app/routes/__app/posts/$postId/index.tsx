@@ -6,7 +6,7 @@ import { getUser } from '~/utils/auth.server'
 import { getPost } from '~/utils/post.server'
 import { QueriedPost, SinglePost } from '~/utils/types.server'
 type LoaderData = {
-  reducedPost:  SinglePost
+  reducedPost: SinglePost
   likeCount: number
   currentUser: string
   isLoggedIn: boolean
@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const isLoggedIn = user === null ? false : true
   invariant(params.postId, 'Post id is required')
-  const {reducedPost } = await getPost(params.postId)
+  const { reducedPost } = await getPost(params.postId)
 
   if (!reducedPost) {
     throw new Response('Post not found', { status: 404 })
@@ -30,13 +30,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     isLoggedIn,
     currentUser,
     isOwner: currentUser === reducedPost?.userId,
-    }
+  }
   return json(data)
 }
 
 export default function PostRoute() {
   const data = useLoaderData<LoaderData>()
-  const { reducedPost, isOwner,currentUser, isLoggedIn } = data
+  const { reducedPost, isOwner, currentUser, isLoggedIn } = data
   return (
     <>
       <div className="">

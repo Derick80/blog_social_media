@@ -54,7 +54,7 @@ export default function Home() {
 
   return (
     <div className="grid grid-cols-1 grid-rows-1 justify-center gap-4 p-2 md:grid-cols-6 md:grid-rows-none md:gap-8 md:p-4">
-      <div className="col-span-full col-start-1 mb-2 justify-center md:col-start-2 md:col-end-6 md:row-end-1 md:mb-2 md:flex-wrap">
+      <div className="col-span-full col-start-1 mb-2 flex flex-nowrap justify-center md:col-start-2 md:col-end-6 md:row-end-1 md:mb-2 md:flex-wrap">
         <div className="flex flex-wrap justify-center pb-2 text-sm md:pb-4 md:text-base">
           {data?.catCount?.map((category) => (
             <CategoryCount key={category.id} category={category} />

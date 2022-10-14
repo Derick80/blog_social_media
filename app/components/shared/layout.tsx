@@ -24,12 +24,12 @@ export type LayoutProps = {
 export default function Layout({ data, children }: LayoutProps) {
   // bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500
   return (
-    <div className="col-start-1 row-start-1 m-0 gap-4 p-2 md:col-start-1 md:col-end-6 md:grid md:p-6 overflow-scroll">
+    <div className="col-start-1 row-start-1 m-0 gap-4 overflow-scroll p-2 md:col-start-1 md:col-end-6 md:grid md:p-6">
       <div className="col-span-6 col-start-1 row-start-1 row-end-1">
         <NavigationBar data={data} />
       </div>
 
-      <div className="col-span-full col-start-1 row-start-2 items-center md:col-start-2 md:col-end-6 md:justify-center h-screen">
+      <div className="col-span-full col-start-1 row-start-2 h-screen items-center md:col-start-2 md:col-end-6 md:justify-center">
         {children}
       </div>
       {/* <Footer /> */}

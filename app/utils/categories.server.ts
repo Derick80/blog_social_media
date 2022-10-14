@@ -11,7 +11,7 @@ export async function getCategories() {
       label: category.name,
     }
   })
-  return {  initialCategoryList }
+  return { initialCategoryList }
 }
 
 export const createCategory = async (form: CategoryForm) => {

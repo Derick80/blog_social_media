@@ -49,18 +49,20 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 export default function CategoryView() {
   const { data } = useLoaderData<LoaderData>()
   return (
-    <div className="flex flex-col">
-      <div>Posts with the {data.categoryName} Tag</div>
+    <div className="grid grid-cols-1 grid-rows-1 justify-center gap-4 p-2 md:grid-cols-6 md:grid-rows-none md:gap-8 md:p-4">
+      <div className="col-span-full col-start-1 mb-2 items-center justify-center md:col-start-2 md:col-end-6 md:row-end-1 md:mb-2 md:flex md:flex-col">
+        <div>Posts with the {data.categoryName} Tag</div>
 
-      {data.postsByCategory.map((post) => (
-        <PostPreview
-          key={post.id}
-          post={post}
-          isLoggedIn={data.isLoggedIn}
-          currentUser={data.currentUser}
-          likeCount={post.likes.length}
-        />
-      ))}
+        {data.postsByCategory.map((post) => (
+          <PostPreview
+            key={post.id}
+            post={post}
+            isLoggedIn={data.isLoggedIn}
+            currentUser={data.currentUser}
+            likeCount={post.likes.length}
+          />
+        ))}
+      </div>
     </div>
   )
 }

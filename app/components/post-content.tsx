@@ -1,11 +1,11 @@
 import { Link } from '@remix-run/react'
 import { format } from 'date-fns'
-import {  SinglePost } from '~/utils/types.server'
+import { SinglePost } from '~/utils/types.server'
 import CategoryContainer from './category-container'
 import LikeContainer from './like-container'
 
 type PostProps = {
-  post:  SinglePost
+  post: SinglePost
   currentUser: string
   isLoggedIn: boolean
 }

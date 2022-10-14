@@ -1,75 +1,52 @@
 import { Children } from 'react'
 
 interface MultiSelectProps {
-options: [
+  options: [
     {
-        id: string
-        value: string
-        name: string
+      id: string
+      value: string
+      name: string
     }
-]
-multiple: boolean
-className: string
-name: string
-value: string[]
+  ]
+  multiple: boolean
+  className: string
+  name: string
+  value: string[]
 
-defaultValue: string[]
-label: string
+  defaultValue?: string[]
+  label: string
 
-onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
-children: React.ReactNode
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
-
-export default function MultipleSelect({options, value,multiple, className, label, name,onChange, defaultValue, children}:MultiSelectProps) {
-
-const handleSelectChanges= (event: React.ChangeEvent<HTMLSelectElement>) => {
-
-        const { value } = e.target;
-        if (formData.categories.includes(value)) {
-          setFormData((prev) => ({
-            ...prev,
-            categories: prev.categories.filter((item) => item !== value),
-          }));
-          setSelected((prev)=> ([
-
-            ...prev.filter((item) => item !== value)
-
-
-          ]))
-
-        } else {
-          setFormData((prev) => ({
-            ...prev,
-            categories: [...prev.categories, value],
-          }));
-          setSelected((prev)=> (
-            [...prev, value]
-            ))
-        }
-      }
-    return(
-        <>
-         <label htmlFor={label}>{label}</label>
-        <select
-        className={`${className} form-field-primary`}
-multiple={multiple}
-name={name}
-defaultValue={defaultValue}
-value={value}
-onChange={onChange}
->
-{options?.map((opt) =>{
-    return(
-        <option
-        key={opt.id}
-        value={opt.value}>
-            {opt.name}
-        </option>
-    )
-})}
-</select>
-
-        </>
-    )
+export default function MultipleSelect({
+  options,
+  value,
+  multiple,
+  className,
+  label,
+  name,
+  onChange,
+  defaultValue,
+}: MultiSelectProps) {
+  return (
+    <div className="mx-1 mt-2 mb-2 flex items-baseline space-x-2 md:mt-4">
+      <label htmlFor={label}>{label}</label>
+      <select
+        className={`${className}`}
+        multiple={multiple}
+        name={name}
+        value={value}
+        onChange={onChange}
+      >
+        {options?.map((opt) => {
+          return (
+            <option className="" key={opt.id} value={opt.value}>
+              {opt.name}
+            </option>
+          )
+        })}
+      </select>
+    </div>
+  )
 }

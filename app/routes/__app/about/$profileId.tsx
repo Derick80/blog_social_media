@@ -119,8 +119,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 }
 
 export default function ProfileRoute() {
-  const  data  = useLoaderData()
-
+  const data = useLoaderData()
 
   const actionData = useActionData()
   const [errors, setErrors] = useState(actionData?.errors || {})
