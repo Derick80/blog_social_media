@@ -22,10 +22,9 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
-  invariant(user, 'User is not available')
   const isLoggedIn = user === null ? false : true
-  const currentUser = user.id
-  const firstName = user.firstName
+  const currentUser = user?.id ||''
+  const firstName = user?.firstName || 'Guest'
   const { userPosts } = await getPosts()
   const catCount = await getCategoryCounts()
   const { heroPost } = await getHeroPost()

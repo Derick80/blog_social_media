@@ -34,7 +34,8 @@ function Document({
     <html lang="en">
       <head>
         <Meta />
-        {title ? <title>{title}</title> : null} <Links />
+        {title ? <title>{title}</title> : null}
+        <Links />
       </head>
       <body className="overflow-scroll font-Condensed dark:bg-gray-700 dark:text-white">
         {children}

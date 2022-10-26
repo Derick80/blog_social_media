@@ -17,9 +17,8 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
   const isLoggedIn = user === null ? false : true
-  invariant(user, 'User is not available')
-  const firstName = user.firstName
-  const userRole = user.role
+  const firstName = user?.firstName || 'Guest'
+  const userRole = user?.role || 'USER'
   const data: LoaderData = {
     isLoggedIn,
     firstName,
