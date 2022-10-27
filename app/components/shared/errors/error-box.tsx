@@ -1,8 +1,8 @@
-import { Link } from '@remix-run/react'
-import Document from './document'
+import { Link } from "@remix-run/react";
+import Document from "./document";
 export interface ErrorBoxProps {
-  message?: string
-  error: Error
+  message?: string;
+  error: Error;
 }
 
 export default function ErrorBox({ error, message }: ErrorBoxProps) {
@@ -15,5 +15,5 @@ export default function ErrorBox({ error, message }: ErrorBoxProps) {
         Go back to home
       </Link>
     </Document>
-  )
+  );
 }

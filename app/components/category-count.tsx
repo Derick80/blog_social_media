@@ -1,13 +1,13 @@
-import { NavLink } from '@remix-run/react'
+import { NavLink } from "@remix-run/react";
 
 export interface CategoryCountProps {
   category: {
-    id: string
-    name: string
+    id: string;
+    name: string;
     _count: {
-      posts: number
-    }
-  }
+      posts: number;
+    };
+  };
 }
 export default function CategoryCount({ category }: CategoryCountProps) {
   return (
@@ -26,5 +26,5 @@ export default function CategoryCount({ category }: CategoryCountProps) {
         </div>
       </NavLink>
     </div>
-  )
+  );
 }

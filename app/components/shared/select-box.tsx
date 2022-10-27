@@ -1,27 +1,27 @@
 interface props {
-  options: string[]
-  className?: string
-  containerClassName?: string
-  defaultValue?: any
-  id?: string
-  name?: string
-  label?: string
+  options: string[];
+  className?: string;
+  containerClassName?: string;
+  defaultValue?: any;
+  id?: string;
+  name?: string;
+  label?: string;
   value: {
-    name: string
-    value: string
-  }[]
-  children?: React.ReactNode
+    name: string;
+    value: string;
+  }[];
+  children?: React.ReactNode;
 
-  onChange?: (...args: any) => any
-  multiple?: boolean
+  onChange?: (...args: any) => any;
+  multiple?: boolean;
 }
 
 export function SelectBox({
   options,
   onChange = () => {},
-  className = '',
-  containerClassName = '',
-  defaultValue = '',
+  className = "",
+  containerClassName = "",
+  defaultValue = "",
   name,
   id,
   value,
@@ -56,5 +56,5 @@ export function SelectBox({
         </svg>
       </div>
     </div>
-  )
+  );
 }

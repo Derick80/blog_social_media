@@ -1,86 +1,87 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node'
-import { json, redirect } from '@remix-run/node'
-import { useActionData, useLoaderData } from '@remix-run/react'
-import React, { useEffect, useRef, useState } from 'react'
-import { ImageUploader } from '~/components/image-uploader'
-import FormField from '~/components/shared/form-field'
-import { getUser, requireUserId } from '~/utils/auth.server'
-import { createDraft } from '~/utils/post.server'
-import { validateText } from '~/utils/validators.server'
-import { getCategories } from '~/utils/categories.server'
-import { SelectedCategories } from '~/utils/types.server'
-import invariant from 'tiny-invariant'
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { useActionData, useLoaderData } from "@remix-run/react";
+import React, { useEffect, useRef, useState } from "react";
+import { ImageUploader } from "~/components/image-uploader";
+import FormField from "~/components/shared/form-field";
+import { getUser, requireUserId } from "~/utils/auth.server";
+import { createDraft } from "~/utils/post.server";
+import { validateText } from "~/utils/validators.server";
+import { getCategories } from "~/utils/categories.server";
+import { CategoryForm, FullCategoryList } from "~/utils/types.server";
+import invariant from "tiny-invariant";
 
 type LoaderData = {
-  fullCategoryList: FullCategoryList[]
-  isAdmin: boolean
-}
+  fullCategoryList: FullCategoryList[];
+  isAdmin: boolean;
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request)
-  const { fullCategoryList } = await getCategories()
-  invariant(user, 'User is not available')
-  const isAdmin = user.role == 'ADMIN'
+  const user = await getUser(request);
+  const { fullCategoryList } = await getCategories();
+  invariant(user, "User is not available");
+  const isAdmin = user.role == "ADMIN";
 
   if (!isAdmin) {
-    throw new Response('Unauthorized', { status: 401 })
+    throw new Response("Unauthorized", { status: 401 });
   }
   if (!fullCategoryList) {
-    throw new Response('No Categories', { status: 404 })
+    throw new Response("No Categories", { status: 404 });
   }
 
   const data: LoaderData = {
     fullCategoryList,
     isAdmin,
-  }
+  };
 
-  return json(data)
-}
+  return json(data);
+};
 
 type ActionData = {
-  formError?: string
+  formError?: string;
   fieldErrors?: {
-    title: string | undefined
-    description: string | undefined
-    body: string | undefined
-    categories?: object | undefined
-    postImg: string | undefined
-  }
+    title: string | undefined;
+    description: string | undefined;
+    body: string | undefined;
+    categories?: object | undefined;
+    postImg: string | undefined;
+  };
   fields?: {
-    title: string
-    description: string
-    body: string
-    postImg: string
-  }
-  categories?: Array<{ id: string; name: string }>
-}
+    title: string;
+    description: string;
+    body: string;
+    postImg: string;
+  };
+  categories?: Array<{ id: string; name: string }>;
+};
 
 const badRequest = (data: ActionData) => {
-  json(data, { status: 400 })
-}
+  json(data, { status: 400 });
+};
 export const action: ActionFunction = async ({ request }) => {
-  const user = await getUser(request)
-  const userId = await requireUserId(request)
-  const formData = await request.formData()
-  const title = formData.get('title')
-  const body = formData.get('body')
-  const description = formData.get('description')
-  const postImg = formData.get('postImg')
-  const createdBy = user?.firstName as string
-  const categories = formData.getAll('categories') as []
+  const user = await getUser(request);
+  const userId = await requireUserId(request);
+  const formData = await request.formData();
+  const title = formData.get("title");
+  const body = formData.get("body");
+  const description = formData.get("description");
+  const postImg = formData.get("postImg");
+  const createdBy = user?.firstName;
+  const categories = formData.getAll("categories");
 
   // || typeof body !== "string" || typeof postImg !== "string"
 
   if (
-    typeof title !== 'string' ||
-    typeof description !== 'string' ||
-    typeof body !== 'string' ||
-    typeof postImg !== 'string' ||
-    typeof categories !== 'object'
+    typeof title !== "string" ||
+    typeof description !== "string" ||
+    typeof body !== "string" ||
+    typeof postImg !== "string" ||
+    typeof categories !== "object" ||
+    typeof createdBy !== "string"
   ) {
     return badRequest({
-      formError: 'Form not submitted correctly',
-    })
+      formError: "Form not submitted correctly",
+    });
   }
 
   const fieldErrors = {
@@ -88,84 +89,92 @@ export const action: ActionFunction = async ({ request }) => {
     description: validateText(description as string),
     body: validateText(body as string),
     postImg: validateText(postImg as string),
-  }
+    createdBy: validateText(createdBy),
+  };
 
-  const fields = { title, description, body, postImg }
+  const fields = { title, description, body, postImg, createdBy };
 
   if (Object.values(fieldErrors).some(Boolean)) {
     return badRequest({
       fieldErrors,
       fields,
-    })
+    });
   }
 
-  const converted = categories.map((category) => {
-    return { name: category }
-  })
+  const correctedCategories = categories.map((cat) => {
+    return {
+      name: cat,
+    };
+  }) as CategoryForm[];
 
   await createDraft({
     ...fields,
     userId,
-    createdBy,
-    categories: converted,
-  })
+    correctedCategories,
+  });
 
-  return redirect('/')
-}
+  return redirect("/");
+};
 
 export default function NewPostRoute() {
-  const { fullCategoryList } = useLoaderData<LoaderData>()
-  const actionData = useActionData()
-  const firstLoad = useRef(true)
-  const [formError, setFormError] = useState(actionData?.error || '')
-  const [errors, setErrors] = useState(actionData?.errors || {})
+  const { fullCategoryList } = useLoaderData<LoaderData>();
+  const actionData = useActionData();
+  const firstLoad = useRef(true);
+  const [formError, setFormError] = useState(actionData?.error || "");
+  const [errors, setErrors] = useState(actionData?.errors || {});
   const [formData, setFormData] = useState({
-    title: actionData?.fields?.title || '',
-    description: actionData?.fields?.description || '',
-    body: actionData?.fields?.body || '',
-    postImg: actionData?.fields?.postImg || '',
+    title: actionData?.fields?.title || "",
+    description: actionData?.fields?.description || "",
+    body: actionData?.fields?.body || "",
+    postImg: actionData?.fields?.postImg || "",
     categories: actionData?.categories || [],
-  })
+  });
   useEffect(() => {
     if (!firstLoad.current) {
-      setFormError('')
+      setFormError("");
     }
-  }, [formData])
+  }, [formData]);
 
   useEffect(() => {
-    firstLoad.current = false
-  }, [])
+    firstLoad.current = false;
+  }, []);
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
     field: string
   ) => {
-    setFormData((form) => ({ ...form, [field]: event.target.value }))
-  }
+    setFormData((form) => ({ ...form, [field]: event.target.value }));
+  };
   const handleFileUpload = async (file: File) => {
-    const inputFormData = new FormData()
-    inputFormData.append('postImg', file)
-    const response = await fetch('/image', {
-      method: 'POST',
+    const inputFormData = new FormData();
+    inputFormData.append("postImg", file);
+    const response = await fetch("/image", {
+      method: "POST",
       body: inputFormData,
-    })
+    });
 
-    const { imageUrl } = await response.json()
-    console.log('imageUrl', imageUrl)
+    const { imageUrl } = await response.json();
+    console.log("imageUrl", imageUrl);
 
     setFormData({
       ...formData,
       postImg: imageUrl,
-    })
-  }
+    });
+  };
   return (
     <div className="flex flex-col items-center">
       <div>{formError}</div>
-      <h1 className="mt-6 text-3xl font-semibold tracking-wide">Write a new Post</h1>
+      <h1 className="mt-6 text-3xl font-semibold tracking-wide">
+        Write a new Post
+      </h1>
       <form
         method="post"
         className="form-primary"
-        onSubmit={(e) => (!confirm('Are you sure?') ? e.preventDefault() : true)}
+        onSubmit={(e) =>
+          !confirm("Are you sure?") ? e.preventDefault() : true
+        }
       >
         <FormField
           htmlFor="title"
@@ -173,9 +182,11 @@ export default function NewPostRoute() {
           name="title"
           type="textarea"
           value={formData.title}
-          onChange={(event) => handleInputChange(event, 'title')}
+          onChange={(event) => handleInputChange(event, "title")}
           aria-invalid={Boolean(actionData?.fieldErrors?.title) || undefined}
-          aria-errormessage={actionData?.fieldErrors?.title ? 'title-error' : undefined}
+          aria-errormessage={
+            actionData?.fieldErrors?.title ? "title-error" : undefined
+          }
         />
         {actionData?.fieldErrors?.title ? (
           <p role="alert" id="title-error">
@@ -188,9 +199,15 @@ export default function NewPostRoute() {
           name="description"
           type="textarea"
           value={formData.description}
-          onChange={(event) => handleInputChange(event, 'description')}
-          aria-invalid={Boolean(actionData?.fieldErrors?.description) || undefined}
-          aria-errormessage={actionData?.fieldErrors?.description ? 'description-error' : undefined}
+          onChange={(event) => handleInputChange(event, "description")}
+          aria-invalid={
+            Boolean(actionData?.fieldErrors?.description) || undefined
+          }
+          aria-errormessage={
+            actionData?.fieldErrors?.description
+              ? "description-error"
+              : undefined
+          }
         />
         {actionData?.fieldErrors?.description ? (
           <p role="alert" id="description-error">
@@ -204,9 +221,11 @@ export default function NewPostRoute() {
           type="textarea"
           className="resize"
           value={formData.body}
-          onChange={(event) => handleInputChange(event, 'body')}
+          onChange={(event) => handleInputChange(event, "body")}
           aria-invalid={Boolean(actionData?.fieldErrors?.body) || undefined}
-          aria-errormessage={actionData?.fieldErrors?.body ? 'body-error' : undefined}
+          aria-errormessage={
+            actionData?.fieldErrors?.body ? "body-error" : undefined
+          }
         />
         <div>
           <label>Tag your post </label>
@@ -215,7 +234,7 @@ export default function NewPostRoute() {
             multiple={true}
             className="form-field-primary min-h-full"
             onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-              handleInputChange(event, 'categories')
+              handleInputChange(event, "categories")
             }
           >
             {fullCategoryList.map((option) => (
@@ -233,14 +252,17 @@ export default function NewPostRoute() {
           className=""
           value={formData.postImg}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            handleInputChange(event, 'postImg')
+            handleInputChange(event, "postImg")
           }
         />
-        <ImageUploader onChange={handleFileUpload} postImg={formData.postImg || ''} />
+        <ImageUploader
+          onChange={handleFileUpload}
+          postImg={formData.postImg || ""}
+        />
         <div className="flex items-center justify-center py-2 md:py-4">
           <button type="submit">Save</button>
         </div>
       </form>
     </div>
-  )
+  );
 }

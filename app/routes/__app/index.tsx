@@ -1,38 +1,35 @@
-import type { LoaderFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import { getUser } from '~/utils/auth.server'
-import { getHeroPost, getPosts } from '~/utils/post.server'
-import PostPreview from '~/components/post-preview'
-import { getCategoryCounts } from '~/utils/categories.server'
-import CategoryCount from '~/components/category-count'
-import { QueriedPost } from '~/utils/types.server'
-
-import HeroPost from '~/components/hero-post-preview'
-import invariant from 'tiny-invariant'
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { getUser } from "~/utils/auth.server";
+import { getHeroPost, getPosts } from "~/utils/post.server";
+import PostPreview from "~/components/post-preview";
+import { getCategoryCounts } from "~/utils/categories.server";
+import CategoryCount from "~/components/category-count";
+import { QueriedPost } from "~/utils/types.server";
 
 type LoaderData = {
-  userPosts: QueriedPost[]
-  catCount: Awaited<ReturnType<typeof getCategoryCounts>>
-  isLoggedIn: boolean
-  currentUser: string
-  firstName: string
-  heroPost: Awaited<typeof getHeroPost> | QueriedPost[]
-}
+  userPosts: QueriedPost[];
+  catCount: Awaited<ReturnType<typeof getCategoryCounts>>;
+  isLoggedIn: boolean;
+  currentUser: string;
+  firstName: string;
+  heroPost: Awaited<typeof getHeroPost> | QueriedPost[];
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request)
-  const isLoggedIn = user === null ? false : true
-  const currentUser = user?.id ||''
-  const firstName = user?.firstName || 'Guest'
-  const { userPosts } = await getPosts()
-  const catCount = await getCategoryCounts()
-  const { heroPost } = await getHeroPost()
+  const user = await getUser(request);
+  const isLoggedIn = user === null ? false : true;
+  const currentUser = user?.id || "";
+  const firstName = user?.firstName || "Guest";
+  const { userPosts } = await getPosts();
+  const catCount = await getCategoryCounts();
+  const { heroPost } = await getHeroPost();
 
   if (!userPosts || !heroPost) {
     throw new Response(`Missing one of 4 requests`, {
       status: 404,
-    })
+    });
   }
 
   const data: LoaderData = {
@@ -42,12 +39,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     isLoggedIn,
     currentUser,
     firstName,
-  }
-  return json(data)
-}
+  };
+  return json(data);
+};
 
 export default function Home() {
-  const data = useLoaderData<LoaderData>()
+  const data = useLoaderData<LoaderData>();
 
   return (
     <div className="grid grid-cols-1 grid-rows-1 justify-center gap-4 p-2 md:grid-cols-6 md:grid-rows-none md:gap-8 md:p-4">
@@ -62,7 +59,7 @@ export default function Home() {
       </div>
       <div className="col-span-full gap-4">
         <div>
-          {' '}
+          {" "}
           {/* {data.heroPost?.map((post) => (
             <HeroPost key={post.id} post={post} isLoggedin={data.isLoggedIn} />
           ))} */}
@@ -81,5 +78,5 @@ export default function Home() {
       </div>
       <div className="flex min-w-fit flex-row flex-wrap text-sm md:flex-col md:text-base"></div>
     </div>
-  )
+  );
 }

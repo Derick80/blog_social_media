@@ -1,15 +1,15 @@
-import { Link } from '@remix-run/react'
-import { format } from 'date-fns'
-import { QueriedPost } from '~/utils/types.server'
-import CategoryContainer from './category-container'
-import LikeContainer from './like-container'
+import { Link } from "@remix-run/react";
+import { format } from "date-fns";
+import { QueriedPost } from "~/utils/types.server";
+import CategoryContainer from "./category-container";
+import LikeContainer from "./like-container";
 
 export type PostPreviewProps = {
-  post: QueriedPost
-  isLoggedIn: boolean
-  currentUser: string
-  likeCount: number
-}
+  post: QueriedPost;
+  isLoggedIn: boolean;
+  currentUser: string;
+  likeCount: number;
+};
 
 export default function PostPreview({
   post,
@@ -21,11 +21,17 @@ export default function PostPreview({
     <article className="">
       <div className="relative flex min-h-full max-w-prose flex-col overflow-hidden rounded-md border border-black transition-shadow duration-200 ease-in-out">
         <div className="h-40 md:h-60">
-          <img src={post.postImg} alt={post.title} className="h-full w-full object-cover" />
+          <img
+            src={post.postImg}
+            alt={post.title}
+            className="h-full w-full object-cover"
+          />
         </div>
         <div className="flex grow flex-col p-4">
           <h3 className="block text-2xl font-semibold leading-10 ">
-            <Link to={`/posts/${post.id}`}>{post.title}</Link>
+            <Link prefetch="intent" to={`/posts/${post.id}`}>
+              {post.title}
+            </Link>
           </h3>
           <div className="flex flex-row border-t-2 border-black dark:border-white">
             {post?.selectedPostCategories?.map((category) => (
@@ -33,14 +39,18 @@ export default function PostPreview({
             ))}
           </div>
           <p className="mt-2 indent-4 md:mt-4 md:text-lg md:leading-7">
-            {post.description}{' '}
-            <Link className="font-medium text-sky-300 hover:underline" to={`/posts/${post.id}`}>
+            {post.description}{" "}
+            <Link
+              prefetch="intent"
+              className="font-medium text-sky-300 hover:underline"
+              to={`/posts/${post.id}`}
+            >
               ...Read more
             </Link>
           </p>
           <div className="flex flex-row items-center justify-between p-2 md:p-4">
             <small>{`By ${post.user?.firstName} ${post.user?.lastName}`}</small>
-            <small>{format(new Date(post.createdAt), 'MMMM dd, yyyy')}</small>
+            <small>{format(new Date(post.createdAt), "MMMM dd, yyyy")}</small>
             <LikeContainer
               postId={post.id}
               likes={post.likes}
@@ -53,5 +63,5 @@ export default function PostPreview({
         </div>
       </div>
     </article>
-  )
+  );
 }

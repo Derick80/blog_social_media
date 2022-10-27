@@ -1,4 +1,4 @@
-import type { LinksFunction, MetaFunction } from '@remix-run/node'
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,28 +7,28 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-} from '@remix-run/react'
-import styles from './styles/app.css'
+} from "@remix-run/react";
+import styles from "./styles/app.css";
 
 export const meta: MetaFunction = () => {
-  const description = `See what I've been up to`
+  const description = `See what I've been up to`;
   return {
-    charset: 'utf-8',
+    charset: "utf-8",
     description,
-    title: 'New Remix App',
-    viewport: 'width=device-width,initial-scale=1',
-    keywords: 'remix,react,typescript, blog, prisma, postgresql',
-  }
-}
+    title: "New Remix App",
+    viewport: "width=device-width,initial-scale=1",
+    keywords: "remix,react,typescript, blog, prisma, postgresql",
+  };
+};
 
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 function Document({
   children,
   title = `My Personal Blog`,
 }: {
-  children: React.ReactNode
-  title?: string
+  children: React.ReactNode;
+  title?: string;
 }) {
   return (
     <html lang="en">
@@ -44,7 +44,7 @@ function Document({
         <LiveReload />
       </body>
     </html>
-  )
+  );
 }
 
 export default function App() {
@@ -52,11 +52,11 @@ export default function App() {
     <Document>
       <Outlet />
     </Document>
-  )
+  );
 }
 
 export function CatchBoundary() {
-  const caught = useCatch()
+  const caught = useCatch();
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
       <div>
@@ -66,7 +66,7 @@ export function CatchBoundary() {
         </h1>
       </div>
     </Document>
-  )
+  );
 }
 export function ErrorBoundary({ error }: { error: Error }) {
   return (
@@ -76,5 +76,5 @@ export function ErrorBoundary({ error }: { error: Error }) {
         <pre>{error.message}</pre>
       </div>
     </Document>
-  )
+  );
 }

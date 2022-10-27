@@ -1,76 +1,83 @@
-import { LoaderFunction, json, ActionFunction, redirect } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import React from 'react'
-import invariant from 'tiny-invariant'
-import { getCategories } from '~/utils/categories.server'
-import { editMiniPostCategories, getMiniPostById } from '~/utils/postv2.server'
-import { CategoryForm, SelectedCategories } from '~/utils/types.server'
+import {
+  LoaderFunction,
+  json,
+  ActionFunction,
+  redirect,
+} from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import React from "react";
+import invariant from "tiny-invariant";
+import { getCategories } from "~/utils/categories.server";
+import { editMiniPostCategories, getMiniPostById } from "~/utils/postv2.server";
+import { CategoryForm, SelectedCategories } from "~/utils/types.server";
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const fullCategoryList = await getCategories()
-  const miniPostId = params.miniPostId
-  invariant(miniPostId, 'No Mini Post Id')
-  const { minifiedPost } = await getMiniPostById(miniPostId)
+  const fullCategoryList = await getCategories();
+  const miniPostId = params.miniPostId;
+  invariant(miniPostId, "No Mini Post Id");
+  const { minifiedPost } = await getMiniPostById(miniPostId);
 
   if (!minifiedPost || !fullCategoryList) {
-    throw new Error('No Mini Post')
+    throw new Error("No Mini Post");
   }
 
   const data = {
     minifiedPost,
     fullCategoryList,
-  }
+  };
 
-  return json(data)
-}
+  return json(data);
+};
 export const action: ActionFunction = async ({ request, params }) => {
-  const formData = await request.formData()
-  const postId = params.miniPostId
-  const categories = formData.getAll('categories')
+  const formData = await request.formData();
+  const postId = params.miniPostId;
+  const categories = formData.getAll("categories");
 
   // reshape category form data for db
   const correctedCategories = categories.map((cat) => {
     return {
       name: cat,
-    }
-  }) as CategoryForm[]
+    };
+  }) as CategoryForm[];
 
-  invariant(postId, 'No Post Id')
+  invariant(postId, "No Post Id");
 
-  await editMiniPostCategories(postId, correctedCategories)
-  return redirect('/miniPosts')
-}
+  await editMiniPostCategories(postId, correctedCategories);
+  return redirect("/miniPosts");
+};
 
 export default function MiniPost() {
-  const data = useLoaderData()
-  const { fullCategoryList } = data.fullCategoryList
+  const data = useLoaderData();
+  const { fullCategoryList } = data.fullCategoryList;
 
-  const tags = data.minifiedPost.selectedTags.map((category: { value: string }) => {
-    return category.value
-  })
+  const tags = data.minifiedPost.selectedTags.map(
+    (category: { value: string }) => {
+      return category.value;
+    }
+  );
 
   const [formData, setFormData] = React.useState({
     categories: tags,
-  })
+  });
 
-  const [selected, setSelected] = React.useState<string[]>(tags)
+  const [selected, setSelected] = React.useState<string[]>(tags);
 
   const handleSelectChanges = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = event.target
+    const { value } = event.target;
     if (formData.categories.includes(value)) {
       setFormData((prev) => ({
         ...prev,
         categories: prev.categories.filter((item: string) => item !== value),
-      }))
-      setSelected((prev) => [...prev.filter((item) => item !== value)])
+      }));
+      setSelected((prev) => [...prev.filter((item) => item !== value)]);
     } else {
       setFormData((prev) => ({
         ...prev,
         categories: [...prev.categories, value],
-      }))
-      setSelected((prev) => [...prev, value])
+      }));
+      setSelected((prev) => [...prev, value]);
     }
-  }
+  };
 
   return (
     <div className="grid grid-cols-1 grid-rows-1 justify-center gap-4 p-2 md:grid-cols-6 md:grid-rows-none md:gap-8 md:p-4">
@@ -86,8 +93,10 @@ export default function MiniPost() {
                       categories: prev.categories.filter(
                         (selectedItem: string) => selectedItem !== item
                       ),
-                    }))
-                    setSelected(selected.filter((selectedItem) => selectedItem !== item))
+                    }));
+                    setSelected(
+                      selected.filter((selectedItem) => selectedItem !== item)
+                    );
                   }}
                   className="flex items-center rounded-md px-3 py-1 hover:bg-gray-50  hover:text-gray-900 dark:text-white md:tracking-wide"
                 >
@@ -123,5 +132,5 @@ export default function MiniPost() {
         </form>
       </div>
     </div>
-  )
+  );
 }

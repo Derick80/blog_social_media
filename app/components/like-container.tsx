@@ -1,18 +1,23 @@
-import { FormMethod, NavLink, useFetcher, useLoaderData } from '@remix-run/react'
-import { useRef, useState } from 'react'
-import { QueriedPost, SinglePost } from '~/utils/types.server'
+import {
+  FormMethod,
+  NavLink,
+  useFetcher,
+  useLoaderData,
+} from "@remix-run/react";
+import { useRef, useState } from "react";
+import { QueriedPost, SinglePost } from "~/utils/types.server";
 
 export type LikeContainerProps = {
-  post: SinglePost
-  currentUser: string
-  postId: string | ''
-  likeCount: number
+  post: SinglePost;
+  currentUser: string;
+  postId: string | "";
+  likeCount: number;
   likes: Array<{
-    postId: string
-    userId: string
-  }>
-  isLoggedIn: boolean
-}
+    postId: string;
+    userId: string;
+  }>;
+  isLoggedIn: boolean;
+};
 
 export default function LikeContainer({
   likes,
@@ -21,27 +26,32 @@ export default function LikeContainer({
   postId,
   isLoggedIn,
 }: LikeContainerProps) {
-  const fetcher = useFetcher()
-  const userLikedPost = likes.find(({ userId }) => userId === currentUser) ? true : false
+  const fetcher = useFetcher();
+  const userLikedPost = likes.find(({ userId }) => userId === currentUser)
+    ? true
+    : false;
 
-  const [likeCount, setLikeCount] = useState(post?._count?.likes || 0)
-  const [isLiked, setIsLiked] = useState(userLikedPost || false)
-  const iconRef = useRef<null | SVGSVGElement>(null)
-  const iconButtonRef = useRef<null | HTMLButtonElement>(null)
+  const [likeCount, setLikeCount] = useState(post?._count?.likes || 0);
+  const [isLiked, setIsLiked] = useState(userLikedPost || false);
+  const iconRef = useRef<null | SVGSVGElement>(null);
+  const iconButtonRef = useRef<null | HTMLButtonElement>(null);
   const toggleLike = async () => {
-    let method: FormMethod = 'delete'
+    let method: FormMethod = "delete";
     if (userLikedPost) {
-      setLikeCount(likeCount - 1)
-      setIsLiked(false)
+      setLikeCount(likeCount - 1);
+      setIsLiked(false);
     } else {
-      method = 'post'
-      setLikeCount(likeCount + 1)
-      setIsLiked(true)
+      method = "post";
+      setLikeCount(likeCount + 1);
+      setIsLiked(true);
     }
-    console.log('likeCount', likeCount)
+    console.log("likeCount", likeCount);
 
-    fetcher.submit({ userId: currentUser, postId }, { method, action: `/posts/${postId}/like` })
-  }
+    fetcher.submit(
+      { userId: currentUser, postId },
+      { method, action: `/posts/${postId}/like` }
+    );
+  };
 
   return (
     <>
@@ -53,7 +63,7 @@ export default function LikeContainer({
           onClick={toggleLike}
         >
           <svg
-            className={`${isLiked ? 'text-red-500' : 'text-slate-400'}`}
+            className={`${isLiked ? "text-red-500" : "text-slate-400"}`}
             ref={iconRef}
             width="16"
             height="16"
@@ -77,5 +87,5 @@ export default function LikeContainer({
         </>
       )}
     </>
-  )
+  );
 }

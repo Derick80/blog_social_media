@@ -1,24 +1,24 @@
-import type { LoaderFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
-import invariant from 'tiny-invariant'
-import { getUser, requireUserId } from '~/utils/auth.server'
-import { getUserDrafts } from '~/utils/post.server'
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
+import invariant from "tiny-invariant";
+import { getUser, requireUserId } from "~/utils/auth.server";
+import { getUserDrafts } from "~/utils/post.server";
 
-import { QueriedPost } from '~/utils/types.server'
+import { QueriedPost } from "~/utils/types.server";
 
 type LoaderData = {
-  userDrafts: QueriedPost[]
-  isLoggedIn: boolean
-  currentUser: string
-}
+  userDrafts: QueriedPost[];
+  isLoggedIn: boolean;
+  currentUser: string;
+};
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await requireUserId(request)
-  const user = await getUser(request)
-  invariant(user, 'User is not available')
-  const isLoggedIn = user === null ? false : true
-  const currentUser = user.id
-  const drafts = await getUserDrafts(userId)
+  const userId = await requireUserId(request);
+  const user = await getUser(request);
+  invariant(user, "User is not available");
+  const isLoggedIn = user === null ? false : true;
+  const currentUser = user.id;
+  const drafts = await getUserDrafts(userId);
 
   const data = {
     drafts,
@@ -26,16 +26,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     isLoggedIn,
     currentUser,
     user,
-  }
+  };
 
   return json({
     data,
-  })
-}
+  });
+};
 
 export default function Drafts() {
-  const data = useLoaderData<typeof loader>()
-  const drafts = data.data.drafts
+  const data = useLoaderData<typeof loader>();
+  const drafts = data.data.drafts;
 
   return (
     <>
@@ -55,5 +55,5 @@ export default function Drafts() {
         ))}
       </div>
     </>
-  )
+  );
 }

@@ -1,17 +1,17 @@
-import React from 'react'
-import { getCategoryCounts } from '~/utils/categories.server'
-import Footer from '../footer'
-import NavigationBar from '../navbar/primary-nav'
+import React from "react";
+import { getCategoryCounts } from "~/utils/categories.server";
+import Footer from "../footer";
+import NavigationBar from "../navbar/primary-nav";
 
 export type LayoutProps = {
   data: {
-    isLoggedIn: boolean
-    firstName: string
-    userRole: string
-  }
+    isLoggedIn: boolean;
+    firstName: string;
+    userRole: string;
+  };
 
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
 // removed this from the div grid-rows-[(1fr, 200px, 1fr, 1fr)] grid-cols-[(1fr, 2fr, 2fr, 1fr)] grid gap-4
 export default function Layout({ data, children }: LayoutProps) {
@@ -22,10 +22,9 @@ export default function Layout({ data, children }: LayoutProps) {
         <NavigationBar data={data} />
       </div>
 
-      <div className="col-span-full col-start-1 row-start-2 h-screen items-center md:col-start-2 md:col-end-6 md:justify-center">
+      <div className="col-span-full col-start-1 row-start-2 row-end-3 h-screen items-center md:col-start-2 md:col-end-6 md:justify-center">
         {children}
       </div>
-      <Footer />
     </div>
-  )
+  );
 }

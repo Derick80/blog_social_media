@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       flex: {
-        '10': '1 0 auto'
+        10: "1 0 auto",
       },
       fontFamily: {
         Condensed: ["Roboto Condensed", "sans-serif"],
@@ -12,17 +12,17 @@ module.exports = {
         Icons_O: ["Material Symbols Outlined"],
       },
       colors: {
-light:{
-  primary: "#e5e7eb",
-  secondary: "#f3f4f6",
-  DEFAULT: "#e5e7eb",
-},
-dark:{
-  primary:"#3f3f46",
-  secondary:"#4b5563",
-  DEFAULT:"#3f3f46",
-},
-      }
+        light: {
+          primary: "#e5e7eb",
+          secondary: "#f3f4f6",
+          DEFAULT: "#e5e7eb",
+        },
+        dark: {
+          primary: "#3f3f46",
+          secondary: "#4b5563",
+          DEFAULT: "#3f3f46",
+        },
+      },
     },
   },
   plugins: [],

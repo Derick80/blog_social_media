@@ -1,22 +1,22 @@
-import { Children } from 'react'
+import { Children } from "react";
 
 interface MultiSelectProps {
   options: [
     {
-      id: string
-      value: string
-      name: string
+      id: string;
+      value: string;
+      name: string;
     }
-  ]
-  multiple: boolean
-  className: string
-  name: string
-  value: string[]
+  ];
+  multiple: boolean;
+  className: string;
+  name: string;
+  value: string[];
 
-  defaultValue?: string[]
-  label: string
+  defaultValue?: string[];
+  label: string;
 
-  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 export default function MultipleSelect({
@@ -44,9 +44,9 @@ export default function MultipleSelect({
             <option className="" key={opt.id} value={opt.value}>
               {opt.name}
             </option>
-          )
+          );
         })}
       </select>
     </div>
-  )
+  );
 }

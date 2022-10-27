@@ -1,7 +1,7 @@
-import { Post, Prisma, User } from '@prisma/client'
-import invariant from 'tiny-invariant'
-import { prisma } from './prisma.server'
-import type { CreateOrEditPost, SavePost, UpdatePost } from './types.server'
+import { Post, Prisma, User } from "@prisma/client";
+import invariant from "tiny-invariant";
+import { prisma } from "./prisma.server";
+import type { CreateOrEditPost, SavePost, UpdatePost } from "./types.server";
 
 const defaultPostSelect = {
   id: true,
@@ -28,7 +28,7 @@ const defaultPostSelect = {
       lastName: true,
     },
   },
-}
+};
 
 export async function getPosts() {
   const userPosts = await prisma.post.findMany({
@@ -37,19 +37,27 @@ export async function getPosts() {
     },
     select: defaultPostSelect,
     orderBy: {
-      createdAt: 'asc',
+      createdAt: "asc",
     },
-  })
+  });
 
-  const likeCount = userPosts.map((post) => post._count?.likes)
-  return { userPosts, likeCount }
+  const likeCount = userPosts.map((post) => post._count?.likes);
+  return { userPosts, likeCount };
 }
 
 export async function getPost(postId: string) {
   const post = await prisma.post.findUnique({
     where: { id: postId },
     include: {
-      user: { select: { email: true, firstName: true, lastName: true, role: true, id: true } },
+      user: {
+        select: {
+          email: true,
+          firstName: true,
+          lastName: true,
+          role: true,
+          id: true,
+        },
+      },
       categories: true,
 
       likes: true,
@@ -59,8 +67,8 @@ export async function getPost(postId: string) {
         },
       },
     },
-  })
-  invariant(post, 'Post not found')
+  });
+  invariant(post, "Post not found");
 
   const selectedPostCategories = post.categories.map((cat) => {
     return {
@@ -68,10 +76,10 @@ export async function getPost(postId: string) {
       value: cat.name,
       label: cat.name,
       name: cat.name,
-    }
-  })
+    };
+  });
 
-  invariant(selectedPostCategories, 'No tags found')
+  invariant(selectedPostCategories, "No tags found");
 
   const reducedPost = {
     id: post.id,
@@ -88,8 +96,8 @@ export async function getPost(postId: string) {
     userId: post.userId,
     user: post.user,
     selectedPostCategories,
-  }
-  return { reducedPost }
+  };
+  return { reducedPost };
 }
 
 export async function getHeroPost() {
@@ -112,12 +120,12 @@ export async function getHeroPost() {
       },
     },
     orderBy: {
-      createdAt: 'asc',
+      createdAt: "asc",
     },
     take: 1,
-  })
-  const likeCount = heroPost.map((post) => post._count?.likes)
-  return { heroPost, likeCount }
+  });
+  const likeCount = heroPost.map((post) => post._count?.likes);
+  return { heroPost, likeCount };
 }
 export async function createDraft({
   title,
@@ -125,9 +133,9 @@ export async function createDraft({
   body,
   postImg,
   userId,
-  categories,
+  correctedCategories,
   createdBy,
-}: Omit<CreateOrEditPost, 'id' & 'userId'> & { userId: User['id'] }) {
+}: Omit<CreateOrEditPost, "id" & "userId"> & { userId: User["id"] }) {
   await prisma.post.create({
     data: {
       title,
@@ -141,13 +149,13 @@ export async function createDraft({
         },
       },
       categories: {
-        connectOrCreate: categories.map((category: any) => ({
-          where: { name: category },
-          create: { name: category },
+        connectOrCreate: correctedCategories.map((cat) => ({
+          where: { name: cat.name },
+          create: { name: cat.name },
         })),
       },
     },
-  })
+  });
 }
 
 export async function getUserDrafts(userId: string) {
@@ -160,10 +168,10 @@ export async function getUserDrafts(userId: string) {
       categories: true,
     },
     orderBy: {
-      createdAt: 'asc',
+      createdAt: "asc",
     },
-  })
-  return userDrafts
+  });
+  return userDrafts;
 }
 
 export async function savePost({
@@ -185,8 +193,8 @@ export async function savePost({
         set: correctedCategories,
       },
     },
-  })
-  return true
+  });
+  return true;
 }
 export async function updatePost({
   id,
@@ -196,7 +204,7 @@ export async function updatePost({
   postImg,
   createdBy,
   categories,
-}: Omit<CreateOrEditPost, 'userId'> & { userId: User['id'] }) {
+}: Omit<CreateOrEditPost, "userId"> & { userId: User["id"] }) {
   try {
     await prisma.post.update({
       where: { id: id },
@@ -214,9 +222,9 @@ export async function updatePost({
           })),
         },
       },
-    })
+    });
   } catch (error) {
-    throw new Error('Unable to save post draft')
+    throw new Error("Unable to save post draft");
   }
 }
 export async function updateAndPublish({
@@ -245,9 +253,9 @@ export async function updateAndPublish({
           })),
         },
       },
-    })
+    });
   } catch (error) {
-    throw new Error('Unable to update AND Publish post')
+    throw new Error("Unable to update AND Publish post");
   }
 }
 export async function publishPost(id: string) {
@@ -255,10 +263,10 @@ export async function publishPost(id: string) {
     const publish = await prisma.post.update({
       where: { id: id },
       data: { published: true },
-    })
-    return publish
+    });
+    return publish;
   } catch (error) {
-    throw new Error('error in publish')
+    throw new Error("error in publish");
   }
 }
 
@@ -267,10 +275,10 @@ export async function unpublishPost(id: string) {
     await prisma.post.update({
       where: { id: id },
       data: { published: false },
-    })
-    return true
+    });
+    return true;
   } catch (error) {
-    throw new Error('error in unpublish')
+    throw new Error("error in unpublish");
   }
 }
 
@@ -278,10 +286,10 @@ export async function deletePost(id: string) {
   try {
     await prisma.post.delete({
       where: { id: id },
-    })
-    return true
+    });
+    return true;
   } catch (error) {
-    throw new Error('Unable to delete post')
+    throw new Error("Unable to delete post");
   }
 }
 
@@ -308,15 +316,15 @@ export async function getPostsByCategory(categoryName: string) {
       },
     },
     orderBy: {
-      createdAt: 'asc',
+      createdAt: "asc",
     },
-  })
-  return postsByCategory
+  });
+  return postsByCategory;
 }
 
 export const updatePostWithCategory = async (form: UpdatePost) => {
-  const selected = form.categories.map((category) => category) as []
-  console.log('selected', selected)
+  const selected = form.categories.map((category) => category) as [];
+  console.log("selected", selected);
 
   await prisma.post.update({
     where: {
@@ -332,10 +340,13 @@ export const updatePostWithCategory = async (form: UpdatePost) => {
         set: selected,
       },
     },
-  })
-}
+  });
+};
 
-export const removeCategoryFromPost = async (id: string, categoryName: string) => {
+export const removeCategoryFromPost = async (
+  id: string,
+  categoryName: string
+) => {
   const updatedPostCategories = await prisma.post.update({
     where: {
       id: id,
@@ -347,6 +358,6 @@ export const removeCategoryFromPost = async (id: string, categoryName: string) =
         },
       },
     },
-  })
-  return updatedPostCategories
-}
+  });
+  return updatedPostCategories;
+};

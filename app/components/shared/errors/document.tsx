@@ -1,11 +1,17 @@
-import { Links, LiveReload, Meta, Scripts, ScrollRestoration } from '@remix-run/react'
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Scripts,
+  ScrollRestoration,
+} from "@remix-run/react";
 
 export default function Document({
   children,
   title = `My Personal Blog`,
 }: {
-  children: React.ReactNode
-  title?: string
+  children: React.ReactNode;
+  title?: string;
 }) {
   return (
     <html lang="en">
@@ -17,8 +23,8 @@ export default function Document({
         {children}
         <ScrollRestoration />
         <Scripts />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}{' '}
+        {process.env.NODE_ENV === "development" && <LiveReload />}{" "}
       </body>
     </html>
-  )
+  );
 }

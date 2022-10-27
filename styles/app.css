@@ -20,16 +20,15 @@
   }
 
   .form-field-primary {
-    @apply mb-6 w-full rounded-xl border-2 border-black p-2 shadow-sm focus:border-slate-700 focus:outline-none focus:ring-1 dark:border-white dark:bg-slate-400 resize;
+    @apply mb-6 w-full resize rounded-xl border-2 border-black p-2 shadow-sm focus:border-slate-700 focus:outline-none focus:ring-1 dark:border-white dark:bg-slate-400;
   }
 
   .btn-primary {
     @apply flex flex-row items-end justify-items-center rounded-xl bg-green-400 px-3 py-2 font-semibold transition duration-300 ease-in-out hover:-translate-y-1 hover:bg-yellow-400;
   }
-.btn {
-  @apply absolute px-3 py-2 text-xs text-center transition rounded bg-slate-200 bottom-5 right-5 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600
-
-}
+  .btn {
+    @apply absolute bottom-5 right-5 rounded bg-slate-200 px-3 py-2 text-center text-xs transition hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600;
+  }
   .form-validation-error {
     @apply m-0 mt-1 bg-red-500 text-xs;
   }

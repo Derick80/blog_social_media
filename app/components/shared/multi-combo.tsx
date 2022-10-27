@@ -1,15 +1,15 @@
 export interface MultiComboProps {
-  clearable?: boolean
-  onChange: (value: ComboBoxOption[]) => void
-  options: ComboBoxOption[]
-  value: ComboBoxOption[]
-  status?: StatusVariant
-  comboType?: 'primar | secondary'
-  selectedOptionsTextOverride?: string
-  filterOption?: (inputValue: string, option: ComboBoxOption) => boolean
-  label: string
-  placeholder?: string
-  disabled?: boolean
+  clearable?: boolean;
+  onChange: (value: ComboBoxOption[]) => void;
+  options: ComboBoxOption[];
+  value: ComboBoxOption[];
+  status?: StatusVariant;
+  comboType?: "primar | secondary";
+  selectedOptionsTextOverride?: string;
+  filterOption?: (inputValue: string, option: ComboBoxOption) => boolean;
+  label: string;
+  placeholder?: string;
+  disabled?: boolean;
 }
 
 export default function MultiCombox({
@@ -42,5 +42,5 @@ export default function MultiCombox({
       />
       ComboBox
     </div>
-  )
+  );
 }
