@@ -219,7 +219,7 @@ export default function NewPostRoute() {
           label="Write Your Post"
           name="body"
           type="textarea"
-          className="resize"
+          className=""
           value={formData.body}
           onChange={(event) => handleInputChange(event, "body")}
           aria-invalid={Boolean(actionData?.fieldErrors?.body) || undefined}

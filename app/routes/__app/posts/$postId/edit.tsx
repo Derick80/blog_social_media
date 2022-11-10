@@ -157,7 +157,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function PostRoute() {
-  const data = useLoaderData<LoaderData>();
+  const data = useLoaderData<typeof loader>();
   const actionData = useActionData();
   const [errors] = useState(actionData?.errors || {});
   const { reducedPost, postCategories } = data;
@@ -294,6 +294,7 @@ export default function PostRoute() {
             <div className="mx-1 mt-2 mb-2 flex flex-wrap space-x-2 md:mt-4">
               {selected.map((item) => (
                 <span
+
                   onClick={() => {
                     setFormData((prev) => ({
                       ...prev,

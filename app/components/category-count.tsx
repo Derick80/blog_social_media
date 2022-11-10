@@ -1,4 +1,4 @@
-import { NavLink } from "@remix-run/react";
+import { Link, NavLink } from "@remix-run/react";
 
 export interface CategoryCountProps {
   category: {
@@ -12,7 +12,7 @@ export interface CategoryCountProps {
 export default function CategoryCount({ category }: CategoryCountProps) {
   return (
     <div className="flex items-baseline">
-      <NavLink
+      <Link
         to={`/categories/${category.name}`}
         className="flex items-center rounded-md px-3 py-1 hover:bg-gray-50  hover:text-gray-900 dark:text-white md:tracking-wide"
         key={category.id}
@@ -24,7 +24,7 @@ export default function CategoryCount({ category }: CategoryCountProps) {
         <div className="flex items-center self-stretch rounded-tr-md rounded-br-md border bg-gray-700 px-1  text-white dark:bg-slate-500">
           {category._count.posts}
         </div>
-      </NavLink>
+      </Link>
     </div>
   );
 }

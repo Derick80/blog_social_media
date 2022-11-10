@@ -1,4 +1,4 @@
-import { json, LoaderFunction } from "@remix-run/node";
+import { json, LoaderFunction, SerializeFrom } from "@remix-run/node";
 import { getPostsByCategory } from "~/utils/post.server";
 import { useLoaderData } from "@remix-run/react";
 import { getUser } from "~/utils/auth.server";
@@ -9,14 +9,7 @@ import invariant from "tiny-invariant";
 // use this to look at json
 // http://192.168.86.32:5322/categories?_data=routes%2Fcategories
 type LoaderData = {
-  postsByCategory: Array<{
-    id: string;
-    title: string;
-    body: string;
-    postImg: string;
-    createdAt: string;
-    categories: Array<{ id: string; name: string }>;
-  }>;
+  postsByCategory: SerializeFrom<typeof getPostsByCategory>
   isAdmin: boolean;
   categoryName: string;
   isLoggedIn: boolean;
@@ -48,7 +41,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export default function CategoryView() {
-  const { data } = useLoaderData<LoaderData>();
+  const { data } = useLoaderData<typeof loader>();
   return (
     <div className="grid grid-cols-1 grid-rows-1 justify-center gap-4 p-2 md:grid-cols-6 md:grid-rows-none md:gap-8 md:p-4">
       <div className="col-span-full col-start-1 mb-2 items-center justify-center md:col-start-2 md:col-end-6 md:row-end-1 md:mb-2 md:flex md:flex-col">
