@@ -237,7 +237,7 @@ export default function PostRoute() {
             label=""
             name="postId"
             type="hidden"
-            value={formData.id}
+            value={reducedPost.id}
             onChange={(event) => handleInputChange(event, "postId")}
             error={errors?.id}
           />{" "}
