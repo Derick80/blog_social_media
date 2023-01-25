@@ -7,7 +7,7 @@ import { json, redirect } from "@remix-run/node";
 import { useActionData } from "@remix-run/react";
 import React, { useEffect, useRef, useState } from "react";
 import FormField from "~/components/shared/form-field";
-import { getUser, login, register } from "~/utils/auth.server";
+import { authenticator } from '~/utils/auth/auth.server'
 import {
   validateEmail,
   validateName,
@@ -41,9 +41,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 
-export const loader: LoaderFunction = async ({ request }) => {
-  return (await getUser(request)) ? redirect("/") : null;
-};
+
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const action = form.get("_action");
@@ -87,12 +85,14 @@ export const action: ActionFunction = async ({ request }) => {
 
   switch (action) {
     case "login": {
-      return await login({ email, password });
+      return await authenticator.authenticate('login', request, {
+        successRedirect: '/'
+      })
     }
     case "register": {
       firstName = firstName as string;
       lastName = lastName as string;
-      return await register({ email, password, firstName, lastName });
+      return await ({ email, password, firstName, lastName });
     }
     default:
       return badRequest({ fieldErrors, formError: "Invalid Login" });

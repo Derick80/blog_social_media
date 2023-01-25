@@ -2,7 +2,7 @@ import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import PostContent from "~/components/post-content";
-import { getUser } from "~/utils/auth.server";
+import { isAuthenticated } from '~/utils/auth/auth.server'
 import { getPost } from "~/utils/post.server";
 import { QueriedPost, SinglePost } from "~/utils/types.server";
 type LoaderData = {
@@ -13,7 +13,7 @@ type LoaderData = {
   isOwner: boolean;
 };
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await getUser(request);
+  const user = await isAuthenticated(request)
   const currentUser = user?.id as string;
 
   const isLoggedIn = user === null ? false : true;

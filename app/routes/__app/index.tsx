@@ -1,12 +1,12 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getUser } from "~/utils/auth.server";
 import { getHeroPost, getPosts } from "~/utils/post.server";
 import PostPreview from "~/components/post-preview";
 import { getCategoryCounts } from "~/utils/categories.server";
 import CategoryCount from "~/components/category-count";
 import { QueriedPost } from "~/utils/types.server";
+import { isAuthenticated } from '~/utils/auth/auth.server'
 
 type LoaderData = {
   userPosts: QueriedPost[];
@@ -18,7 +18,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
+  const user = await isAuthenticated(request)
   const isLoggedIn = user === null ? false : true;
   const currentUser = user?.id || "";
   const firstName = user?.firstName || "Guest";

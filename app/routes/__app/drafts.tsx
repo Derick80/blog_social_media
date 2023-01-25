@@ -2,7 +2,7 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { getUser, requireUserId } from "~/utils/auth.server";
+import { isAuthenticated } from '~/utils/auth/auth.server'
 import { getUserDrafts } from "~/utils/post.server";
 
 import { QueriedPost } from "~/utils/types.server";
@@ -13,8 +13,9 @@ type LoaderData = {
   currentUser: string;
 };
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await requireUserId(request);
-  const user = await getUser(request);
+  const user = await isAuthenticated(request)
+  invariant(user, "User is not available")
+  const userId = user.id;
   invariant(user, "User is not available");
   const isLoggedIn = user === null ? false : true;
   const currentUser = user.id;

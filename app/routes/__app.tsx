@@ -1,10 +1,9 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
 import Footer from "~/components/footer";
 import Layout from "~/components/shared/layout";
-import { getUser } from "~/utils/auth.server";
+import { isAuthenticated } from '~/utils/auth/auth.server'
 
 export const meta: MetaFunction = () => ({
   title: `Derick's Personal Blog Feed`,
@@ -16,7 +15,7 @@ type LoaderData = {
   userRole: string;
 };
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
+  const user = await isAuthenticated(request)
   const isLoggedIn = user === null ? false : true;
   const firstName = user?.firstName || "Guest";
   const userRole = user?.role || "USER";

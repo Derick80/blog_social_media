@@ -25,6 +25,8 @@ model User {
   password  String
   posts     Post[]
   profile   Profile?
+  accounts    Account[]
+  tokens      Token[]
   role      Role     @default(USER)
   likes     Like[]
   avatar    Avatar?
@@ -128,4 +130,33 @@ enum TokenType {
   REFRESH_TOKEN
   VERIFY_EMAIL
   RESET_PASSWORD
+}
+model Token {
+  id        String    @id @default(cuid())
+  token     String
+  type      TokenType
+  expiresAt DateTime?
+  sentTo    String?
+  usedAt    DateTime?
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([token, type])
+  @@index([userId])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  provider          String
+  providerAccountId String
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  userId            String
+  user              User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }

@@ -6,7 +6,7 @@ import invariant from "tiny-invariant";
 import { ImageUploader } from "~/components/image-uploader";
 import FormField from "~/components/shared/form-field";
 import TipTap from '~/components/tip-tap'
-import { getUser, getUserId } from "~/utils/auth.server";
+import { isAuthenticated } from '~/utils/auth/auth.server'
 import { getCategories } from "~/utils/categories.server";
 import {
   deletePost,
@@ -32,7 +32,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ params, request }) => {
-  const user = await getUser(request);
+  const user = await isAuthenticated(request)
   invariant(user, "User not Available");
   const isLoggedIn = user === null ? false : true;
   const fullCategoryList = await getCategories();

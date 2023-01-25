@@ -5,7 +5,6 @@ import { useActionData, useLoaderData } from "@remix-run/react";
 import React, { useState } from "react";
 import FormField from "~/components/shared/form-field";
 import { SelectBox } from "~/components/shared/select-box";
-import { getUser, getUserId } from "~/utils/auth.server";
 import { pronouns } from "~/utils/constants";
 import { getProfile, updateProfile } from "~/utils/profile.server";
 import {
@@ -15,6 +14,7 @@ import {
 } from "~/utils/validators.server";
 import { ImageUploader } from "~/components/image-uploader";
 import invariant from "tiny-invariant";
+import { isAuthenticated } from '~/utils/auth/auth.server'
 
 type LoaderData = {
   profile: Profile;
@@ -22,10 +22,11 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ params, request }) => {
-  const userId = await getUserId(request);
+  const user = await isAuthenticated(request)
+  invariant(user, "User");
+  const userId = user?.id;
   const profileId = params.profileId;
   invariant(profileId, "Profile id is required");
-  const user = await getUser(request);
   const isAdmin = user?.role === "ADMIN";
 
   const profile = userId ? await getProfile(profileId) : null;
@@ -46,10 +47,11 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await getUserId(request);
   const profileId = params.profileId as string;
-
+  const user = await isAuthenticated(request)
+  const userId = user?.id;
   const formData = await request.formData();
+
   const id = formData.get("id");
   const firstName = formData.get("firstName");
   const lastName = formData.get("lastName");

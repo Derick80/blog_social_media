@@ -1,10 +1,14 @@
+import { MiniPost } from '@prisma/client'
 import { json, LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { requireUserId } from "~/utils/auth.server";
+import invariant from 'tiny-invariant'
+import { isAuthenticated } from '~/utils/auth/auth.server'
 import { getMiniPosts } from "~/utils/postv2.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await requireUserId(request);
+  const user = await isAuthenticated(request)
+  invariant(user, "User is not available")
+
   const miniPosts = await getMiniPosts();
 
   if (!miniPosts) {
@@ -23,7 +27,7 @@ export default function MiniPostsIndex() {
   return (
     <div>
       <h1>Mini Posts</h1>
-      {data.miniPosts.map((miniPost) => {
+      {data.miniPosts.map((miniPost: MiniPost) => {
         return (
           <div key={miniPost.id}>
             <Link to={`/miniPosts/${miniPost.id}`}>{miniPost.title}</Link>

@@ -1,10 +1,10 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { getUser } from "~/utils/auth.server";
 import { getOwnerProfile } from "~/utils/profile.server";
 import ProfileContent from "~/components/profile-content";
 import { QueriedUserProfile } from "~/utils/types.server";
+import { isAuthenticated } from '~/utils/auth/auth.server'
 
 // keep a list of the icon ids we put in the symbol
 
@@ -33,7 +33,7 @@ type LoaderData = {
   userRole: string;
 };
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
+  const user = await isAuthenticated(request)
   const isLoggedIn = user === null ? false : true;
   const firstName = user?.firstName as string;
   const userRole = user?.role as string;

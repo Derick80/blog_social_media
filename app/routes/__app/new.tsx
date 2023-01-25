@@ -4,7 +4,6 @@ import { useActionData, useLoaderData } from "@remix-run/react"
 import React, { useEffect, useRef, useState } from "react"
 import { ImageUploader } from "~/components/image-uploader"
 import FormField from "~/components/shared/form-field"
-import { getUser, requireUserId } from "~/utils/auth.server"
 import { createDraft } from "~/utils/post.server"
 import { validateText } from "~/utils/validators.server"
 import { getCategories } from "~/utils/categories.server"
@@ -13,6 +12,7 @@ import { CategoryForm, FullCategoryListDestructure } from "~/utils/types.server"
 import quillCss from 'quill/dist/quill.snow.css'
 import TipTap from '~/components/tip-tap'
 import invariant from 'tiny-invariant'
+import { isAuthenticated } from '~/utils/auth/auth.server'
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: quillCss }
 ]
@@ -22,7 +22,7 @@ type LoaderData = {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request)
+  const user = await isAuthenticated(request)
   const { fullCategoryList } = await getCategories()
   invariant(user, "User is not available")
   const isAdmin = user.role == "ADMIN"
@@ -64,8 +64,8 @@ const badRequest = (data: ActionData) => {
   json(data, { status: 400 })
 }
 export const action: ActionFunction = async ({ request }) => {
-  const user = await getUser(request)
-  const userId = await requireUserId(request)
+const user = await isAuthenticated(request)
+  const userId = user?.id
   const formData = await request.formData()
   const title = formData.get("title")
   const body = formData.get("body")
@@ -82,7 +82,8 @@ export const action: ActionFunction = async ({ request }) => {
     typeof body !== "string" ||
     typeof postImg !== "string" ||
     typeof categories !== "object" ||
-    typeof createdBy !== "string"
+    typeof createdBy !== "string" ||
+    typeof userId !== "string"
   ) {
     return badRequest({
       formError: "Form not submitted correctly",
@@ -222,7 +223,9 @@ export default function NewPostRoute () {
         <div className='flex'>
 
         </div>
-        <TipTap />
+        <TipTap
+          content=''
+        />
         {/* <FormField
           htmlFor="body"
           label="Write Your Post"

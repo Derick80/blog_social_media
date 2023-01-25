@@ -1,7 +1,7 @@
 import { Post, Prisma, User } from "@prisma/client";
 import invariant from "tiny-invariant";
 import { prisma } from "./prisma.server";
-import type { CreateOrEditPost, SavePost, UpdatePost } from "./types.server";
+import { SavePost } from './types.server'
 
 const defaultPostSelect = {
   id: true,

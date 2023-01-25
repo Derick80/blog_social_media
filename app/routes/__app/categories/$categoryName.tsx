@@ -1,10 +1,10 @@
 import { json, LoaderFunction, SerializeFrom } from "@remix-run/node";
 import { getPostsByCategory } from "~/utils/post.server";
 import { useLoaderData } from "@remix-run/react";
-import { getUser } from "~/utils/auth.server";
 
 import PostPreview from "~/components/post-preview";
-import invariant from "tiny-invariant";
+import { isAuthenticated } from '~/utils/auth/auth.server'
+import { Post } from '@prisma/client'
 
 // use this to look at json
 // http://192.168.86.32:5322/categories?_data=routes%2Fcategories
@@ -17,7 +17,7 @@ type LoaderData = {
 };
 export const loader: LoaderFunction = async ({ params, request }) => {
   const categoryName = params.categoryName as string;
-  const user = await getUser(request);
+  const user = await isAuthenticated(request)
   const isLoggedIn = user === null ? false : true;
   const currentUser = user?.id || "";
   const isAdmin = user?.role === "ADMIN" ? true : false;
@@ -47,7 +47,7 @@ export default function CategoryView() {
       <div className="col-span-full col-start-1 mb-2 items-center justify-center md:col-start-2 md:col-end-6 md:row-end-1 md:mb-2 md:flex md:flex-col">
         <div>Posts with the {data.categoryName} Tag</div>
 
-        {data.postsByCategory.map((post) => (
+        {data.postsByCategory.map((post: Partial<Post>) => (
           <PostPreview
             key={post.id}
             post={post}
