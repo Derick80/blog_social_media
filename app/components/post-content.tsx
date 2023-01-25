@@ -65,8 +65,10 @@ export default function PostContent({
             {post.description}
           </div>
 
-          <p className="border-t-2 border-black p-2 indent-4 dark:border-white md:p-2 md:text-lg md:leading-7">
-            {post.body}
+          <p className="border-t-2 border-black p-2 indent-4 dark:border-white md:p-2 md:text-lg md:leading-7"
+          dangerouslySetInnerHTML={
+            { __html: post.body }
+          }>
           </p>
         </div>
       </div>

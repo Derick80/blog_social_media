@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import invariant from "tiny-invariant";
 import { ImageUploader } from "~/components/image-uploader";
 import FormField from "~/components/shared/form-field";
+import TipTap from '~/components/tip-tap'
 import { getUser, getUserId } from "~/utils/auth.server";
 import { getCategories } from "~/utils/categories.server";
 import {
@@ -273,15 +274,9 @@ export default function PostRoute() {
               {actionData.fieldErrors.description}
             </p>
           ) : null}
-          <FormField
-            htmlFor="body"
-            label="Write Your Post"
-            name="body"
-            className="form-field-primary"
-            value={formData.body}
-            onChange={(event) => handleInputChange(event, "body")}
-            error={errors?.body}
-          />
+         <TipTap
+            content={formData.body}
+         />
           <FormField
             htmlFor="postImg"
             label="Post Image"

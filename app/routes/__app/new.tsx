@@ -11,6 +11,7 @@ import { getCategories } from "~/utils/categories.server"
 import { CategoryForm, FullCategoryListDestructure } from "~/utils/types.server"
 
 import quillCss from 'quill/dist/quill.snow.css'
+import TipTap from '~/components/tip-tap'
 import invariant from 'tiny-invariant'
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: quillCss }
@@ -221,7 +222,8 @@ export default function NewPostRoute () {
         <div className='flex'>
 
         </div>
-        <FormField
+        <TipTap />
+        {/* <FormField
           htmlFor="body"
           label="Write Your Post"
           name="body"
@@ -233,7 +235,7 @@ export default function NewPostRoute () {
           aria-errormessage={
             actionData?.fieldErrors?.body ? "body-error" : undefined
           }
-        />
+        /> */}
         <div>
           <label>Tag your post </label>
           <select
