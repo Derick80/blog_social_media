@@ -9,10 +9,9 @@ import { createDraft } from "~/utils/post.server"
 import { validateText } from "~/utils/validators.server"
 import { getCategories } from "~/utils/categories.server"
 import { CategoryForm, FullCategoryListDestructure } from "~/utils/types.server"
-import invariant from "tiny-invariant"
-import Quill from '~/components/quill-client'
-import { ClientOnly } from 'remix-utils'
+
 import quillCss from 'quill/dist/quill.snow.css'
+import invariant from 'tiny-invariant'
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: quillCss }
 ]
@@ -220,18 +219,9 @@ export default function NewPostRoute () {
           </p>
         ) : null }
         <div className='flex'>
-          <ClientOnly fallback={ <div style={ { width: 500, height: 300 } }></div> }>
-            { () => <Quill
-              value={ formData.body }
-              name='body'
 
-
-
-
-            /> }
-          </ClientOnly>
         </div>
-        {/* <FormField
+        <FormField
           htmlFor="body"
           label="Write Your Post"
           name="body"
@@ -243,7 +233,7 @@ export default function NewPostRoute () {
           aria-errormessage={
             actionData?.fieldErrors?.body ? "body-error" : undefined
           }
-        /> */}
+        />
         <div>
           <label>Tag your post </label>
           <select
